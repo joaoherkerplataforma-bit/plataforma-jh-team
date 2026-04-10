@@ -21,7 +21,7 @@ export default async function ProtectedLayout({
 
   const { data: usuario } = await supabase
     .from('usuarios')
-    .select('id, nome, email, perfil, ativo, criado_em, atualizado_em')
+    .select('id, nome, email, perfil, ativo, created_at, updated_at')
     .eq('id', user.id)
     .single()
 
@@ -39,8 +39,8 @@ export default async function ProtectedLayout({
     email: usuario.email,
     perfil: usuario.perfil,
     ativo: usuario.ativo,
-    criado_em: usuario.criado_em,
-    atualizado_em: usuario.atualizado_em,
+    created_at: usuario.created_at,
+    updated_at: usuario.updated_at,
   }
 
   return (

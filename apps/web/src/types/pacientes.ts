@@ -10,8 +10,8 @@ export interface Paciente {
   tempo_plano: 'trimestral' | 'semestral' | 'anual'
   observacoes: string | null
   ativo: boolean
-  criado_em: string
-  atualizado_em: string
+  created_at: string
+  updated_at: string
 }
 
 export interface PacienteComCalculos extends Paciente {

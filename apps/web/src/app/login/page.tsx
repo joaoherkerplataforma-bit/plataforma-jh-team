@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -17,7 +16,6 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
-  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -66,8 +64,10 @@ export default function LoginPage() {
     const perfil = usuario?.perfil as PerfilAcesso | undefined
     const redirectTo = perfil ? PERFIL_ROUTES[perfil] : '/dashboard'
 
-    router.push(redirectTo)
-    router.refresh()
+    // Use window.location for a hard redirect so that all auth cookies
+    // are included in the new request and the middleware reads the session
+    // correctly — avoids race conditions with router.push() + router.refresh().
+    window.location.href = redirectTo
   }
 
   return (

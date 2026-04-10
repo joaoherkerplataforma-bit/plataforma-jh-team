@@ -6,8 +6,8 @@ export interface UserProfile {
   email: string
   perfil: PerfilAcesso
   ativo: boolean
-  criado_em: string
-  atualizado_em: string
+  created_at: string
+  updated_at: string
 }
 
 export const PERFIL_ROUTES: Record<PerfilAcesso, string> = {
