@@ -1,0 +1,46 @@
+# =============================================================
+# JH TEAM — .gitignore
+# =============================================================
+
+# Dependências
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+out/
+build/
+
+# Turbo cache
+.turbo/
+
+# Variáveis de ambiente — NUNCA commitar valores reais
+.env.local
+.env.*.local
+.env.production
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# macOS
+.DS_Store
+*.pem
+
+# IDE
+.idea/
+.vscode/settings.json
+
+# Supabase local dev
+supabase/.branches
+supabase/.temp

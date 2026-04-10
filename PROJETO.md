@@ -288,5 +288,43 @@ Arquivos gerados em `supabase/`:
 - Index único em `delegacao_controle` garante exatamente 1 linha em produção
 - Funções RLS com `SECURITY DEFINER STABLE` para performance nas verificações de perfil
 
+### Sessão 3 — Environment Bootstrap (2026-04-10)
+Monorepo Turborepo configurado e ambiente de desenvolvimento funcional.
+
+**Estrutura criada:**
+```
+jh-team/
+├── apps/web/           — Next.js 15.5 + TypeScript + Tailwind v3
+├── services/relatorio/ — Railway/Node.js (placeholder, pronto para implementação)
+├── packages/           — Tipos compartilhados (vazio, pronto para uso)
+├── supabase/           — Migrations e seeds (Sessão 2)
+├── turbo.json          — Turborepo pipeline: build, dev, lint, typecheck, test
+├── package.json        — npm workspaces + packageManager npm@11.9.0
+├── vercel.json         — Deploy monorepo configurado para Vercel
+├── .env.example        — Documentação de todas as variáveis necessárias
+├── .env.local          — Variáveis vazias para preencher (não commitado)
+└── .gitignore          — Protege .env.local, node_modules, .next, .turbo
+```
+
+**Dependências instaladas em `apps/web`:**
+- `next@15.5.15`, `react@19`, `react-dom@19`
+- `@supabase/supabase-js@^2`, `@supabase/ssr@^0.6`
+- `tailwindcss@^3`, `postcss`, `autoprefixer`
+- `zod@^3`, `react-hook-form@^7`, `@hookform/resolvers`
+- `clsx`, `tailwind-merge`, `class-variance-authority`, `lucide-react` (base shadcn/ui)
+- `typescript@^5`, todos os `@types/*` necessários
+
+**Página inicial:**
+- `apps/web/src/app/page.tsx` — "JH TEAM" em dourado (#C9A84C) sobre fundo preto
+- `src/lib/utils.ts` — utilitário `cn()` para shadcn/ui
+- CSS brand tokens: `--gold: #C9A84C`, `--gold-light: #E8C97A`, `--gold-dark: #A07830`
+
+**Validações executadas:**
+- `npm run build` → 2 packages, 2 success, 0 erros
+- `npm run dev` → `✓ Ready in 1576ms`, `GET / 200` confirmado em localhost:3000
+- Next.js 15.5.15, compile time 4.5s, bundle inicial 102 kB
+
+**Próximo passo:** Preencher `.env.local` com as chaves do Supabase e conectar o cliente.
+
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
