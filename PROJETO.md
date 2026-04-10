@@ -239,10 +239,29 @@ Conteúdo esperado pelo João:
 ---
 
 ## Decisões técnicas tomadas
-[preencher após sessão com o arquiteto]
+_(Sessão de arquitetura — 2026-04-10)_
+
+1. **Turborepo monorepo** — `apps/web` (Next.js) + `services/relatorio` (Railway/Node.js). Compartilha tipos TypeScript entre os serviços.
+2. **Next.js App Router com RSC** — Route Handlers para webhooks, Middleware nativo para proteção de rotas por perfil, Server Components para dados sensíveis.
+3. **Tabela `tarefas` unificada** para Módulos B, C, D — campo `modulo` discrimina o tipo. Facilita queries de tarefas atrasadas e visão consolidada.
+4. **`tarefa_pai_id`** na tabela `tarefas` — Módulo D aponta para tarefa do Módulo C. Desbloqueio automático: quando C vai para 'gravado', plataforma atualiza D para 'pendente'.
+5. **Alternância Pablo/Estagiário calculada dinamicamente** — via `delegacao_controle`, não por flag. Resiliente a falhas.
+6. **Make apenas como bridge de Google Forms** — Make dispara webhooks para a plataforma. Lógica de negócio fica no Next.js, não no Make.
+7. **Railway para WhatsApp Business API e relatório diário** — evita timeout do Vercel (10s). Cron job às 8h via Railway. Sharp também neste serviço para imagens futuras.
+8. **`service_role` Supabase apenas em backend** — webhooks usam service_role que bypassa RLS. Nunca exposta no browser.
+9. **Shadcn/UI** — paleta preto/dourado via CSS variables, sem vendor lock-in.
+10. **Identificação de paciente por nome + telefone** — Google Forms não tem IDs. Match por combinação nome+telefone com fila de revisão para João em casos ambíguos.
 
 ## O que foi construído
-[atualizar após cada sessão de desenvolvimento]
+_(2026-04-10 — Sessão de arquitetura)_
+
+- Arquitetura fullstack completa documentada (estrutura de pastas, schema, RLS, rotas, webhooks)
+- Schema SQL completo: tabelas `usuarios`, `pacientes`, `formularios_recebidos`, `delegacao_controle`, `tarefas`, `protocolos_base`, `historico_entregas`
+- Políticas RLS definidas para todos os perfis (joao_admin, pablo, joao_estagiario, aluno)
+- Mapa de rotas com controle de acesso por perfil
+- Fluxo de integração Make → Webhooks → Supabase documentado
+- Fluxo de relatório diário Railway → WhatsApp documentado
+- 8 riscos identificados com mitigações
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
