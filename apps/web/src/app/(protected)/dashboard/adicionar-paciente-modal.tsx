@@ -35,7 +35,6 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
         return
       }
 
-      // Calcular data de vencimento com base no tempo do plano
       const inicio = new Date(dataInicio + 'T00:00:00')
       let mesesAdicionais = 3
       if (tempoplano === 'semestral') mesesAdicionais = 6
@@ -79,20 +78,24 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
 
   if (!aberto) return null
 
+  const inputClass =
+    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#8A7A5A]/50'
+  const labelClass = 'block text-sm text-[#8A7A5A] mb-1'
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="bg-[#242424] border border-white/10 rounded-xl w-full max-w-lg mx-4 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+      <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 shadow-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <h2 className="text-lg font-semibold text-gold tracking-wide">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2209]">
+          <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
             Adicionar Paciente
           </h2>
           <button
             type="button"
             onClick={onFechar}
-            className="text-white/40 hover:text-white transition-colors text-xl leading-none"
+            className="text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors text-xl leading-none"
           >
-            x
+            ✕
           </button>
         </div>
 
@@ -100,70 +103,36 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
         <form onSubmit={handleSubmit} className="px-6 py-5 space-y-4">
           {/* Nome */}
           <div>
-            <label htmlFor="nome" className="block text-sm text-white/60 mb-1">
+            <label htmlFor="nome" className={labelClass}>
               Nome completo *
             </label>
-            <input
-              id="nome"
-              name="nome"
-              type="text"
-              required
-              className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-            />
+            <input id="nome" name="nome" type="text" required className={inputClass} />
           </div>
 
           {/* Telefone + Email */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="telefone" className="block text-sm text-white/60 mb-1">
-                Telefone
-              </label>
-              <input
-                id="telefone"
-                name="telefone"
-                type="text"
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              />
+              <label htmlFor="telefone" className={labelClass}>Telefone</label>
+              <input id="telefone" name="telefone" type="text" className={inputClass} />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm text-white/60 mb-1">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              />
+              <label htmlFor="email" className={labelClass}>Email</label>
+              <input id="email" name="email" type="email" className={inputClass} />
             </div>
           </div>
 
           {/* Tipo + Tempo do plano */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="tipo_plano" className="block text-sm text-white/60 mb-1">
-                Tipo de plano
-              </label>
-              <select
-                id="tipo_plano"
-                name="tipo_plano"
-                defaultValue="completo"
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              >
+              <label htmlFor="tipo_plano" className={labelClass}>Tipo de plano</label>
+              <select id="tipo_plano" name="tipo_plano" defaultValue="completo" className={inputClass}>
                 <option value="dieta">Dieta</option>
                 <option value="completo">Completo</option>
               </select>
             </div>
             <div>
-              <label htmlFor="tempo_plano" className="block text-sm text-white/60 mb-1">
-                Tempo do plano
-              </label>
-              <select
-                id="tempo_plano"
-                name="tempo_plano"
-                defaultValue="trimestral"
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              >
+              <label htmlFor="tempo_plano" className={labelClass}>Tempo do plano</label>
+              <select id="tempo_plano" name="tempo_plano" defaultValue="trimestral" className={inputClass}>
                 <option value="trimestral">Trimestral</option>
                 <option value="semestral">Semestral</option>
                 <option value="anual">Anual</option>
@@ -174,27 +143,12 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
           {/* Data inicio + Proximo retorno */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label htmlFor="data_inicio" className="block text-sm text-white/60 mb-1">
-                Data de inicio *
-              </label>
-              <input
-                id="data_inicio"
-                name="data_inicio"
-                type="date"
-                required
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              />
+              <label htmlFor="data_inicio" className={labelClass}>Data de inicio *</label>
+              <input id="data_inicio" name="data_inicio" type="date" required className={inputClass} />
             </div>
             <div>
-              <label htmlFor="proximo_retorno" className="block text-sm text-white/60 mb-1">
-                Proximo retorno
-              </label>
-              <input
-                id="proximo_retorno"
-                name="proximo_retorno"
-                type="date"
-                className="w-full bg-[#1A1A1A] border border-white/10 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-gold transition-colors"
-              />
+              <label htmlFor="proximo_retorno" className={labelClass}>Proximo retorno</label>
+              <input id="proximo_retorno" name="proximo_retorno" type="date" className={inputClass} />
             </div>
           </div>
 
@@ -209,14 +163,14 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
               type="button"
               onClick={onFechar}
               disabled={salvando}
-              className="px-4 py-2 text-sm text-white/60 hover:text-white border border-white/10 rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={salvando}
-              className="px-4 py-2 text-sm bg-gold hover:bg-gold-light text-black font-medium rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm bg-[#C9A84C] hover:bg-[#E2BC6A] text-[#0A0A0A] font-semibold rounded-lg transition-colors disabled:opacity-50"
             >
               {salvando ? 'Salvando...' : 'Adicionar'}
             </button>

@@ -44,7 +44,6 @@ export default function LoginPage() {
       return
     }
 
-    // Fetch user profile to determine redirect
     const {
       data: { user },
     } = await supabase.auth.getUser()
@@ -64,85 +63,84 @@ export default function LoginPage() {
     const perfil = usuario?.perfil as PerfilAcesso | undefined
     const redirectTo = perfil ? PERFIL_ROUTES[perfil] : '/dashboard'
 
-    // Use window.location for a hard redirect so that all auth cookies
-    // are included in the new request and the middleware reads the session
-    // correctly — avoids race conditions with router.push() + router.refresh().
     window.location.href = redirectTo
   }
 
   return (
-    <main className="min-h-screen bg-black flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-8">
-        {/* Logo */}
-        <div className="text-center space-y-3">
-          <h1 className="text-5xl font-bold tracking-[0.3em] text-gold">
+    <main className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        {/* Logo acima do card */}
+        <div className="text-center space-y-3 mb-8">
+          <h1 className="font-serif text-5xl tracking-[0.35em] text-[#C9A84C]">
             JH TEAM
           </h1>
-          <div className="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-gold to-transparent" />
+          <div className="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent" />
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div className="space-y-1">
-            <label
-              htmlFor="email"
-              className="block text-sm text-white/60 tracking-wide"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              {...register('email')}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-              placeholder="seu@email.com"
-            />
-            {errors.email && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <label
-              htmlFor="password"
-              className="block text-sm text-white/60 tracking-wide"
-            >
-              Senha
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              {...register('password')}
-              className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/30 focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors"
-              placeholder="******"
-            />
-            {errors.password && (
-              <p className="text-red-400 text-xs mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm text-center">
-              {error}
+        {/* Card do formulario */}
+        <div className="bg-[#111111] border border-[#2A2209] rounded-2xl p-8 space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div className="space-y-1">
+              <label
+                htmlFor="email"
+                className="block text-sm text-[#8A7A5A] tracking-wide"
+              >
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                autoComplete="email"
+                {...register('email')}
+                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#8A7A5A]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
+                placeholder="seu@email.com"
+              />
+              {errors.email && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </div>
-          )}
 
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-3 bg-gold hover:bg-gold-light text-black font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed tracking-wide"
-          >
-            {isLoading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
+            <div className="space-y-1">
+              <label
+                htmlFor="password"
+                className="block text-sm text-[#8A7A5A] tracking-wide"
+              >
+                Senha
+              </label>
+              <input
+                id="password"
+                type="password"
+                autoComplete="current-password"
+                {...register('password')}
+                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#8A7A5A]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
+                placeholder="••••••"
+              />
+              {errors.password && (
+                <p className="text-red-400 text-xs mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
 
-        <p className="text-center text-white/20 text-xs">
+            {error && (
+              <div className="bg-red-500/10 border border-red-500/20 rounded-lg px-4 py-3 text-red-400 text-sm text-center">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3 bg-[#C9A84C] hover:bg-[#E2BC6A] text-[#0A0A0A] font-semibold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed tracking-wide"
+            >
+              {isLoading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-[#8A7A5A]/40 text-xs mt-6">
           Joao Herker Personal
         </p>
       </div>

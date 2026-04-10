@@ -12,9 +12,12 @@ const config: Config = {
       colors: {
         gold: {
           DEFAULT: '#C9A84C',
-          light: '#E8C97A',
-          dark: '#A07830',
+          hover:   '#E2BC6A',
+          light:   '#E2BC6A',
+          text:    '#D4AF37',
+          dark:    '#A07830',
         },
+        surface: '#111111',
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],

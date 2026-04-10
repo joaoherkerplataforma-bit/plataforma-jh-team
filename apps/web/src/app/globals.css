@@ -3,9 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --gold: #C9A84C;
-  --gold-light: #E8C97A;
-  --gold-dark: #A07830;
+  --background:  #0A0A0A;
+  --surface:     #111111;
+  --gold:        #C9A84C;
+  --gold-hover:  #E2BC6A;
+  --gold-text:   #D4AF37;
+  --border:      #2A2209;
+  --text:        #F5F0E8;
+  --text-muted:  #8A7A5A;
 }
 
 @layer base {
@@ -18,10 +23,8 @@
   }
 
   body {
-    @apply bg-white text-[#1A1A1A] antialiased;
-  }
-
-  .dark body {
-    @apply bg-[#1A1A1A] text-white;
+    background-color: #0A0A0A;
+    color: #F5F0E8;
+    @apply antialiased;
   }
 }

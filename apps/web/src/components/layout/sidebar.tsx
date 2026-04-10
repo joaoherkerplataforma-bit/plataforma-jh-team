@@ -68,7 +68,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
       {/* Overlay mobile */}
       {mobileAberta && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-black/70 lg:hidden"
           onClick={onFecharMobile}
         />
       )}
@@ -76,7 +76,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
       <aside
         className={`
           fixed top-0 left-0 z-50 h-screen flex flex-col
-          bg-[#F8F9FA] dark:bg-[#222222] border-r border-gray-200 dark:border-gray-700
+          bg-[#0A0A0A] border-r border-[#2A2209]
           transition-all duration-300
           ${expandida ? 'w-60' : 'w-16'}
           ${mobileAberta ? 'translate-x-0' : '-translate-x-full'}
@@ -84,24 +84,24 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
         `}
       >
         {/* Logo */}
-        <div className="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700 px-4">
-          <span className="text-[#C9A84C] font-bold tracking-[0.15em] text-xl whitespace-nowrap overflow-hidden">
+        <div className="flex items-center justify-center h-16 border-b border-[#2A2209] px-4">
+          <span className="font-serif text-[#C9A84C] tracking-[0.25em] text-xl whitespace-nowrap overflow-hidden">
             {expandida ? 'JH TEAM' : 'JH'}
           </span>
         </div>
 
         {/* Avatar do usuario */}
-        <div className={`px-4 py-4 border-b border-gray-200 dark:border-gray-700 ${expandida ? '' : 'flex justify-center'}`}>
+        <div className={`px-4 py-4 border-b border-[#2A2209] ${expandida ? '' : 'flex justify-center'}`}>
           <div className={`flex items-center gap-3 ${expandida ? '' : 'flex-col'}`}>
             <div className="w-10 h-10 rounded-full bg-[#C9A84C] flex items-center justify-center flex-shrink-0">
-              <span className="text-black font-bold text-sm">{inicial}</span>
+              <span className="text-[#0A0A0A] font-bold text-sm">{inicial}</span>
             </div>
             {expandida && (
               <div className="overflow-hidden">
-                <p className="text-sm font-medium text-[#1A1A1A] dark:text-white truncate">
+                <p className="text-sm font-medium text-[#F5F0E8] truncate">
                   {user.nome}
                 </p>
-                <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded bg-[#C9A84C]/20 text-[#C9A84C]">
+                <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border border-[#C9A84C] bg-[#1A1500] text-[#C9A84C]">
                   {PERFIL_LABELS[user.perfil]}
                 </span>
               </div>
@@ -125,8 +125,8 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
                   ${expandida ? '' : 'justify-center'}
                   ${
                     ativo
-                      ? 'bg-[#C9A84C]/10 text-[#C9A84C]'
-                      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-[#1A1A1A] dark:hover:text-white'
+                      ? 'bg-[#1A1500] text-[#C9A84C] border-l-[3px] border-l-[#C9A84C]'
+                      : 'text-[#8A7A5A] hover:bg-[#1A1500]/60 hover:text-[#F5F0E8]'
                   }
                 `}
                 title={expandida ? undefined : item.label}
@@ -141,11 +141,11 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
         </nav>
 
         {/* Botao toggle expandir/recolher */}
-        <div className="border-t border-gray-200 dark:border-gray-700 p-2">
+        <div className="border-t border-[#2A2209] p-2">
           <button
             type="button"
             onClick={() => setExpandida(!expandida)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-gray-400 hover:text-[#1A1A1A] dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
           >
             {expandida ? (
               <>

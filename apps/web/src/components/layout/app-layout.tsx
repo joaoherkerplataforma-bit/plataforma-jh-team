@@ -14,7 +14,7 @@ export function AppLayout({ user, children }: AppLayoutProps) {
   const [sidebarMobileAberta, setSidebarMobileAberta] = useState(false)
 
   return (
-    <div className="flex h-screen bg-white dark:bg-[#1A1A1A]">
+    <div className="flex h-screen bg-[#0A0A0A]">
       <Sidebar
         user={user}
         mobileAberta={sidebarMobileAberta}
