@@ -43,11 +43,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))
   }, [])
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return <>{children}</>
-  }
-
+  // Always wrap in Provider so useTheme() never throws "must be within ThemeProvider".
+  // Before mount, toggleTheme is a no-op and theme defaults to 'dark' — the real
+  // value is applied by the useEffect once the component mounts on the client.
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
       {children}
