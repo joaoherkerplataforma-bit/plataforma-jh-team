@@ -326,5 +326,39 @@ jh-team/
 
 **Próximo passo:** Preencher `.env.local` com as chaves do Supabase e conectar o cliente.
 
+### Sessao 4 -- Autenticacao e perfis de acesso (2026-04-10)
+Sistema de autenticacao completo com Supabase Auth, protecao de rotas por middleware e redirecionamento por perfil.
+
+**Arquivos criados:**
+```
+apps/web/src/
+├── types/auth.ts                    — Tipos TypeScript: UserProfile, PerfilAcesso, PERFIL_ROUTES
+├── lib/supabase/
+│   ├── client.ts                    — Cliente Supabase browser (createBrowserClient)
+│   ├── server.ts                    — Cliente Supabase server (createServerClient + cookies)
+│   └── middleware.ts                — Helper de refresh de sessao + protecao de rotas + redirect por perfil
+├── middleware.ts                    — Middleware Next.js (matcher para rotas protegidas)
+├── app/login/page.tsx               — Pagina de login (react-hook-form + zod + identidade visual)
+├── app/dashboard/
+│   ├── page.tsx                     — Dashboard placeholder (Server Component protegido)
+│   └── logout-button.tsx            — Componente de logout (Client Component)
+├── app/tarefas/page.tsx             — Pagina tarefas placeholder (Server Component protegido)
+└── app/portal/page.tsx              — Portal do aluno placeholder (Server Component protegido)
+```
+
+**Funcionalidades implementadas:**
+- Login com email/senha via Supabase Auth (validacao com zod)
+- Middleware protege `/dashboard`, `/tarefas`, `/portal` — redireciona para `/login` se nao autenticado
+- Apos login, busca perfil na tabela `usuarios` e redireciona: joao_admin->/dashboard, pablo->/tarefas, joao_estagiario->/tarefas, aluno->/portal
+- Usuario autenticado em `/login` e redirecionado automaticamente para sua rota de perfil
+- Logout funcional com redirecionamento para `/login`
+- Identidade visual: fundo preto, elementos dourados (#C9A84C), tipografia tracking
+
+**Validacoes executadas:**
+- `npx tsc --noEmit` — 0 erros
+- `next lint` — 0 warnings, 0 erros
+
+**Proximo passo:** Criar usuarios de teste no Supabase Auth (joao@jhteam.com, pablo@jhteam.com, etc.) e vincular com a tabela `usuarios` via seed ou dashboard.
+
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
