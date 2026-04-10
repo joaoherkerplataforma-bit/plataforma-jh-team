@@ -49,7 +49,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Already authenticated on login page -> redirect to profile route
+  // Already authenticated on login page -> redirect to profile route (only if profile exists)
   if (user && isLoginPage) {
     const { data: usuario } = await supabase
       .from('usuarios')
@@ -57,20 +57,28 @@ export async function updateSession(request: NextRequest) {
       .eq('id', user.id)
       .single()
 
-    const perfilRoutes: Record<string, string> = {
-      joao_admin: '/dashboard',
-      pablo: '/tarefas',
-      joao_estagiario: '/tarefas',
-      aluno: '/portal',
+    // Only redirect if the user has a valid profile in the usuarios table.
+    // If no profile is found, fall through and let the login page render —
+    // the layout or login page will handle signing out. This prevents the
+    // infinite loop: dashboard -> login -> dashboard when !usuario.
+    if (usuario?.perfil) {
+      const perfilRoutes: Record<string, string> = {
+        joao_admin: '/dashboard',
+        pablo: '/tarefas',
+        joao_estagiario: '/tarefas',
+        aluno: '/portal',
+      }
+
+      const redirectTo = perfilRoutes[usuario.perfil] ?? '/dashboard'
+      const url = request.nextUrl.clone()
+      url.pathname = redirectTo
+
+      const redirectResponse = NextResponse.redirect(url)
+      supabaseResponse.cookies.getAll().forEach((cookie) => {
+        redirectResponse.cookies.set(cookie.name, cookie.value)
+      })
+      return redirectResponse
     }
-
-    const redirectTo = usuario?.perfil
-      ? perfilRoutes[usuario.perfil] ?? '/dashboard'
-      : '/dashboard'
-
-    const url = request.nextUrl.clone()
-    url.pathname = redirectTo
-    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
