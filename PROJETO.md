@@ -394,5 +394,59 @@ apps/web/src/
 
 **Proximo passo:** Implementar Modulos B, C e D (protocolos novos, fotos antes/depois, retorno dietetico).
 
+### Sessao 6 -- Layout base: Sidebar + Tema claro/escuro (2026-04-10)
+Layout compartilhado para todas as rotas protegidas com sidebar, header e sistema de temas.
+
+**Arquivos criados:**
+```
+apps/web/src/
+├── components/
+│   ├── theme-provider.tsx               — Context API para tema light/dark, persistencia localStorage
+│   └── layout/
+│       ├── sidebar.tsx                  — Sidebar responsiva (240px/64px), menu filtrado por perfil
+│       ├── header.tsx                   — Saudacao, badge perfil, toggle tema, botao sair
+│       └── app-layout.tsx              — Wrapper: sidebar + header + conteudo
+├── app/
+│   └── (protected)/
+│       ├── layout.tsx                   — Server Component: auth check + busca perfil + ThemeProvider + AppLayout
+│       ├── dashboard/
+│       │   ├── page.tsx                 — REESCRITO: sem auth check (layout cuida), 4 cards com tarefas
+│       │   ├── pacientes-table.tsx      — ATUALIZADO: 4 cards (Ativos, Vencidos, Tarefas Aberto, Tarefas Atrasadas) + dark mode
+│       │   ├── adicionar-paciente-modal.tsx  — MOVIDO de app/dashboard/
+│       │   ├── observacoes-inline.tsx   — MOVIDO de app/dashboard/
+│       │   └── logout-button.tsx        — MOVIDO de app/dashboard/
+│       ├── tarefas/page.tsx             — SIMPLIFICADO: sem auth check, sem header proprio
+│       └── portal/page.tsx              — SIMPLIFICADO: sem auth check, sem header proprio
+```
+
+**Arquivos modificados:**
+- `tailwind.config.ts` — adicionado `darkMode: 'class'`
+- `app/globals.css` — body com cores light/dark
+- `app/layout.tsx` — classe `dark` no html, `suppressHydrationWarning`
+
+**Arquivos removidos:**
+- `app/dashboard/` (antigo, movido para `(protected)/dashboard/`)
+- `app/tarefas/` (antigo, movido para `(protected)/tarefas/`)
+- `app/portal/` (antigo, movido para `(protected)/portal/`)
+
+**Funcionalidades implementadas:**
+- Sidebar com logo JH TEAM (dourado), avatar com inicial, menu filtrado por perfil
+- Sidebar expandida (240px) / recolhida (64px) com transicao suave (duration-300)
+- Badges de perfil: ADMIN, PABLO, ESTAGIARIO, ALUNO
+- Toggle tema claro/escuro com icones Sun/Moon, persistencia em localStorage
+- Header com saudacao personalizada, badge de perfil, botao sair
+- Mobile: sidebar escondida por padrao, hamburger menu no header, overlay para fechar
+- 4 cards no dashboard: Total Ativos, Vencidos, Tarefas em Aberto, Tarefas Atrasadas
+- Tarefas em Aberto: query `status NOT IN ('entregue', 'cancelada')`
+- Tarefas Atrasadas: query `data_entrega < NOW() - 3 dias`
+- Route group `(protected)` centraliza auth check e layout em um unico Server Component
+- Todas as classes CSS com suporte dual: `bg-white dark:bg-[#1A1A1A]`, etc.
+
+**Validacoes executadas:**
+- `npx tsc --noEmit` — 0 erros
+- `next lint` — 0 warnings, 0 erros
+
+**Proximo passo:** Implementar Modulos B, C e D (protocolos novos, fotos antes/depois, retorno dietetico).
+
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
