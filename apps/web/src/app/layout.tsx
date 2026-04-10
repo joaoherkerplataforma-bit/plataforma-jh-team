@@ -9,7 +9,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: 'JH TEAM',
-  description: 'Plataforma de gestão — João Herker Personal',
+  description: 'Plataforma de gestao — Joao Herker Personal',
 }
 
 export default function RootLayout({
@@ -18,8 +18,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-BR" className={inter.variable}>
-      <body>{children}</body>
+    <html lang="pt-BR" className={`${inter.variable} dark`} suppressHydrationWarning>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   )
 }

@@ -18,6 +18,10 @@
   }
 
   body {
-    @apply bg-black text-white antialiased;
+    @apply bg-white text-[#1A1A1A] antialiased;
+  }
+
+  .dark body {
+    @apply bg-[#1A1A1A] text-white;
   }
 }
