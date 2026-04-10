@@ -51,11 +51,11 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
           telefone,
           email,
           tipo_plano: tipoplano,
-          tempo_plano: tempoplano,
+          duracao_plano: tempoplano,
           data_inicio: dataInicio,
           data_vencimento_plano: dataVencimento,
           proximo_retorno: proximoRetorno,
-          ativo: true,
+          // status omitido — banco usa default 'ativo'
         })
 
         if (error) {

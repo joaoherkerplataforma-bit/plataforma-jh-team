@@ -185,7 +185,7 @@ export function PacientesTable({ ativos, vencidos, resumo, tarefasResumo }: Paci
                       {TIPO_PLANO_LABELS[p.tipo_plano]}
                     </td>
                     <td className="px-4 py-3 text-gray-500 dark:text-white/60 whitespace-nowrap">
-                      {TEMPO_PLANO_LABELS[p.tempo_plano]}
+                      {TEMPO_PLANO_LABELS[p.duracao_plano]}
                     </td>
                     <td className="px-4 py-3 text-gray-500 dark:text-white/60 whitespace-nowrap">
                       {formatarData(p.data_vencimento_plano)}

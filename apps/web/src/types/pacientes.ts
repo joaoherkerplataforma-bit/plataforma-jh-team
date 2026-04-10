@@ -7,9 +7,9 @@ export interface Paciente {
   data_vencimento_plano: string
   proximo_retorno: string | null
   tipo_plano: 'dieta' | 'completo'
-  tempo_plano: 'trimestral' | 'semestral' | 'anual'
+  duracao_plano: 'trimestral' | 'semestral' | 'anual'
   observacoes: string | null
-  ativo: boolean
+  status: 'ativo' | 'vencido' | 'pausado'
   created_at: string
   updated_at: string
 }
@@ -32,7 +32,7 @@ export const TIPO_PLANO_LABELS: Record<Paciente['tipo_plano'], string> = {
   completo: 'Completo',
 } as const
 
-export const TEMPO_PLANO_LABELS: Record<Paciente['tempo_plano'], string> = {
+export const TEMPO_PLANO_LABELS: Record<Paciente['duracao_plano'], string> = {
   trimestral: 'Trimestral',
   semestral: 'Semestral',
   anual: 'Anual',
