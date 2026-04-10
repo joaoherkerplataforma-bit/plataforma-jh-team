@@ -360,5 +360,39 @@ apps/web/src/
 
 **Proximo passo:** Criar usuarios de teste no Supabase Auth (joao@jhteam.com, pablo@jhteam.com, etc.) e vincular com a tabela `usuarios` via seed ou dashboard.
 
+### Sessao 5 -- Modulo A: Controle de Pacientes (2026-04-10)
+Dashboard real substituindo o placeholder, com gestao completa de pacientes.
+
+**Arquivos criados/modificados:**
+```
+apps/web/src/
+├── types/pacientes.ts                       — Tipos TypeScript: Paciente, PacienteComCalculos, ResumoCards, labels
+├── lib/pacientes.ts                         — Funcoes de calculo (dias retorno, dias ativos), formatacao, cores, badges
+├── app/dashboard/
+│   ├── page.tsx                             — MODIFICADO: Server Component com fetch de pacientes do Supabase
+│   ├── pacientes-table.tsx                  — Client Component: tabela com tabs Ativos/Vencidos, cards de resumo
+│   ├── adicionar-paciente-modal.tsx         — Client Component: modal com formulario de novo paciente
+│   └── observacoes-inline.tsx               — Client Component: edicao inline de observacoes (click-to-edit)
+```
+
+**Funcionalidades implementadas:**
+- Dashboard com header JH TEAM (dourado) + info do usuario + logout
+- Painel de resumo: 3 cards (Total Ativos, Vencidos, Vencendo em breve)
+- Tabela de pacientes com 11 colunas (nome, datas, status, tipo/tempo plano, observacoes)
+- Sistema de cores automatico por linha (verde=hoje, laranja=1-3 dias, vermelho=atrasado)
+- Nome em vermelho quando plano venceu (dias_ativos < 0)
+- Badges de status: retorno (verde/laranja/vermelho) e plano (amarelo vencendo/vermelho vencido)
+- Tabs Ativos/Vencidos com contagem
+- Tab Vencidos sem colunas de status de retorno
+- Modal "Adicionar Paciente" com calculo automatico da data de vencimento (trimestral=+3m, semestral=+6m, anual=+12m)
+- Observacoes editaveis inline: click abre textarea, blur ou Enter salva no Supabase, Escape cancela
+- Identidade visual: fundo #1A1A1A, cards #242424, linhas alternadas #1E1E1E, dourado #C9A84C
+
+**Validacoes executadas:**
+- `npx tsc --noEmit` — 0 erros
+- `next lint` — 0 warnings, 0 erros
+
+**Proximo passo:** Implementar Modulos B, C e D (protocolos novos, fotos antes/depois, retorno dietetico).
+
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
