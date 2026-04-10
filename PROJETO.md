@@ -253,8 +253,8 @@ _(Sessão de arquitetura — 2026-04-10)_
 10. **Identificação de paciente por nome + telefone** — Google Forms não tem IDs. Match por combinação nome+telefone com fila de revisão para João em casos ambíguos.
 
 ## O que foi construído
-_(2026-04-10 — Sessão de arquitetura)_
 
+### Sessão 1 — Arquitetura (2026-04-10)
 - Arquitetura fullstack completa documentada (estrutura de pastas, schema, RLS, rotas, webhooks)
 - Schema SQL completo: tabelas `usuarios`, `pacientes`, `formularios_recebidos`, `delegacao_controle`, `tarefas`, `protocolos_base`, `historico_entregas`
 - Políticas RLS definidas para todos os perfis (joao_admin, pablo, joao_estagiario, aluno)
@@ -262,6 +262,31 @@ _(2026-04-10 — Sessão de arquitetura)_
 - Fluxo de integração Make → Webhooks → Supabase documentado
 - Fluxo de relatório diário Railway → WhatsApp documentado
 - 8 riscos identificados com mitigações
+
+### Sessão 2 — Database (2026-04-10)
+Arquivos gerados em `supabase/`:
+
+**Migrations (`supabase/migrations/`):**
+- `20260410000001_create_usuarios.sql` — tabela usuarios + função utilitária `set_updated_at()`
+- `20260410000002_create_pacientes.sql` — tabela pacientes com todos os campos do dashboard
+- `20260410000003_create_formularios_recebidos.sql` — tabela para payloads brutos do Make/Google Forms
+- `20260410000004_create_delegacao_controle.sql` — tabela com constraint de 1 linha única (alternância Pablo/Estagiário)
+- `20260410000005_create_tarefas.sql` — tabela unificada Módulos B/C/D + trigger `desbloquear_modulo_d` + constraints de negócio
+- `20260410000006_create_protocolos_base.sql` — links WebDiet/MFit por paciente e versão
+- `20260410000007_create_historico_entregas.sql` — registro imutável de entregas (portal do aluno)
+- `20260410000008_rls_policies.sql` — políticas RLS completas + funções helper `meu_perfil()` e `tem_perfil()`
+- `20260410000009_indexes.sql` — 14 indexes baseados nos access patterns do dashboard e relatório diário
+
+**Seeds e testes (`supabase/`):**
+- `seed.sql` — 6 usuários, 3 pacientes (cenários: retorno próximo, plano vencendo hoje, paciente nova), 3 tarefas (feito/bloqueada/pendente), formulários, protocolos e histórico. Idempotente.
+- `smoke_test.sql` — 9 blocos de validação: existência de tabelas, RLS habilitado, contagem de policies, indexes, foreign keys, constraints de negócio, dados seed, trigger desbloqueio Módulo D, funções helper
+
+**Decisões técnicas implementadas:**
+- Trigger automático: Módulo C → 'gravado' desbloqueia Módulo D de 'bloqueada' para 'pendente'
+- Constraint `chk_modulo_d_bloqueada`: Módulo D sempre referencia um Módulo C (tarefa_pai_id NOT NULL)
+- Constraint `chk_gravado_apenas_modulo_c`: status 'gravado' exclusivo do Módulo C
+- Index único em `delegacao_controle` garante exatamente 1 linha em produção
+- Funções RLS com `SECURITY DEFINER STABLE` para performance nas verificações de perfil
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
