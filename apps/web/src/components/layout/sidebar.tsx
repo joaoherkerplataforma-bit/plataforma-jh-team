@@ -37,7 +37,7 @@ const menuItems = [
     label: 'Tarefas',
     href: '/tarefas',
     icon: CheckSquare,
-    perfis: ['pablo', 'joao_estagiario'] as PerfilAcesso[],
+    perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
   },
   {
     label: 'Portal',
