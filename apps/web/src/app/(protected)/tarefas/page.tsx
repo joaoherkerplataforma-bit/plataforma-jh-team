@@ -41,9 +41,6 @@ export default async function TarefasPage() {
     query = query.eq('responsavel_id', user.id)
   }
 
-  // Módulo D: estagiário doesn't see D — already filtered by responsavel_id
-  // (estagiario is never assigned to D per business rules)
-
   const { data: tarefasRaw } = await query
 
   const tarefas = (tarefasRaw ?? []) as unknown as Tarefa[]
@@ -51,14 +48,37 @@ export default async function TarefasPage() {
   const tarefasB = tarefas.filter((t) => t.modulo === 'B')
   const tarefasC = tarefas.filter((t) => t.modulo === 'C')
   const tarefasD = tarefas.filter((t) => t.modulo === 'D')
+  const tarefasE = tarefas.filter((t) => t.modulo === 'E')
 
   // Summary counts for the header
   const totalAberto = tarefas.filter(
     (t) => t.status !== 'entregue' && t.status !== 'bloqueada'
   ).length
 
+  // Fetch pacientes list for the modal (admin only)
+  let pacientes: { id: string; nome: string }[] = []
+  let usuarios: { id: string; nome: string; perfil: string }[] = []
+
+  if (perfil === 'joao_admin') {
+    const { data: pacientesData } = await service
+      .from('pacientes')
+      .select('id, nome')
+      .order('nome', { ascending: true })
+
+    pacientes = (pacientesData ?? []) as { id: string; nome: string }[]
+
+    const { data: usuariosData } = await service
+      .from('usuarios')
+      .select('id, nome, perfil')
+      .in('perfil', ['pablo', 'joao_estagiario'])
+      .eq('ativo', true)
+      .order('nome', { ascending: true })
+
+    usuarios = (usuariosData ?? []) as { id: string; nome: string; perfil: string }[]
+  }
+
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-6">
+    <>
       {/* Page header */}
       <div className="mb-6">
         <div className="flex items-center justify-between">
@@ -79,8 +99,11 @@ export default async function TarefasPage() {
         tarefasB={tarefasB}
         tarefasC={tarefasC}
         tarefasD={tarefasD}
+        tarefasE={tarefasE}
         perfil={perfil}
+        pacientes={pacientes}
+        usuarios={usuarios}
       />
-    </div>
+    </>
   )
 }

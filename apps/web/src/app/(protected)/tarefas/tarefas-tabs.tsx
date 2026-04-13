@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Lock, MessageSquare } from 'lucide-react'
+import { Lock, MessageSquare, Plus, X } from 'lucide-react'
 import type { Tarefa, ModuloTarefa, StatusTarefa } from '@/types/tarefas'
 import {
   STATUS_LABELS,
@@ -17,7 +17,10 @@ interface TarefasTabsProps {
   tarefasB: Tarefa[]
   tarefasC: Tarefa[]
   tarefasD: Tarefa[]
+  tarefasE: Tarefa[]
   perfil: PerfilAcesso
+  pacientes: { id: string; nome: string }[]
+  usuarios: { id: string; nome: string; perfil: string }[]
 }
 
 type TabId = 'pendencias' | 'fotos' | 'retornos' | 'alteracoes'
@@ -42,6 +45,10 @@ function proximoStatus(
   }
   if (modulo === 'D') {
     if (status === 'pendente' && perfil === 'pablo') return 'feito'
+    if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
+  }
+  if (modulo === 'E') {
+    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   return null
@@ -477,12 +484,287 @@ function TabelaRetornos({ tarefas, perfil, onUpdate, atualizando }: TabelaDProps
   )
 }
 
+/* ─────────────────── Tabela Alteracoes (E) ─────────────────── */
+
+interface TabelaEProps {
+  tarefas: Tarefa[]
+  perfil: PerfilAcesso
+  onUpdate: (id: string, status: StatusTarefa) => void
+  atualizando: string | null
+}
+
+function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEProps) {
+  return (
+    <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
+            <th className={thClass}>Nome do Aluno</th>
+            <th className={thClass}>Responsavel</th>
+            <th className={thClass}>Data do Pedido</th>
+            <th className={thClass}>Observacoes</th>
+            <th className={thCenter}>Status</th>
+            <th className={thCenter}>Acao</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tarefas.length === 0 ? (
+            <tr>
+              <td colSpan={6} className="text-center py-12 text-[#8A7A5A]/60">
+                Nenhuma alteracao de protocolo.
+              </td>
+            </tr>
+          ) : (
+            tarefas.map((t, idx) => {
+              const atrasada = linhaAtrasada(t)
+              const bgAlt = idx % 2 === 1 ? 'bg-[#0D0D0D]' : ''
+              const bgAtrasada = atrasada ? 'border-l-2 border-l-orange-500/60' : ''
+
+              return (
+                <tr
+                  key={t.id}
+                  className={`border-b border-[#1A1A1A] hover:bg-[#1A1500]/30 transition-colors ${bgAlt} ${bgAtrasada}`}
+                >
+                  <td className="px-4 py-3 font-medium whitespace-nowrap text-[#F5F0E8]">
+                    {t.paciente?.nome ?? '-'}
+                  </td>
+                  <td className={tdClass}>
+                    {t.responsavel?.nome.split(' ')[0] ?? '-'}
+                  </td>
+                  <td className={tdClass}>{formatarData(t.data_criacao)}</td>
+                  <td className="px-4 py-3">
+                    <ObservacoesCell tarefaId={t.id} valor={t.observacoes_joao} perfil={perfil} />
+                  </td>
+                  <td className="px-4 py-3 text-center whitespace-nowrap">
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs ${STATUS_BADGE_CLASS[t.status]}`}>
+                      {STATUS_LABELS[t.status]}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-center whitespace-nowrap">
+                    <StatusButton tarefa={t} perfil={perfil} onUpdate={onUpdate} atualizando={atualizando} />
+                  </td>
+                </tr>
+              )
+            })
+          )}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+/* ─────────────────── Modal Nova Alteracao ─────────────────── */
+
+interface NovaAlteracaoModalProps {
+  aberto: boolean
+  onFechar: () => void
+  pacientes: { id: string; nome: string }[]
+  usuarios: { id: string; nome: string; perfil: string }[]
+  onSalvo: () => void
+}
+
+function NovaAlteracaoModal({
+  aberto,
+  onFechar,
+  pacientes,
+  usuarios,
+  onSalvo,
+}: NovaAlteracaoModalProps) {
+  const [pacienteId, setPacienteId] = useState('')
+  const [responsavelId, setResponsavelId] = useState('')
+  const [observacoes, setObservacoes] = useState('')
+  const [salvando, setSalvando] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
+  const [buscaPaciente, setBuscaPaciente] = useState('')
+
+  const pacientesFiltrados = buscaPaciente.trim()
+    ? pacientes.filter((p) =>
+        p.nome.toLowerCase().includes(buscaPaciente.toLowerCase())
+      )
+    : pacientes
+
+  const handleSalvar = useCallback(async () => {
+    if (!pacienteId || !responsavelId) {
+      setErro('Selecione o aluno e o responsavel.')
+      return
+    }
+
+    setSalvando(true)
+    setErro(null)
+
+    try {
+      const res = await fetch('/api/tarefas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          paciente_id: pacienteId,
+          responsavel_id: responsavelId,
+          observacoes_joao: observacoes || null,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        setErro(data.error || 'Erro ao criar alteracao.')
+        return
+      }
+
+      // Reset form
+      setPacienteId('')
+      setResponsavelId('')
+      setObservacoes('')
+      setBuscaPaciente('')
+      onFechar()
+      onSalvo()
+    } catch (error) {
+      console.error('Falha ao criar alteracao:', error)
+      setErro('Erro de conexao. Tente novamente.')
+    } finally {
+      setSalvando(false)
+    }
+  }, [pacienteId, responsavelId, observacoes, onFechar, onSalvo])
+
+  if (!aberto) return null
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center">
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/70" onClick={onFechar} />
+
+      {/* Modal */}
+      <div className="relative bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-lg font-bold text-[#F5F0E8]">Nova Alteracao</h2>
+          <button
+            type="button"
+            onClick={onFechar}
+            className="p-1 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Form */}
+        <div className="space-y-4">
+          {/* Nome do aluno */}
+          <div>
+            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+              Nome do Aluno
+            </label>
+            <input
+              type="text"
+              value={buscaPaciente}
+              onChange={(e) => {
+                setBuscaPaciente(e.target.value)
+                setPacienteId('')
+              }}
+              placeholder="Buscar aluno..."
+              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#8A7A5A]/40 focus:outline-none focus:border-[#C9A84C]/60"
+            />
+            {buscaPaciente.trim() && !pacienteId && (
+              <div className="mt-1 max-h-32 overflow-y-auto bg-[#0A0A0A] border border-[#2A2209] rounded-lg">
+                {pacientesFiltrados.length === 0 ? (
+                  <p className="px-3 py-2 text-xs text-[#8A7A5A]/60">Nenhum aluno encontrado.</p>
+                ) : (
+                  pacientesFiltrados.map((p) => (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => {
+                        setPacienteId(p.id)
+                        setBuscaPaciente(p.nome)
+                      }}
+                      className="w-full text-left px-3 py-2 text-sm text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+                    >
+                      {p.nome}
+                    </button>
+                  ))
+                )}
+              </div>
+            )}
+            {pacienteId && (
+              <p className="mt-1 text-xs text-[#C9A84C]">Selecionado: {buscaPaciente}</p>
+            )}
+          </div>
+
+          {/* Responsavel */}
+          <div>
+            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+              Responsavel
+            </label>
+            <select
+              value={responsavelId}
+              onChange={(e) => setResponsavelId(e.target.value)}
+              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] focus:outline-none focus:border-[#C9A84C]/60"
+            >
+              <option value="">Selecionar...</option>
+              {usuarios.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Observacoes */}
+          <div>
+            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+              Observacoes
+            </label>
+            <textarea
+              value={observacoes}
+              onChange={(e) => setObservacoes(e.target.value)}
+              placeholder="Detalhes da alteracao..."
+              rows={3}
+              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#8A7A5A]/40 focus:outline-none focus:border-[#C9A84C]/60 resize-none"
+            />
+          </div>
+
+          {/* Error */}
+          {erro && (
+            <p className="text-sm text-red-400">{erro}</p>
+          )}
+
+          {/* Actions */}
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onFechar}
+              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={handleSalvar}
+              disabled={salvando}
+              className="px-4 py-2 text-sm font-semibold rounded-lg bg-[#C9A84C] hover:bg-[#E2BC6A] text-[#0A0A0A] transition-colors disabled:opacity-50"
+            >
+              {salvando ? 'Salvando...' : 'Criar Alteracao'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /* ─────────────────── Main Tabs Component ─────────────────── */
 
-export function TarefasTabs({ tarefasB, tarefasC, tarefasD, perfil }: TarefasTabsProps) {
+export function TarefasTabs({
+  tarefasB,
+  tarefasC,
+  tarefasD,
+  tarefasE,
+  perfil,
+  pacientes,
+  usuarios,
+}: TarefasTabsProps) {
   const router = useRouter()
   const [tabAtiva, setTabAtiva] = useState<TabId>('pendencias')
   const [atualizando, setAtualizando] = useState<string | null>(null)
+  const [modalAberto, setModalAberto] = useState(false)
 
   const isAdmin = perfil === 'joao_admin'
   const isPablo = perfil === 'pablo'
@@ -495,7 +777,7 @@ export function TarefasTabs({ tarefasB, tarefasC, tarefasD, perfil }: TarefasTab
     ...(isPablo || isAdmin
       ? [{ id: 'retornos' as TabId, label: 'Retornos de Dieta', count: tarefasD.filter((t) => isPablo ? t.status !== 'bloqueada' : true).length }]
       : []),
-    ...(isAdmin ? [{ id: 'alteracoes' as TabId, label: 'Alteracoes' }] : []),
+    ...(isAdmin ? [{ id: 'alteracoes' as TabId, label: 'Alteracoes', count: tarefasE.length }] : []),
   ]
 
   const handleUpdate = useCallback(
@@ -574,9 +856,34 @@ export function TarefasTabs({ tarefasB, tarefasC, tarefasD, perfil }: TarefasTab
       )}
 
       {tabAtiva === 'alteracoes' && isAdmin && (
-        <div className="bg-[#111111] border border-[#2A2209] rounded-xl px-6 py-16 text-center">
-          <p className="text-[#8A7A5A] text-sm">Em breve -- Modulo E</p>
-        </div>
+        <>
+          {/* Button "+ Nova Alteracao" — above table, right-aligned */}
+          <div className="flex justify-end mb-4">
+            <button
+              type="button"
+              onClick={() => setModalAberto(true)}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-[#C9A84C] hover:bg-[#E2BC6A] text-[#0A0A0A] transition-colors"
+            >
+              <Plus size={16} />
+              Nova Alteracao
+            </button>
+          </div>
+
+          <TabelaAlteracoes
+            tarefas={tarefasE}
+            perfil={perfil}
+            onUpdate={handleUpdate}
+            atualizando={atualizando}
+          />
+
+          <NovaAlteracaoModal
+            aberto={modalAberto}
+            onFechar={() => setModalAberto(false)}
+            pacientes={pacientes}
+            usuarios={usuarios}
+            onSalvo={() => router.refresh()}
+          />
+        </>
       )}
     </>
   )

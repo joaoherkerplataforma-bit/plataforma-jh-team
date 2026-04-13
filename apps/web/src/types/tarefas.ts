@@ -1,5 +1,5 @@
 export type StatusTarefa = 'pendente' | 'bloqueada' | 'feito' | 'gravado' | 'entregue'
-export type ModuloTarefa = 'B' | 'C' | 'D'
+export type ModuloTarefa = 'B' | 'C' | 'D' | 'E'
 
 export interface PacienteResumo {
   id: string
