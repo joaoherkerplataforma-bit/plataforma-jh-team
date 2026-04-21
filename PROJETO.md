@@ -453,6 +453,92 @@ apps/web/src/
 
 **Proximo passo:** Implementar Modulos B, C e D (protocolos novos, fotos antes/depois, retorno dietetico).
 
+### Sessao 7 -- Modulos B, C, D e pagina /tarefas (2026-04-13)
+Fila operacional completa para Pablo, Joao Estagiario e Joao Admin com tabs por modulo.
+
+**Arquivos criados/modificados:**
+```
+apps/web/src/
+├── app/(protected)/tarefas/
+│   ├── page.tsx                          — Server Component: fetch tarefas + perfil + nome paciente
+│   └── tarefas-tabs.tsx                  — Client Component: 4 abas (Pendencias/Fotos 30 Dias/Retornos de Dieta/Alteracoes)
+├── app/api/tarefas/
+│   ├── route.ts                          — POST: criar tarefa avulsa (usado pela aba Alteracoes)
+│   └── [id]/
+│       ├── status/route.ts               — PATCH: transicao de status (feito/gravado/entregue)
+│       └── observacoes/route.ts          — PATCH: editar observacoes_joao (admin only)
+├── components/layout/sidebar.tsx         — Menu /tarefas liberado para joao_admin
+├── lib/supabase/service.ts               — Cliente service-role para route handlers
+└── types/tarefas.ts                      — Tipos: Tarefa, ModuloTarefa, StatusTarefa, labels
+
+supabase/migrations/
+└── 20260414000001_add_modulo_e.sql       — Adiciona valor 'E' ao enum modulo (Alteracoes)
+```
+
+**Funcionalidades implementadas:**
+- Tabs com nomes da operacao real: **Pendencias** (B), **Fotos 30 Dias** (C), **Retornos de Dieta** (D), **Alteracoes** (E)
+- Visibilidade por perfil:
+  - `joao_estagiario` → so ve Pendencias
+  - `pablo` → ve B, C e D (tarefas D bloqueadas ficam ocultas)
+  - `joao_admin` → ve todas as 4 abas, inclusive D bloqueadas com cadeado
+- Transicoes de status por perfil:
+  - Pablo marca **feito** em B/D, **feito** em C
+  - Joao marca **gravado** em C (libera D do mesmo paciente via trigger DB)
+  - Joao marca **entregue** em qualquer modulo
+- Observacoes do Joao com destaque dourado e edicao inline (admin only)
+- Highlight visual de prazo: neutro (no prazo), laranja (1-3 dias), vermelho (atrasado)
+- Modal "Nova alteracao" na aba E para registrar pedidos de ajuste avulso
+- Trigger DB `desbloquear_modulo_d` continua sendo a fonte da verdade para o desbloqueio do Modulo D
+
+**Validacoes executadas:**
+- `npx tsc --noEmit` — 0 erros
+- `next lint` — 0 warnings, 0 erros
+
+**Proximo passo:** Conectar webhooks Make → API para automatizar criacao de pacientes e tarefas a partir do Google Forms.
+
+### Sessao 8 -- Webhooks Make (2026-04-16)
+Cinco endpoints REST que recebem os Google Forms via Make e geram pacientes + tarefas automaticamente.
+
+**Arquivos criados:**
+```
+apps/web/src/
+├── app/api/webhooks/
+│   ├── anamnese/route.ts                 — POST: cria paciente + tarefa B com alternancia Pablo/Estagiario
+│   ├── fotos-iniciais/route.ts           — POST: registra formulario do paciente novo
+│   ├── treino/route.ts                   — POST: registra formulario do plano completo
+│   ├── fotos-30-dias/route.ts            — POST: cria tarefa C (Pablo monta Antes/Depois)
+│   └── retorno-dieta/route.ts            — POST: cria tarefa D bloqueada (espera Joao gravar)
+├── lib/
+│   ├── webhook-auth.ts                   — Helper de verificacao do Bearer WEBHOOK_SECRET
+│   └── dates.ts                          — Helpers: data_inicio = anamnese + 5 dias, data_entrega = +3/+4 dias
+└── scripts/test-webhooks.ts              — Script de teste local (npx tsx scripts/test-webhooks.ts)
+```
+
+**Regras de negocio aplicadas pelos webhooks:**
+- **Anamnese:** Match de paciente existente por (email) ou (nome+telefone). Se nao existir, cria novo paciente com `data_inicio = hoje + 5 dias`. Cria tarefa B com prazo +3 dias e responsavel definido pela `delegacao_controle` (alternancia Pablo/Estagiario, atualizada apos cada criacao).
+- **Fotos iniciais / Treino:** Apenas registram payload em `formularios_recebidos`. Se paciente nao existe, retornam 404 (anamnese deve vir primeiro).
+- **Fotos 30 dias:** Cria tarefa C para Pablo com prazo +4 dias.
+- **Retorno dieta:** Cria tarefa D bloqueada (`status = 'bloqueada'`) com `tarefa_pai_id` apontando para a ultima tarefa C do paciente. So fica disponivel quando Joao marcar a C como `gravado`.
+
+**Seguranca:**
+- Todos os endpoints exigem header `Authorization: Bearer ${WEBHOOK_SECRET}`
+- Token invalido → 401 Unauthorized
+- Payload invalido → 400 Bad Request com lista de campos faltantes
+- Service-role key usada no servidor (bypassa RLS, nunca exposta ao browser)
+
+**Testes executados (`scripts/test-webhooks.ts`):**
+1. Token invalido → **401** OK
+2. Anamnese paciente novo → **200** cria paciente + tarefa B
+3. Fotos iniciais → **200** registra formulario
+4. Treino → **200** registra formulario
+5. Fotos 30 dias → **200** cria tarefa C para Pablo
+6. Retorno dieta → **200** cria tarefa D bloqueada
+7. Anamnese duplicada → **200** reusa paciente existente (sem criar duplicata)
+8. Fotos iniciais com paciente inexistente → **404** OK
+9. Anamnese com campos faltando → **400** OK
+
+**Proximo passo:** Configurar os 5 cenarios no Make para apontar para os webhooks de producao em https://jh-team.vercel.app/api/webhooks/*.
+
 ### Sessao 9 -- Deploy no Vercel (2026-04-21)
 Plataforma publicada com URL pública funcional.
 
@@ -482,6 +568,46 @@ Plataforma publicada com URL pública funcional.
 - Deployment ID: `dpl_PFtyESoTWpg2qmd6nwFyahJSHMQ1`
 
 **Proximo passo:** Apontar o dominio definitivo (jhteam.com / consultoriajhteam.com / joaoherkerteam.com) para o projeto Vercel quando o registro estiver disponivel.
+
+---
+
+## Status atual do projeto (2026-04-21)
+
+### Pronto e funcional
+- **Infraestrutura:** Turborepo (apps/web + services/relatorio + packages) + Next.js 15.5 + TypeScript + Tailwind v3
+- **Banco de dados:** Supabase com 7 tabelas, RLS completa, trigger de desbloqueio do Modulo D, 9 migrations + seed + smoke tests
+- **Auth:** Login Supabase Auth + middleware de protecao + redirect por perfil (joao_admin / pablo / joao_estagiario / aluno)
+- **Layout:** Sidebar responsiva, tema claro/escuro com persistencia, identidade visual preto + dourado (#C9A84C)
+- **Modulo A (Controle de pacientes):** Dashboard com cards de resumo, tabela de 11 colunas, sistema de cores automatico, modal "Adicionar Paciente", observacoes editaveis inline, abas Ativos/Vencidos
+- **Modulos B, C, D, E (Tarefas):** Pagina /tarefas com 4 abas (Pendencias, Fotos 30 Dias, Retornos de Dieta, Alteracoes), visibilidade por perfil, transicoes de status, observacoes do Joao com destaque, alertas de prazo
+- **Webhooks Make → API (5 endpoints, todos testados):**
+  - `POST /api/webhooks/anamnese`
+  - `POST /api/webhooks/fotos-iniciais`
+  - `POST /api/webhooks/treino`
+  - `POST /api/webhooks/fotos-30-dias`
+  - `POST /api/webhooks/retorno-dieta`
+- **Deploy producao:** https://jh-team.vercel.app — auto-deploy ativo no push em `main`, env vars configuradas em Production
+
+### Em aberto / proximos passos
+1. **Configurar Make** — criar os 5 cenarios apontando os Google Forms para os webhooks de producao
+2. **Servico Railway** — implementar `services/relatorio` (cron 8h, WhatsApp Business API, composicao de imagem com Sharp)
+3. **Portal do aluno** — pagina /portal real (placeholder atualmente): redirecionamento WebDiet/MFit, historico de protocolos, calendario de frequencia
+4. **Migracao de dados** — importar pacientes existentes do Google Planilhas
+5. **Dominio definitivo** — apontar jhteam.com (1a opcao) para o projeto Vercel
+6. **Usuarios de producao** — criar contas reais (Joao, Pablo, Joao Estagiario) no Supabase Auth e vincular a tabela `usuarios`
+
+### Sessoes concluidas
+| # | Data | Entrega |
+|---|------|---------|
+| 1 | 2026-04-10 | Arquitetura fullstack |
+| 2 | 2026-04-10 | Database (migrations + RLS + seed) |
+| 3 | 2026-04-10 | Environment bootstrap (Turborepo + Next.js) |
+| 4 | 2026-04-10 | Auth + perfis de acesso |
+| 5 | 2026-04-10 | Modulo A (Controle de pacientes) |
+| 6 | 2026-04-10 | Layout base (sidebar + tema) |
+| 7 | 2026-04-13 | Modulos B, C, D + pagina /tarefas |
+| 8 | 2026-04-16 | Webhooks Make (5 endpoints + testes) |
+| 9 | 2026-04-21 | Deploy Vercel (https://jh-team.vercel.app) |
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
