@@ -90,6 +90,40 @@ async function main() {
     nome_completo: 'Teste Incompleto',
   })
 
+  // Test 9: Anamnese formato combinado Google Forms - Trimestral - Dieta
+  await testEndpoint('9. Anamnese - Formato combinado: "Trimestral - Dieta"', '/api/webhooks/anamnese', {
+    nome_completo: 'Carlos Forms Dieta',
+    email: 'carlos.forms.dieta@email.com',
+    telefone: '11988887777',
+    qual_plano: 'Trimestral - Dieta',
+    tempo_plano: 'Trimestral',
+  })
+
+  // Test 10: Anamnese formato combinado Google Forms - Semestral - Dieta + Treino
+  await testEndpoint('10. Anamnese - Formato combinado: "Semestral - Dieta + Treino"', '/api/webhooks/anamnese', {
+    nome_completo: 'Joana Forms Completo',
+    email: 'joana.forms.completo@email.com',
+    telefone: '11977776666',
+    qual_plano: 'Semestral - Dieta + Treino',
+    tempo_plano: 'Semestral',
+  })
+
+  // Test 11: Anamnese formato combinado Anual - Dieta + Treino sem tempo_plano
+  await testEndpoint('11. Anamnese - Formato combinado sem tempo_plano: "Anual - Dieta + Treino"', '/api/webhooks/anamnese', {
+    nome_completo: 'Pedro Forms Anual',
+    email: 'pedro.forms.anual@email.com',
+    telefone: '11966665555',
+    qual_plano: 'Anual - Dieta + Treino',
+  })
+
+  // Test 12: Anamnese formato combinado invalido (tempo desconhecido)
+  await testEndpoint('12. Anamnese - Combinado invalido (deve retornar 400)', '/api/webhooks/anamnese', {
+    nome_completo: 'Teste Invalido',
+    email: 'invalido@email.com',
+    qual_plano: 'Mensal - Dieta',
+    tempo_plano: 'Mensal',
+  })
+
   console.log('\n=== Testes concluidos ===')
 }
 

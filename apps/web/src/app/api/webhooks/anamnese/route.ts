@@ -3,30 +3,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { verificarWebhookToken } from '@/lib/webhook-auth'
 import { hoje, addDias, addMeses } from '@/lib/dates'
+import { parsePlano, DURACAO_MESES } from '@/lib/parse-plano'
 
 interface AnamnesePayload {
   nome_completo: string
   email: string
   telefone?: string
-  qual_plano: 'Dieta' | 'Completo'
-  tempo_plano: 'Trimestral' | 'Semestral' | 'Anual'
-}
-
-const PLANO_MAP: Record<string, string> = {
-  Dieta: 'dieta',
-  Completo: 'completo',
-}
-
-const DURACAO_MAP: Record<string, string> = {
-  Trimestral: 'trimestral',
-  Semestral: 'semestral',
-  Anual: 'anual',
-}
-
-const DURACAO_MESES: Record<string, number> = {
-  trimestral: 3,
-  semestral: 6,
-  anual: 12,
+  // Aceita tanto literal ("Dieta" | "Completo") quanto formato combinado
+  // do Google Forms (ex.: "Trimestral - Dieta", "Semestral - Dieta + Treino")
+  qual_plano: string
+  tempo_plano?: string
 }
 
 export async function POST(request: NextRequest) {
@@ -43,16 +29,26 @@ export async function POST(request: NextRequest) {
 
   const { nome_completo, email, telefone, qual_plano, tempo_plano } = body
 
-  if (!nome_completo || !email || !qual_plano || !tempo_plano) {
-    return NextResponse.json({ error: 'Campos obrigatorios: nome_completo, email, qual_plano, tempo_plano' }, { status: 400 })
+  if (!nome_completo || !email || !qual_plano) {
+    return NextResponse.json({ error: 'Campos obrigatorios: nome_completo, email, qual_plano' }, { status: 400 })
   }
 
-  const tipo_plano = PLANO_MAP[qual_plano]
-  const duracao_plano = DURACAO_MAP[tempo_plano]
+  const plano = parsePlano(qual_plano, tempo_plano)
 
-  if (!tipo_plano || !duracao_plano) {
-    return NextResponse.json({ error: 'Valores invalidos para qual_plano ou tempo_plano' }, { status: 400 })
+  if (!plano) {
+    return NextResponse.json(
+      {
+        error: 'Valores invalidos para qual_plano ou tempo_plano',
+        detalhes:
+          'qual_plano aceita "Dieta" | "Completo" (com tempo_plano "Trimestral"|"Semestral"|"Anual") ' +
+          'ou formato combinado "Trimestral - Dieta", "Semestral - Dieta + Treino", etc.',
+        recebido: { qual_plano, tempo_plano },
+      },
+      { status: 400 }
+    )
   }
+
+  const { tipo_plano, duracao_plano } = plano
 
   const meses = DURACAO_MESES[duracao_plano]
   const data_inicio = addDias(hoje(), 5)
