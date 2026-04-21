@@ -6,6 +6,11 @@ Cliente: João Herker Personal (marca: JH TEAM)
 Nome da plataforma: JH TEAM
 Domínio desejado: jhteam.com (1ª opção), consultoriajhteam.com (2ª), joaoherkerteam.com (3ª)
 
+## URL pública (Vercel)
+- Produção: https://jh-team.vercel.app
+- Projeto Vercel: freitasrafabjs-projects/jh-team
+- Auto-deploy: push em `main` dispara build (vercel.json)
+
 ## Stack técnica
 - Frontend: Next.js + TypeScript
 - Banco de dados + Auth: Supabase
@@ -447,6 +452,36 @@ apps/web/src/
 - `next lint` — 0 warnings, 0 erros
 
 **Proximo passo:** Implementar Modulos B, C e D (protocolos novos, fotos antes/depois, retorno dietetico).
+
+### Sessao 9 -- Deploy no Vercel (2026-04-21)
+Plataforma publicada com URL pública funcional.
+
+**Configuracao Vercel:**
+- Projeto linkado: `freitasrafabjs-projects/jh-team` (projectId `prj_twOkRPVLfSU9nF3HqFVaPR75Mtto`)
+- Framework detectado: Next.js
+- Build command: `npx turbo run build --filter=@jh-team/web...`
+- Output directory: `apps/web/.next`
+- Install command: `npm install`
+- Auto-deploy ativo no push em `main` via `vercel.json`
+
+**Variaveis de ambiente configuradas em Production:**
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `WEBHOOK_SECRET`
+
+**Ajuste no Turborepo:**
+- `turbo.json` recebeu bloco `env` no task `build` declarando as 5 variaveis (4 do Supabase/webhook + `NODE_ENV`).
+- Sem isso o Turborepo nao expoe as env vars ao processo do Next.js e o build quebra na geracao de paginas que usam `createClient()` em build time.
+
+**Deploy de producao:**
+- URL canonica: https://jh-team.vercel.app
+- URL alternativas: https://jh-team-freitasrafabjs-projects.vercel.app
+- Build time: 59s
+- Status: Ready (HTTP 200)
+- Deployment ID: `dpl_PFtyESoTWpg2qmd6nwFyahJSHMQ1`
+
+**Proximo passo:** Apontar o dominio definitivo (jhteam.com / consultoriajhteam.com / joaoherkerteam.com) para o projeto Vercel quando o registro estiver disponivel.
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
