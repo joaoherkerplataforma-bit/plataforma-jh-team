@@ -9,7 +9,8 @@ export interface Paciente {
   tipo_plano: 'dieta' | 'completo'
   duracao_plano: 'trimestral' | 'semestral' | 'anual'
   observacoes: string | null
-  status: 'ativo' | 'vencido' | 'pausado'
+  status: 'ativo' | 'vencido' | 'pausado' | 'cancelado'
+  origem?: string | null
   created_at: string
   updated_at: string
 }

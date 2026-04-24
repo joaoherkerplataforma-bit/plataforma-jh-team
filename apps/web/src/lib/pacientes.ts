@@ -27,6 +27,7 @@ export function calcularResumo(pacientes: Paciente[]): ResumoCards {
   let vencendoEmBreve = 0
 
   for (const p of pacientes) {
+    if (p.status === 'cancelado') continue
     const diasAtivos = calcularDiasEntreDatas(p.data_vencimento_plano, hoje)
     if (diasAtivos < 0) {
       totalVencidos++
@@ -48,19 +49,23 @@ export function calcularResumo(pacientes: Paciente[]): ResumoCards {
 export function separarPacientes(pacientes: PacienteComCalculos[]): {
   ativos: PacienteComCalculos[]
   vencidos: PacienteComCalculos[]
+  cancelados: PacienteComCalculos[]
 } {
   const ativos: PacienteComCalculos[] = []
   const vencidos: PacienteComCalculos[] = []
+  const cancelados: PacienteComCalculos[] = []
 
   for (const p of pacientes) {
-    if (p.dias_ativos < 0) {
+    if (p.status === 'cancelado') {
+      cancelados.push(p)
+    } else if (p.dias_ativos < 0) {
       vencidos.push(p)
     } else {
       ativos.push(p)
     }
   }
 
-  return { ativos, vencidos }
+  return { ativos, vencidos, cancelados }
 }
 
 export function formatarData(dataStr: string | null): string {
