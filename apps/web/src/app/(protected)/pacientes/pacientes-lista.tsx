@@ -1,6 +1,7 @@
 'use client'
 
 import { useMemo, useState, useTransition } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Search, Ban, RotateCcw } from 'lucide-react'
 import type { Paciente, PacienteComCalculos } from '@/types/pacientes'
@@ -266,7 +267,12 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                     className={`border-b border-[#1A1A1A] hover:bg-[#1A1500]/30 transition-colors ${bgAlt} ${linhaClasse}`}
                   >
                     <td className={`px-4 py-3 whitespace-nowrap ${nomeClasse}`}>
-                      {p.nome}
+                      <Link
+                        href={`/pacientes/${p.id}`}
+                        className="hover:text-[#C9A84C] hover:underline transition-colors"
+                      >
+                        {p.nome}
+                      </Link>
                     </td>
                     <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
                       {formatarData(p.data_inicio)}
