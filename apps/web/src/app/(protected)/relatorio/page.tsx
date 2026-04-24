@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { calcularCamposPaciente, calcularResumo, separarPacientes } from '@/lib/pacientes'
 import type { Paciente } from '@/types/pacientes'
-import { PacientesTable } from '@/app/(protected)/dashboard/pacientes-table'
+import { PacientesTable } from '@/app/(protected)/relatorio/pacientes-table'
 
 interface TarefasResumo {
   tarefas_em_aberto: number

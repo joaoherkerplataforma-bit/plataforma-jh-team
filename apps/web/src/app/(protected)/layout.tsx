@@ -28,7 +28,7 @@ export default async function ProtectedLayout({
   if (!usuario) {
     // User has a valid Supabase Auth session but no entry in the `usuarios`
     // table. Redirecting to /login directly would cause an infinite loop
-    // (middleware detects the session and redirects back to /dashboard).
+    // (middleware detects the session and redirects back to /relatorio).
     // Routing through /api/auth/signout clears the session first.
     redirect('/api/auth/signout')
   }

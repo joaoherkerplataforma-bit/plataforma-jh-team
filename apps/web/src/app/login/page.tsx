@@ -61,7 +61,7 @@ export default function LoginPage() {
       .single()
 
     const perfil = usuario?.perfil as PerfilAcesso | undefined
-    const redirectTo = perfil ? PERFIL_ROUTES[perfil] : '/dashboard'
+    const redirectTo = perfil ? PERFIL_ROUTES[perfil] : '/relatorio'
 
     window.location.href = redirectTo
   }

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  LayoutDashboard,
+  BarChart3,
   Users,
   CheckSquare,
   BookOpen,
@@ -22,16 +22,16 @@ const PERFIL_LABELS: Record<PerfilAcesso, string> = {
 
 const menuItems = [
   {
-    label: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutDashboard,
-    perfis: ['joao_admin'] as PerfilAcesso[],
+    label: 'Relatório',
+    href: '/relatorio',
+    icon: BarChart3,
+    perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
   },
   {
     label: 'Pacientes',
-    href: '/dashboard',
+    href: '/pacientes',
     icon: Users,
-    perfis: ['joao_admin'] as PerfilAcesso[],
+    perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
   },
   {
     label: 'Tarefas',

@@ -36,7 +36,8 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   const isProtectedRoute =
-    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/relatorio') ||
+    pathname.startsWith('/pacientes') ||
     pathname.startsWith('/tarefas') ||
     pathname.startsWith('/portal')
 
@@ -63,13 +64,13 @@ export async function updateSession(request: NextRequest) {
     // infinite loop: dashboard -> login -> dashboard when !usuario.
     if (usuario?.perfil) {
       const perfilRoutes: Record<string, string> = {
-        joao_admin: '/dashboard',
-        pablo: '/tarefas',
-        joao_estagiario: '/tarefas',
+        joao_admin: '/relatorio',
+        pablo: '/relatorio',
+        joao_estagiario: '/relatorio',
         aluno: '/portal',
       }
 
-      const redirectTo = perfilRoutes[usuario.perfil] ?? '/dashboard'
+      const redirectTo = perfilRoutes[usuario.perfil] ?? '/relatorio'
       const url = request.nextUrl.clone()
       url.pathname = redirectTo
 

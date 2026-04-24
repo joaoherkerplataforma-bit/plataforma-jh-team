@@ -12,8 +12,8 @@ import {
   badgeStatusPlano,
   corNomePaciente,
 } from '@/lib/pacientes'
-import { ObservacoesInline } from '@/app/(protected)/dashboard/observacoes-inline'
-import { AdicionarPacienteModal } from '@/app/(protected)/dashboard/adicionar-paciente-modal'
+import { ObservacoesInline } from '@/app/(protected)/relatorio/observacoes-inline'
+import { AdicionarPacienteModal } from '@/app/(protected)/relatorio/adicionar-paciente-modal'
 
 interface TarefasResumo {
   tarefas_em_aberto: number

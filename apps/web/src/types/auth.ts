@@ -11,10 +11,10 @@ export interface UserProfile {
 }
 
 export const PERFIL_ROUTES: Record<PerfilAcesso, string> = {
-  joao_admin: '/dashboard',
-  pablo: '/tarefas',
-  joao_estagiario: '/tarefas',
+  joao_admin: '/relatorio',
+  pablo: '/relatorio',
+  joao_estagiario: '/relatorio',
   aluno: '/portal',
 } as const
 
-export const PROTECTED_ROUTES = ['/dashboard', '/tarefas', '/portal'] as const
+export const PROTECTED_ROUTES = ['/relatorio', '/pacientes', '/tarefas', '/portal'] as const
