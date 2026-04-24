@@ -298,7 +298,7 @@ function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBPro
           <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
             <th className={thClass}>Nome</th>
             <th className={thClass}>Email</th>
-            <th className={thClass}>Responsavel</th>
+            <th className={thCenter}>Responsavel</th>
             <th className={thClass}>Plano</th>
             <th className={thClass}>Data Envio</th>
             <th className={thClass}>Data Entrega</th>
@@ -329,7 +329,7 @@ function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBPro
                     {t.paciente?.nome ?? '-'}
                   </td>
                   <td className={tdClass}>{t.paciente?.email ?? '-'}</td>
-                  <td className={tdClass}>
+                  <td className={`${tdClass} text-center`}>
                     <ResponsavelBadge nome={t.responsavel?.nome} perfil={t.responsavel?.perfil} />
                   </td>
                   <td className={tdClass}>
@@ -532,7 +532,7 @@ function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEPro
         <thead>
           <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
             <th className={thClass}>Nome do Aluno</th>
-            <th className={thClass}>Responsavel</th>
+            <th className={thCenter}>Responsavel</th>
             <th className={thClass}>Data do Pedido</th>
             <th className={thClass}>Observacoes</th>
             <th className={thCenter}>Status</th>
@@ -560,7 +560,7 @@ function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEPro
                   <td className="px-4 py-3 font-medium whitespace-nowrap text-[#F5F0E8]">
                     {t.paciente?.nome ?? '-'}
                   </td>
-                  <td className={tdClass}>
+                  <td className={`${tdClass} text-center`}>
                     <ResponsavelBadge nome={t.responsavel?.nome} perfil={t.responsavel?.perfil} />
                   </td>
                   <td className={tdClass}>{formatarData(t.data_criacao)}</td>
