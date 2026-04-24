@@ -5,6 +5,14 @@ import { PacientesLista } from '@/app/(protected)/pacientes/pacientes-lista'
 export default async function PacientesPage() {
   const supabase = await createClient()
 
+  const { data: { user } } = await supabase.auth.getUser()
+  const { data: usuarioData } = await supabase
+    .from('usuarios')
+    .select('perfil')
+    .eq('id', user?.id ?? '')
+    .single()
+  const perfilAtual = usuarioData?.perfil ?? ''
+
   const { data: pacientesRaw } = await supabase
     .from('pacientes')
     .select('*')
@@ -12,5 +20,5 @@ export default async function PacientesPage() {
 
   const pacientes = (pacientesRaw as Paciente[] | null) ?? []
 
-  return <PacientesLista pacientes={pacientes} />
+  return <PacientesLista pacientes={pacientes} perfilAtual={perfilAtual} />
 }
