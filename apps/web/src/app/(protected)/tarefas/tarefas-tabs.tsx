@@ -93,6 +93,38 @@ function linhaAtrasada(tarefa: Tarefa): boolean {
   return diasAteOuDesde(tarefa.data_prazo) > 0
 }
 
+/* ─────────────────── ResponsavelBadge ─────────────────── */
+
+interface ResponsavelBadgeProps {
+  nome: string | undefined
+  perfil: string | undefined
+}
+
+function ResponsavelBadge({ nome, perfil }: ResponsavelBadgeProps) {
+  if (!nome) return <span className="text-sm text-[#8A7A5A]">-</span>
+
+  const primeiroNome = nome.split(' ')[0]
+
+  let bg = '#2A2209'
+  let textColor = '#F5F0E8'
+  if (perfil === 'joao_estagiario') {
+    bg = '#93C5FD'
+    textColor = '#0F172A'
+  } else if (perfil === 'pablo') {
+    bg = '#C4B5FD'
+    textColor = '#0F172A'
+  }
+
+  return (
+    <span
+      className="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+      style={{ backgroundColor: bg, color: textColor }}
+    >
+      {primeiroNome}
+    </span>
+  )
+}
+
 /* ─────────────────── Style constants ─────────────────── */
 
 const thClass =
@@ -298,7 +330,7 @@ function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBPro
                   </td>
                   <td className={tdClass}>{t.paciente?.email ?? '-'}</td>
                   <td className={tdClass}>
-                    {t.responsavel?.nome.split(' ')[0] ?? '-'}
+                    <ResponsavelBadge nome={t.responsavel?.nome} perfil={t.responsavel?.perfil} />
                   </td>
                   <td className={tdClass}>
                     {t.paciente ? TIPO_PLANO_LABELS[t.paciente.tipo_plano] : '-'}
@@ -529,7 +561,7 @@ function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEPro
                     {t.paciente?.nome ?? '-'}
                   </td>
                   <td className={tdClass}>
-                    {t.responsavel?.nome.split(' ')[0] ?? '-'}
+                    <ResponsavelBadge nome={t.responsavel?.nome} perfil={t.responsavel?.perfil} />
                   </td>
                   <td className={tdClass}>{formatarData(t.data_criacao)}</td>
                   <td className="px-4 py-3">
