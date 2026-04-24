@@ -6,14 +6,15 @@ import { PacientePerfil } from '@/app/(protected)/pacientes/[id]/paciente-perfil
 export default async function PacienteDetalhe({
   params,
 }: {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const { data: paciente, error } = await supabase
     .from('pacientes')
     .select('*')
-    .eq('id', params.id)
+    .eq('id', id)
     .single()
 
   if (error || !paciente) notFound()
@@ -33,7 +34,7 @@ export default async function PacienteDetalhe({
     .select(
       'id, status, data_prazo, created_at, responsavel:usuarios(id, nome, perfil)',
     )
-    .eq('paciente_id', params.id)
+    .eq('paciente_id', id)
     .eq('modulo', 'B')
     .order('created_at', { ascending: false })
     .limit(1)
