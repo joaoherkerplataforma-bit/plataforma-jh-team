@@ -13,7 +13,10 @@ interface AnamnesePayload {
   // do Google Forms (ex.: "Trimestral - Dieta", "Semestral - Dieta + Treino")
   qual_plano: string
   tempo_plano?: string
+  origem?: string
 }
+
+const ORIGENS_VALIDAS = ['Instagram', 'TikTok', 'YouTube', 'Indicação'] as const
 
 export async function POST(request: NextRequest) {
   if (!verificarWebhookToken(request)) {
@@ -31,6 +34,13 @@ export async function POST(request: NextRequest) {
 
   if (!nome_completo || !email || !qual_plano) {
     return NextResponse.json({ error: 'Campos obrigatorios: nome_completo, email, qual_plano' }, { status: 400 })
+  }
+
+  if (body.origem && !ORIGENS_VALIDAS.includes(body.origem as typeof ORIGENS_VALIDAS[number])) {
+    return NextResponse.json(
+      { error: 'Valor inválido para origem', validos: ORIGENS_VALIDAS },
+      { status: 400 }
+    )
   }
 
   const plano = parsePlano(qual_plano, tempo_plano)
@@ -84,6 +94,7 @@ export async function POST(request: NextRequest) {
           data_vencimento_plano,
           proximo_retorno,
           status: 'ativo',
+          origem: body.origem ?? null,
         })
         .select('id')
         .single()
