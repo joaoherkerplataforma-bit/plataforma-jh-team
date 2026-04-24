@@ -111,13 +111,13 @@ function ResponsavelBadge({ nome, perfil }: ResponsavelBadgeProps) {
     bg = '#93C5FD'
     textColor = '#0F172A'
   } else if (perfil === 'pablo') {
-    bg = '#C4B5FD'
-    textColor = '#0F172A'
+    bg = '#7C3AED'
+    textColor = '#FFFFFF'
   }
 
   return (
     <span
-      className="inline-block px-2 py-0.5 rounded-full text-xs font-medium"
+      className="inline-flex justify-center items-center text-center px-2 py-0.5 rounded-full text-xs font-medium"
       style={{ backgroundColor: bg, color: textColor }}
     >
       {primeiroNome}
