@@ -3,9 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { verificarWebhookToken } from '@/lib/webhook-auth'
 import { hoje, addDias } from '@/lib/dates'
+import { type PerguntaResposta, isValidRespostas } from '@/lib/webhook-respostas'
 
 interface Fotos30DiasPayload {
   nome_completo: string
+  respostas?: PerguntaResposta[]
 }
 
 export async function POST(request: NextRequest) {
@@ -24,6 +26,15 @@ export async function POST(request: NextRequest) {
 
   if (!nome_completo) {
     return NextResponse.json({ error: 'Campo obrigatorio: nome_completo' }, { status: 400 })
+  }
+
+  // Defensive validation: if respostas vier malformado, logar e remover
+  // (nao bloquear o webhook — preserva compat e robustez ao Make).
+  if (body.respostas !== undefined && !isValidRespostas(body.respostas)) {
+    console.warn(
+      `[webhook fotos-30-dias] respostas malformado para "${nome_completo}", ignorando campo`
+    )
+    delete body.respostas
   }
 
   const supabase = createServiceClient()

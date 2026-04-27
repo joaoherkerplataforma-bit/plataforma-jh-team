@@ -4,6 +4,7 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { verificarWebhookToken } from '@/lib/webhook-auth'
 import { hoje, addDias, addMeses } from '@/lib/dates'
 import { parsePlano, DURACAO_MESES } from '@/lib/parse-plano'
+import { type PerguntaResposta, isValidRespostas } from '@/lib/webhook-respostas'
 
 interface AnamnesePayload {
   nome_completo: string
@@ -14,6 +15,7 @@ interface AnamnesePayload {
   qual_plano: string
   tempo_plano?: string
   origem?: string
+  respostas?: PerguntaResposta[]
 }
 
 const ORIGENS_VALIDAS = ['Instagram', 'TikTok', 'YouTube', 'Indicação'] as const
@@ -41,6 +43,15 @@ export async function POST(request: NextRequest) {
       { error: 'Valor inválido para origem', validos: ORIGENS_VALIDAS },
       { status: 400 }
     )
+  }
+
+  // Defensive validation: if respostas vier malformado, logar e remover
+  // (nao bloquear o webhook — preserva compat e robustez ao Make).
+  if (body.respostas !== undefined && !isValidRespostas(body.respostas)) {
+    console.warn(
+      `[webhook anamnese] respostas malformado para "${nome_completo}", ignorando campo`
+    )
+    delete body.respostas
   }
 
   const plano = parsePlano(qual_plano, tempo_plano)

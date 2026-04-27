@@ -3,28 +3,11 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createServiceClient } from '@/lib/supabase/service'
 import { verificarWebhookToken } from '@/lib/webhook-auth'
 import { hoje, addDias } from '@/lib/dates'
-
-interface PerguntaResposta {
-  pergunta: string
-  resposta: string
-}
+import { type PerguntaResposta, isValidRespostas } from '@/lib/webhook-respostas'
 
 interface RetornoDietaPayload {
   nome_completo: string
   respostas?: PerguntaResposta[]
-}
-
-function isValidRespostas(value: unknown): value is PerguntaResposta[] {
-  return (
-    Array.isArray(value) &&
-    value.every(
-      (item) =>
-        typeof item === 'object' &&
-        item !== null &&
-        typeof (item as PerguntaResposta).pergunta === 'string' &&
-        typeof (item as PerguntaResposta).resposta === 'string'
-    )
-  )
 }
 
 export async function POST(request: NextRequest) {
