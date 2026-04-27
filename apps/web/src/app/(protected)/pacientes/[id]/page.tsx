@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { Paciente } from '@/types/pacientes'
+import type { FormularioRecebido } from '@/types/formularios'
 import { PacientePerfil } from '@/app/(protected)/pacientes/[id]/paciente-perfil'
 
 export default async function PacienteDetalhe({
@@ -50,11 +51,19 @@ export default async function PacienteDetalhe({
     : (responsavelRaw ?? null)
   const responsavelNome = responsavelObj?.nome ?? null
 
+  const { data: formulariosData } = await supabase
+    .from('formularios_recebidos')
+    .select('id, paciente_id, tipo_formulario, dados_raw, criado_em')
+    .eq('paciente_id', id)
+    .order('criado_em', { ascending: true })
+  const formularios = (formulariosData ?? []) as FormularioRecebido[]
+
   return (
     <PacientePerfil
       paciente={paciente as Paciente}
       perfilAtual={perfilAtual}
       responsavelNome={responsavelNome}
+      formularios={formularios}
     />
   )
 }

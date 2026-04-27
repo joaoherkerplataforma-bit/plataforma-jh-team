@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import type { Paciente, PacienteComCalculos } from '@/types/pacientes'
 import { TIPO_PLANO_LABELS, TEMPO_PLANO_LABELS } from '@/types/pacientes'
+import type { FormularioRecebido } from '@/types/formularios'
 import { calcularCamposPaciente, badgeStatusPlano } from '@/lib/pacientes'
 import { Timeline } from '@/app/(protected)/pacientes/[id]/timeline'
 import { AnaliseIaPlaceholder } from '@/app/(protected)/pacientes/[id]/analise-ia-placeholder'
@@ -13,6 +14,7 @@ interface PacientePerfilProps {
   paciente: Paciente
   perfilAtual: string
   responsavelNome: string | null
+  formularios: FormularioRecebido[]
 }
 
 function badgeStatusHeader(
@@ -37,6 +39,7 @@ export function PacientePerfil({
   paciente,
   perfilAtual: _perfilAtual,
   responsavelNome,
+  formularios: _formularios,
 }: PacientePerfilProps) {
   const pacienteCalculado = useMemo(
     () => calcularCamposPaciente(paciente),
