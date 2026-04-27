@@ -1,13 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import type { CardFormulario } from '@/types/formularios'
 import { formatarData } from '@/lib/pacientes'
+import { FormularioModal } from '@/app/(protected)/pacientes/[id]/formulario-modal'
 
 interface FormularioCardProps {
   card: CardFormulario
 }
 
 export function FormularioCard({ card }: FormularioCardProps) {
+  const [modalAberto, setModalAberto] = useState(false)
   const respondido = card.status === 'respondido'
 
   const titulo = card.cicloNumero
@@ -53,6 +56,7 @@ export function FormularioCard({ card }: FormularioCardProps) {
       <button
         type="button"
         disabled={!respondido}
+        onClick={() => respondido && setModalAberto(true)}
         className={`mt-auto inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-medium transition-colors ${
           respondido
             ? 'bg-[#C9A84C]/15 text-[#C9A84C] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
@@ -61,6 +65,14 @@ export function FormularioCard({ card }: FormularioCardProps) {
       >
         Ver respostas
       </button>
+
+      {card.formulario && (
+        <FormularioModal
+          formulario={card.formulario}
+          aberto={modalAberto}
+          onFechar={() => setModalAberto(false)}
+        />
+      )}
     </div>
   )
 }
