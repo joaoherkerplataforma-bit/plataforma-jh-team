@@ -4,8 +4,27 @@ import { createServiceClient } from '@/lib/supabase/service'
 import { verificarWebhookToken } from '@/lib/webhook-auth'
 import { hoje, addDias } from '@/lib/dates'
 
+interface PerguntaResposta {
+  pergunta: string
+  resposta: string
+}
+
 interface RetornoDietaPayload {
   nome_completo: string
+  respostas?: PerguntaResposta[]
+}
+
+function isValidRespostas(value: unknown): value is PerguntaResposta[] {
+  return (
+    Array.isArray(value) &&
+    value.every(
+      (item) =>
+        typeof item === 'object' &&
+        item !== null &&
+        typeof (item as PerguntaResposta).pergunta === 'string' &&
+        typeof (item as PerguntaResposta).resposta === 'string'
+    )
+  )
 }
 
 export async function POST(request: NextRequest) {
@@ -24,6 +43,15 @@ export async function POST(request: NextRequest) {
 
   if (!nome_completo) {
     return NextResponse.json({ error: 'Campo obrigatorio: nome_completo' }, { status: 400 })
+  }
+
+  // Defensive validation: if respostas vier malformado, logar e remover
+  // (nao bloquear o webhook — preserva compat e robustez ao Make).
+  if (body.respostas !== undefined && !isValidRespostas(body.respostas)) {
+    console.warn(
+      `[webhook retorno-dieta] respostas malformado para "${nome_completo}", ignorando campo`
+    )
+    delete body.respostas
   }
 
   const supabase = createServiceClient()
