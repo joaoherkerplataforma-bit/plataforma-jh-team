@@ -8,6 +8,7 @@ import { TIPO_PLANO_LABELS, TEMPO_PLANO_LABELS } from '@/types/pacientes'
 import type { FormularioRecebido } from '@/types/formularios'
 import { calcularCamposPaciente, badgeStatusPlano } from '@/lib/pacientes'
 import { Timeline } from '@/app/(protected)/pacientes/[id]/timeline'
+import { FormulariosSection } from '@/app/(protected)/pacientes/[id]/formularios-section'
 import { AnaliseIaPlaceholder } from '@/app/(protected)/pacientes/[id]/analise-ia-placeholder'
 
 interface PacientePerfilProps {
@@ -39,7 +40,7 @@ export function PacientePerfil({
   paciente,
   perfilAtual: _perfilAtual,
   responsavelNome,
-  formularios: _formularios,
+  formularios,
 }: PacientePerfilProps) {
   const pacienteCalculado = useMemo(
     () => calcularCamposPaciente(paciente),
@@ -80,6 +81,11 @@ export function PacientePerfil({
       </div>
 
       <Timeline paciente={pacienteCalculado} responsavelNome={responsavelNome} />
+
+      <FormulariosSection
+        formularios={formularios}
+        tipoPlano={paciente.tipo_plano}
+      />
 
       <AnaliseIaPlaceholder />
     </div>
