@@ -45,5 +45,8 @@ next-env.d.ts
 supabase/.branches
 supabase/.temp
 
+# Backups locais (dumps de schema pré-migração) — NUNCA commitar
+backups/
+
 # Claude Code — estado runtime de agentes (local, por-desenvolvedor)
 .claude/agent-memory/
