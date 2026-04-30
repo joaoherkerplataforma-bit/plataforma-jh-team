@@ -8,6 +8,7 @@ import {
   Users,
   CheckSquare,
   BookOpen,
+  Film,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -31,6 +32,12 @@ const menuItems = [
     label: 'Pacientes',
     href: '/pacientes',
     icon: Users,
+    perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
+  },
+  {
+    label: 'Videoaulas',
+    href: '/pacientes/videoaulas',
+    icon: Film,
     perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
   },
   {
