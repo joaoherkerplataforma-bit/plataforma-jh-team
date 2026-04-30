@@ -1,12 +1,18 @@
 import { Eye } from 'lucide-react'
 import type { VideoaulaComProgresso } from '@/types/videoaulas'
+import type { Paciente } from '@/types/pacientes'
+import type { FormularioRecebido } from '@/types/formularios'
+import type { ProtocoloAtivo } from '@/lib/protocolos'
 import { VideoaulasList } from '@/app/(protected)/portal/videoaulas-list'
-import { AreaPersonalizadaPlaceholder } from '@/app/(protected)/portal/area-personalizada-placeholder'
+import { AreaPersonalizada } from '@/app/(protected)/portal/area-personalizada'
 
 interface PortalContentProps {
   videoaulasComProgresso: VideoaulaComProgresso[]
   acessoLiberado: boolean
   modoPreview?: boolean
+  paciente: Paciente | null
+  protocolo: ProtocoloAtivo | null
+  formularios: FormularioRecebido[]
 }
 
 /**
@@ -18,6 +24,9 @@ export function PortalContent({
   videoaulasComProgresso,
   acessoLiberado,
   modoPreview = false,
+  paciente,
+  protocolo,
+  formularios,
 }: PortalContentProps) {
   return (
     <div className="max-w-3xl mx-auto">
@@ -36,11 +45,15 @@ export function PortalContent({
         <div className="h-px w-32 mt-2 bg-gradient-to-r from-[#C9A84C] to-transparent" />
       </header>
 
-      {acessoLiberado ? (
-        // Acesso liberado: mostra área personalizada (placeholder por enquanto)
-        // e mantém a trilha de videoaulas como referência (todas assistidas).
+      {acessoLiberado && paciente ? (
+        // Acesso liberado: mostra área personalizada real e mantém a trilha de
+        // videoaulas como referência (todas assistidas).
         <>
-          <AreaPersonalizadaPlaceholder />
+          <AreaPersonalizada
+            paciente={paciente}
+            protocolo={protocolo}
+            formularios={formularios}
+          />
 
           {videoaulasComProgresso.length > 0 && (
             <section className="mt-8">
