@@ -10,6 +10,7 @@ import {
   BookOpen,
   Film,
   ClipboardList,
+  UserCog,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -51,6 +52,12 @@ const menuItems = [
     label: 'Formulários',
     href: '/formularios',
     icon: ClipboardList,
+    perfis: ['joao_admin'] as PerfilAcesso[],
+  },
+  {
+    label: 'Equipe',
+    href: '/equipe',
+    icon: UserCog,
     perfis: ['joao_admin'] as PerfilAcesso[],
   },
   {
