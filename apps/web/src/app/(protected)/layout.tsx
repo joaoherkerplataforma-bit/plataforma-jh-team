@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import type { UserProfile } from '@/types/auth'
-import { ThemeProvider } from '@/components/theme-provider'
 import { AppLayout } from '@/components/layout/app-layout'
 
 export default async function ProtectedLayout({
@@ -43,11 +42,5 @@ export default async function ProtectedLayout({
     updated_at: usuario.updated_at,
   }
 
-  return (
-    <ThemeProvider>
-      <AppLayout user={userProfile}>
-        {children}
-      </AppLayout>
-    </ThemeProvider>
-  )
+  return <AppLayout user={userProfile}>{children}</AppLayout>
 }

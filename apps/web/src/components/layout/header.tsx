@@ -1,9 +1,8 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Sun, Moon, LogOut, Menu } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { useTheme } from '@/components/theme-provider'
 import type { UserProfile, PerfilAcesso } from '@/types/auth'
 
 const PERFIL_LABELS: Record<PerfilAcesso, string> = {
@@ -19,7 +18,6 @@ interface HeaderProps {
 }
 
 export function Header({ user, onToggleSidebar }: HeaderProps) {
-  const { theme, toggleTheme } = useTheme()
   const router = useRouter()
 
   async function handleLogout() {
@@ -60,15 +58,6 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
           <span className="hidden sm:inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]">
             {PERFIL_LABELS[user.perfil]}
           </span>
-
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
-            aria-label={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
 
           <button
             type="button"
