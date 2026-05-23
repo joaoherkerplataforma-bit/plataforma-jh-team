@@ -816,6 +816,116 @@ Plataforma publicada com URL pública funcional.
 
 **Proximo passo:** Apontar o dominio definitivo (jhteam.com / consultoriajhteam.com / joaoherkerteam.com) para o projeto Vercel quando o registro estiver disponivel.
 
+### Sessao 10 -- Servico de relatorio diario (Railway) (2026-05-23)
+Implementacao completa do `services/relatorio` (antes era placeholder). Monta o
+relatorio diario do Joao a partir do Supabase e envia por WhatsApp Business API
+as 8h (BRT).
+
+**Arquivos criados:**
+```
+services/relatorio/
+├── railway.json              — cron 0 11 * * * (= 08:00 BRT), startCommand npm start, restart NEVER
+├── .env.example              — Supabase (obrigatorio) + WhatsApp Cloud API (opcional) + REPORT_CRON/TZ
+├── README.md                 — modos de execucao, deploy Railway, nota sobre template do WhatsApp
+└── src/
+    ├── index.ts              — entrypoint: modos --once (cron) / --scheduler (node-cron) / --dry
+    ├── config.ts             — carrega e valida env; WhatsApp opcional (degrada para modo log)
+    ├── supabase.ts           — cliente service_role (bypassa RLS, so backend)
+    ├── types.ts              — tipos minimos do schema relevante ao relatorio
+    ├── dates.ts              — hoje no fuso BRT, diasEntre (UTC, sem erro de DST), formatacao
+    ├── relatorio.ts          — montarRelatorio (queries) + classificarRelatorio (logica pura)
+    ├── formatar.ts           — render do texto WhatsApp com as 6 secoes do PROJETO.md
+    ├── whatsapp.ts           — envio via Meta Cloud API + chunking do limite de 4096 chars
+    └── smoke.ts              — teste da logica de classificacao + preview (sem banco/WhatsApp)
+```
+
+**Conteudo do relatorio (conforme PROJETO.md):**
+1. Enviar formularios de 30 dias hoje (retorno = hoje)
+2. Retornos proximos (1-3 dias) + retornos atrasados
+3. Planos vencendo em breve (0-3 dias)
+4. Planos vencidos (renovacao)
+5. Tarefas atrasadas (sem conclusao ha mais de 3 dias apos o prazo; ignora 'bloqueada' e 'entregue')
+6. Resumo: X ativos / Y vencidos / Z para vencer
+
+**Regras espelhadas de `apps/web/src/lib/pacientes.ts`:** classificacao ativo/vencido
+por `dias_ativos` (vencimento - hoje), janela de alerta de 3 dias, `cancelado`
+excluido de todas as secoes. Resumo identico a `calcularResumo`.
+
+**Decisoes:**
+- One-shot por padrao (sai apos enviar) para o cron nativo do Railway; modo
+  `--scheduler` com node-cron disponivel como alternativa always-on.
+- WhatsApp opcional: sem as 3 chaves (`WHATSAPP_PHONE_NUMBER_ID/ACCESS_TOKEN/RECIPIENT`)
+  o servico imprime o relatorio no log em vez de falhar — permite validar conteudo.
+- Logica de classificacao isolada em funcao pura (`classificarRelatorio`) para
+  ser testavel sem Supabase.
+
+**Validacoes executadas:**
+- `npm run typecheck` (relatorio) — 0 erros
+- `npm run build` (relatorio) — 0 erros, dist/ gerado
+- `npm run smoke` — 10/10 asserções OK + preview da mensagem
+- `npm run typecheck` (turbo, monorepo) — 2/2 packages OK
+
+**Proximo passo:** Criar app WhatsApp Business (Meta) e preencher as 3 chaves no
+Railway; opcionalmente migrar para envio via *template* aprovado (mensagem proativa
+fora da janela de 24h). Composicao de imagem com Sharp segue como item futuro.
+
+### Sessao 11 -- Construtor de formularios nativo (substitui Google Forms + Make) (2026-05-23)
+Formularios nativos mobile-first na plataforma. Os pacientes preenchem direto
+(link publico via WhatsApp), os dados vao para o Supabase e a mesma logica de
+negocio dos webhooks roda no envio. Elimina a dependencia de Google Forms + Make.
+
+**Banco (migrations):**
+```
+supabase/migrations/
+├── 20260523000001_create_formularios.sql  — tabela formularios (campos JSONB + acao + share_token),
+│                                             RLS (admin gerencia / equipe le), FK formulario_id e tipo
+│                                             'avulso' em formularios_recebidos, bucket publico formularios-fotos
+└── 20260523000002_seed_formularios.sql     — pre-cria os 5 forms (anamnese, fotos-iniciais, treino,
+                                              fotos-30-dias, feedback-retorno) com campos; idempotente
+```
+
+**App (apps/web):**
+```
+src/
+├── types/formulario-builder.ts             — TipoCampo, AcaoFormulario, CampoFormulario, Formulario, labels
+├── lib/
+│   ├── formulario-schema.ts                — slugify, normalizarCampos (builder), validarValor (envio)
+│   └── automacoes.ts                       — FONTE UNICA da logica: processarAnamnese/FotosIniciais/Treino/
+│                                             Fotos30Dias/RetornoDieta + registrarAvulso
+├── app/f/[slug]/                           — PUBLICO (sem login): page.tsx + formulario-publico.tsx (renderer
+│                                             mobile-first: escolha, escala 0-10, upload de foto com camera)
+├── app/api/forms/[slug]/
+│   ├── submit/route.ts                     — POST publico (valida token + campos, grava, dispara a acao)
+│   └── upload/route.ts                     — POST publico (foto -> bucket via service_role, retorna URL publica)
+├── app/(protected)/formularios/            — BUILDER (admin): lista + editor [id] (campos drag por setas,
+│                                             tipos, obrigatorio, mapeamento, opcoes, link/QR, ativar/rotacionar)
+└── app/api/admin/formularios/              — POST criar, PATCH editar (normaliza campos), DELETE
+```
+
+**Decisoes:**
+- Builder com **acoes fixas** (escolhido): Joao edita perguntas/opcoes/ordem; cada form
+  tem um papel (anamnese cria paciente, etc.); forms avulsos usam acao 'nenhuma'.
+- **Webhooks Make refatorados** para wrappers finos sobre `lib/automacoes` — fonte unica
+  da verdade. Continuam vivos durante a transicao; podem ser removidos ao desligar o Make.
+- `dados_raw` gravado no formato `respostas: [{pergunta,resposta}]` + campos mapeados no topo,
+  100% compativel com a tela `/pacientes/[id]` existente (texto e fotos renderizam sem mudanca).
+- Fotos em **bucket publico** com path UUID (nao descobrivel) — preserva o `<img>` direto que
+  a UI ja usava com as URLs do Drive. Upload server-side (service_role) gated pelo `share_token`.
+- Seguranca do envio publico: `share_token` no link + honeypot; sem login (paciente nao tem conta
+  na entrada, igual ao fluxo atual de mandar o link pelo WhatsApp).
+
+**Validacoes executadas:**
+- `npx tsc --noEmit` (web) — 0 erros
+- `next lint` — 0 warnings, 0 erros
+- `npm run build` (turbo, monorepo) — 2/2 packages OK; rotas /f/[slug], /formularios,
+  /formularios/[id], /api/forms/* e /api/admin/formularios/* compiladas
+- Teste das funcoes puras (normalizarCampos, validarValor, slugify) — todas OK
+
+**Proximo passo:** Aplicar as 2 migrations no Supabase; abrir `/formularios`, revisar os
+5 forms pre-criados, copiar os links e enviar pelo WhatsApp no lugar dos Google Forms.
+Quando estiver rodando, desligar os cenarios do Make e (opcional) remover as rotas
+`/api/webhooks/*`.
+
 ---
 
 ## Status atual do projeto (2026-04-21)
@@ -836,12 +946,12 @@ Plataforma publicada com URL pública funcional.
 - **Deploy producao:** https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app — auto-deploy ativo no push em `main`, env vars configuradas em Production
 
 ### Em aberto / proximos passos
-1. **Configurar Make** — criar os 5 cenarios apontando os Google Forms para os webhooks de producao
-2. **Servico Railway** — implementar `services/relatorio` (cron 8h, WhatsApp Business API, composicao de imagem com Sharp)
-3. **Portal do aluno** — pagina /portal real (placeholder atualmente): redirecionamento WebDiet/MFit, historico de protocolos, calendario de frequencia
-4. **Migracao de dados** — importar pacientes existentes do Google Planilhas
-5. **Dominio definitivo** — apontar jhteam.com (1a opcao) para o projeto Vercel
-6. **Usuarios de producao** — criar contas reais (Joao, Pablo, Joao Estagiario) no Supabase Auth e vincular a tabela `usuarios`
+1. ~~**Configurar Make**~~ ✅ **substituido na Sessao 11** por formularios nativos (`/formularios` + `/f/{slug}`). Acao restante: aplicar as 2 migrations no Supabase, revisar os 5 forms pre-criados, enviar os links pelo WhatsApp e desligar o Make.
+2. ~~**Servico Railway** — implementar `services/relatorio`~~ ✅ **codigo concluido na Sessao 10.** Falta apenas: criar app WhatsApp Business (Meta) e preencher as 3 chaves no Railway. Composicao de imagem (Sharp) segue como item futuro.
+3. ~~**Portal do aluno**~~ ✅ implementado (area personalizada, videoaulas com gating, player com signed URL) — ver historico de commits pos-Sessao 9
+4. **Migracao de dados** — importar pacientes existentes do Google Planilhas *(externo: depende do export real da planilha)*
+5. **Dominio definitivo** — apontar jhteam.com (1a opcao) para o projeto Vercel *(externo: depende do registro do dominio)*
+6. **Usuarios de producao** — criar contas reais (Joao, Pablo, Joao Estagiario) no Supabase Auth e vincular a tabela `usuarios` *(externo: Supabase Dashboard)*
 
 ### Sessoes concluidas
 | # | Data | Entrega |
@@ -855,6 +965,8 @@ Plataforma publicada com URL pública funcional.
 | 7 | 2026-04-13 | Modulos B, C, D + pagina /tarefas |
 | 8 | 2026-04-16 | Webhooks Make (5 endpoints + testes) |
 | 9 | 2026-04-21 | Deploy Vercel (https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app) |
+| 10 | 2026-05-23 | Servico de relatorio diario (Railway + WhatsApp Business API) |
+| 11 | 2026-05-23 | Construtor de formularios nativo (substitui Google Forms + Make) |
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]

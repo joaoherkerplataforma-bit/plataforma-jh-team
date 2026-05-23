@@ -17,6 +17,8 @@ build/
 .turbo/
 
 # Variáveis de ambiente — NUNCA commitar valores reais
+# (.env.example é versionado de propósito; o padrão ".env" não o afeta)
+.env
 .env.local
 .env.*.local
 .env.production

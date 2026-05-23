@@ -9,6 +9,7 @@ import {
   CheckSquare,
   BookOpen,
   Film,
+  ClipboardList,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react'
@@ -45,6 +46,12 @@ const menuItems = [
     href: '/tarefas',
     icon: CheckSquare,
     perfis: ['joao_admin', 'pablo', 'joao_estagiario'] as PerfilAcesso[],
+  },
+  {
+    label: 'Formulários',
+    href: '/formularios',
+    icon: ClipboardList,
+    perfis: ['joao_admin'] as PerfilAcesso[],
   },
   {
     label: 'Portal',
