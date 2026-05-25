@@ -264,7 +264,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                 return (
                   <tr
                     key={p.id}
-                    className={`border-b border-[#1A1A1A] hover:bg-[#1A1500]/30 transition-colors ${bgAlt} ${linhaClasse}`}
+                    className={`border-b border-[#1A1A1A] hover:bg-white/5 transition-colors ${bgAlt} ${linhaClasse}`}
                   >
                     <td className={`px-4 py-3 whitespace-nowrap ${nomeClasse}`}>
                       <Link

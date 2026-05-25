@@ -76,9 +76,9 @@ export function formatarData(dataStr: string | null): string {
 
 export function corDaLinhaRetorno(diasParaRetorno: number | null): string {
   if (diasParaRetorno === null) return ''
-  if (diasParaRetorno === 0) return 'bg-green-900/30 border-l-2 border-l-green-500'
-  if (diasParaRetorno >= 1 && diasParaRetorno <= 3) return 'bg-orange-900/20 border-l-2 border-l-orange-500'
-  if (diasParaRetorno < 0) return 'bg-red-900/20 border-l-2 border-l-red-500'
+  if (diasParaRetorno === 0) return 'border-l-2 border-l-green-500'
+  if (diasParaRetorno >= 1 && diasParaRetorno <= 3) return 'border-l-2 border-l-orange-500'
+  if (diasParaRetorno < 0) return 'border-l-2 border-l-red-500'
   return ''
 }
 
