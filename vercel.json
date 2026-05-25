@@ -4,7 +4,6 @@
   "outputDirectory": "apps/web/.next",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "ignoreCommand": "npx turbo-ignore @jh-team/web",
   "git": {
     "deploymentEnabled": {
       "main": true
