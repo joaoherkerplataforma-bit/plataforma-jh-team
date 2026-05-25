@@ -87,19 +87,19 @@ export function badgeStatusRetorno(diasParaRetorno: number | null): {
   classe: string
 } {
   if (diasParaRetorno === null) return { texto: '-', classe: 'text-white/40' }
-  if (diasParaRetorno === 0) return { texto: 'Hoje', classe: 'bg-green-600/20 text-green-400 border border-green-600/30' }
-  if (diasParaRetorno >= 1 && diasParaRetorno <= 3) return { texto: `${diasParaRetorno}d`, classe: 'bg-orange-600/20 text-orange-400 border border-orange-600/30' }
-  if (diasParaRetorno < 0) return { texto: `${Math.abs(diasParaRetorno)}d atrasado`, classe: 'bg-red-600/20 text-red-400 border border-red-600/30' }
-  return { texto: `${diasParaRetorno}d`, classe: 'bg-white/5 text-white/50 border border-white/10' }
+  if (diasParaRetorno === 0) return { texto: 'Hoje', classe: 'bg-green-600/20 text-green-400' }
+  if (diasParaRetorno >= 1 && diasParaRetorno <= 3) return { texto: `${diasParaRetorno}d`, classe: 'bg-orange-600/20 text-orange-400' }
+  if (diasParaRetorno < 0) return { texto: `${Math.abs(diasParaRetorno)}d atrasado`, classe: 'bg-red-600/20 text-red-400' }
+  return { texto: `${diasParaRetorno}d`, classe: 'bg-white/5 text-white/50' }
 }
 
 export function badgeStatusPlano(diasAtivos: number): {
   texto: string
   classe: string
 } {
-  if (diasAtivos < 0) return { texto: 'Vencido', classe: 'bg-red-600/20 text-red-400 border border-red-600/30' }
-  if (diasAtivos >= 0 && diasAtivos <= 3) return { texto: `Vence em ${diasAtivos}d`, classe: 'bg-yellow-600/20 text-[#F5F0E8] border border-yellow-600/30' }
-  return { texto: 'Ativo', classe: 'bg-green-600/20 text-green-400 border border-green-600/30' }
+  if (diasAtivos < 0) return { texto: 'Vencido', classe: 'bg-red-600/20 text-red-400' }
+  if (diasAtivos >= 0 && diasAtivos <= 3) return { texto: `Vence em ${diasAtivos}d`, classe: 'bg-yellow-600/20 text-[#F5F0E8]' }
+  return { texto: 'Ativo', classe: 'bg-green-600/20 text-green-400' }
 }
 
 export function corNomePaciente(diasAtivos: number): string {
