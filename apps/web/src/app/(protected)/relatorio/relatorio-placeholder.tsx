@@ -23,7 +23,7 @@ const SECOES = [
 export function RelatorioPlaceholder() {
   return (
     <div className="mt-8 space-y-4">
-      <h2 className="text-[#8A7A5A] text-xs uppercase tracking-wider font-semibold">
+      <h2 className="text-[#F5F0E8] text-xs uppercase tracking-wider font-semibold">
         Proximas secoes
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -42,10 +42,10 @@ export function RelatorioPlaceholder() {
                   <h3 className="text-[#F5F0E8]/80 text-sm font-semibold mb-1">
                     {s.titulo}
                   </h3>
-                  <p className="text-[#8A7A5A] text-xs leading-relaxed mb-3">
+                  <p className="text-[#F5F0E8] text-xs leading-relaxed mb-3">
                     {s.descricao}
                   </p>
-                  <div className="flex items-center gap-2 text-[#8A7A5A]/70">
+                  <div className="flex items-center gap-2 text-[#F5F0E8]/70">
                     <Construction size={12} />
                     <span className="text-[10px] uppercase tracking-wider">
                       Em construcao — disponivel em breve

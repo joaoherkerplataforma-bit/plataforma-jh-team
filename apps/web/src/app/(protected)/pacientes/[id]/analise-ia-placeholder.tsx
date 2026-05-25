@@ -11,7 +11,7 @@ function Bloco({ titulo, descricao }: BlocoProps) {
   return (
     <div className="bg-[#0D0D0D] border border-dashed border-[#2A2209] rounded-xl p-5">
       <h4 className="text-sm font-medium text-[#F5F0E8] mb-2">{titulo}</h4>
-      <div className="flex items-start gap-2 text-[#8A7A5A] text-sm">
+      <div className="flex items-start gap-2 text-[#F5F0E8] text-sm">
         <Lock size={14} className="mt-0.5 flex-shrink-0" />
         <p>{descricao}</p>
       </div>

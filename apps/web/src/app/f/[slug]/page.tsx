@@ -55,7 +55,7 @@ function Aviso({ titulo, texto }: { titulo: string; texto: string }) {
       <div className="max-w-md w-full text-center">
         <p className="font-serif text-[#F5F0E8] tracking-[0.25em] text-lg mb-6">JH TEAM</p>
         <h1 className="text-[#F5F0E8] text-xl font-semibold mb-2">{titulo}</h1>
-        <p className="text-[#8A7A5A] text-sm leading-relaxed">{texto}</p>
+        <p className="text-[#F5F0E8] text-sm leading-relaxed">{texto}</p>
       </div>
     </main>
   )

@@ -114,7 +114,7 @@ export function AreaPersonalizada({
             valor={formatarData(paciente.data_vencimento_plano)}
           />
           <div className="sm:col-span-2">
-            <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+            <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
               Dias restantes
             </p>
             <p className={`text-base font-medium ${corDias}`}>
@@ -135,7 +135,7 @@ export function AreaPersonalizada({
           <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium mb-2">
             Histórico de formulários
           </h3>
-          <p className="text-sm text-[#8A7A5A]">
+          <p className="text-sm text-[#F5F0E8]">
             Você ainda não respondeu nenhum formulário. Quando responder, eles
             aparecerão aqui.
           </p>
@@ -170,7 +170,7 @@ function CardAcesso({
           {titulo}
         </h3>
       </div>
-      <p className="text-sm text-[#8A7A5A] leading-relaxed">{descricao}</p>
+      <p className="text-sm text-[#F5F0E8] leading-relaxed">{descricao}</p>
       <a
         href={url}
         target="_blank"
@@ -192,7 +192,7 @@ interface InfoLinhaProps {
 function InfoLinha({ rotulo, valor }: InfoLinhaProps) {
   return (
     <div>
-      <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+      <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
         {rotulo}
       </p>
       <p className="text-[#F5F0E8] text-sm">{valor}</p>

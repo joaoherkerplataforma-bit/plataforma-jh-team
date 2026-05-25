@@ -40,7 +40,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-[#F5F0E8]">Formulários</h1>
-          <p className="text-sm text-[#8A7A5A] mt-1">
+          <p className="text-sm text-[#F5F0E8] mt-1">
             Links nativos para enviar aos pacientes pelo WhatsApp — sem Google Forms.
           </p>
         </div>
@@ -71,7 +71,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
                   </span>
                 )}
               </div>
-              <p className="text-xs text-[#8A7A5A] mt-1">
+              <p className="text-xs text-[#F5F0E8] mt-1">
                 {ACAO_LABELS[f.acao]} · {f.total_campos} campos · {f.total_respostas} respostas
               </p>
             </div>
@@ -80,7 +80,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
               <button
                 type="button"
                 onClick={() => copiarLink(f)}
-                className="flex items-center gap-1.5 text-xs text-[#C9C4BA] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 transition-colors"
+                className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 transition-colors"
               >
                 {copiado === f.id ? (
                   <>
@@ -103,7 +103,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
         ))}
 
         {formularios.length === 0 && (
-          <div className="text-center py-16 text-[#8A7A5A] text-sm">
+          <div className="text-center py-16 text-[#F5F0E8] text-sm">
             Nenhum formulário ainda. Clique em <span className="text-[#F5F0E8]">Novo</span> para começar.
           </div>
         )}

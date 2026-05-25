@@ -79,8 +79,8 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
   if (!aberto) return null
 
   const inputClass =
-    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#8A7A5A]/50'
-  const labelClass = 'block text-sm text-[#8A7A5A] mb-1'
+    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#F5F0E8]/50'
+  const labelClass = 'block text-sm text-[#F5F0E8] mb-1'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
@@ -93,7 +93,7 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
           <button
             type="button"
             onClick={onFechar}
-            className="text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors text-xl leading-none"
+            className="text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors text-xl leading-none"
           >
             ✕
           </button>
@@ -163,7 +163,7 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
               type="button"
               onClick={onFechar}
               disabled={salvando}
-              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

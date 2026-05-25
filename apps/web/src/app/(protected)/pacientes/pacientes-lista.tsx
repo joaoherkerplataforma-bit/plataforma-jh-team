@@ -116,7 +116,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
     `px-4 py-2 text-sm rounded-md transition-colors ${
       tabAtiva === key
         ? 'bg-[#111111] text-[#F5F0E8] font-medium'
-        : 'text-[#8A7A5A] hover:text-[#F5F0E8]'
+        : 'text-[#F5F0E8] hover:text-[#F5F0E8]'
     }`
 
   const colunasRetorno = tabAtiva === 'ativos'
@@ -138,14 +138,14 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         <div className="relative max-w-xl flex-1">
           <Search
             size={18}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8A7A5A]"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#F5F0E8]"
           />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar por nome, e-mail ou telefone..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[#111111] border border-[#2A2209] rounded-lg text-[#F5F0E8] text-sm placeholder-[#8A7A5A]/60 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
+            className="w-full pl-10 pr-4 py-2.5 bg-[#111111] border border-[#2A2209] rounded-lg text-[#F5F0E8] text-sm placeholder-[#F5F0E8]/60 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
           />
         </div>
 
@@ -188,49 +188,49 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Nome
               </th>
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Data Inicio
               </th>
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Prox. Retorno
               </th>
               {colunasRetorno && (
                 <>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Dias p/ Retorno
                   </th>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Status Retorno
                   </th>
                 </>
               )}
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Tipo
               </th>
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Tempo
               </th>
               {colunasPlano && (
                 <>
-                  <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Vencimento
                   </th>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Dias Ativos
                   </th>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Status Plano
                   </th>
                 </>
               )}
-              <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                 Obs.
               </th>
               {colunasAcao && (
-                <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                   Acao
                 </th>
               )}
@@ -241,7 +241,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
               <tr>
                 <td
                   colSpan={totalColunas}
-                  className="text-center py-12 text-[#8A7A5A]/60"
+                  className="text-center py-12 text-[#F5F0E8]/60"
                 >
                   {tabAtiva === 'ativos' && 'Nenhum paciente ativo.'}
                   {tabAtiva === 'vencidos' && 'Nenhum paciente com plano vencido.'}
@@ -258,7 +258,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                 const statusPlano = badgeStatusPlano(p.dias_ativos)
                 const nomeClasse =
                   tabAtiva === 'cancelados'
-                    ? 'text-[#8A7A5A] line-through'
+                    ? 'text-[#F5F0E8] line-through'
                     : corNomePaciente(p.dias_ativos)
 
                 return (
@@ -274,15 +274,15 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                         {p.nome}
                       </Link>
                     </td>
-                    <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                       {formatarData(p.data_inicio)}
                     </td>
-                    <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                       {formatarData(p.proximo_retorno)}
                     </td>
                     {colunasRetorno && (
                       <>
-                        <td className="px-4 py-3 text-center text-[#8A7A5A] whitespace-nowrap">
+                        <td className="px-4 py-3 text-center text-[#F5F0E8] whitespace-nowrap">
                           {p.dias_para_retorno !== null ? p.dias_para_retorno : '-'}
                         </td>
                         <td className="px-4 py-3 text-center whitespace-nowrap">
@@ -294,18 +294,18 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                         </td>
                       </>
                     )}
-                    <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                       {TIPO_PLANO_LABELS[p.tipo_plano]}
                     </td>
-                    <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
+                    <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                       {TEMPO_PLANO_LABELS[p.duracao_plano]}
                     </td>
                     {colunasPlano && (
                       <>
-                        <td className="px-4 py-3 text-[#8A7A5A] whitespace-nowrap">
+                        <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                           {formatarData(p.data_vencimento_plano)}
                         </td>
-                        <td className="px-4 py-3 text-center text-[#8A7A5A] whitespace-nowrap">
+                        <td className="px-4 py-3 text-center text-[#F5F0E8] whitespace-nowrap">
                           {p.dias_ativos}
                         </td>
                         <td className="px-4 py-3 text-center whitespace-nowrap">
@@ -400,7 +400,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                 type="button"
                 onClick={fecharConfirm}
                 disabled={pending}
-                className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
+                className="px-4 py-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
               >
                 Voltar
               </button>

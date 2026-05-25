@@ -53,7 +53,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           Entrada
         </h3>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Início
           </p>
           <p className="text-[#F5F0E8] text-sm">
@@ -61,7 +61,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           </p>
         </div>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Plano
           </p>
           <p className="text-[#F5F0E8] text-sm">
@@ -71,7 +71,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           </p>
         </div>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Responsável
           </p>
           <p className="text-[#F5F0E8] text-sm">{responsavelNome ?? '—'}</p>
@@ -92,7 +92,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           Progresso
         </h3>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Dias ativos
           </p>
           <p className="text-[#F5F0E8] text-sm">
@@ -103,7 +103,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
         </div>
         <div>
           <div className="flex items-center justify-between mb-2">
-            <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
+            <p className="text-[#F5F0E8] text-xs uppercase tracking-wider">
               % do plano
             </p>
             <span className="text-[#F5F0E8] text-xs font-medium">
@@ -118,7 +118,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           </div>
         </div>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Próximo retorno
           </p>
           <p className="text-[#F5F0E8] text-sm">
@@ -126,7 +126,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           </p>
         </div>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Status retorno
           </p>
           <span
@@ -151,7 +151,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           Saída
         </h3>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Vencimento
           </p>
           <p className="text-[#F5F0E8] text-sm">
@@ -159,7 +159,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
           </p>
         </div>
         <div>
-          <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+          <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
             Dias restantes
           </p>
           <p className={`text-sm font-medium ${diasRestantesClasse}`}>
@@ -168,7 +168,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
         </div>
         {exibeStatusPlanoSaida && (
           <div>
-            <p className="text-[#8A7A5A] text-xs uppercase tracking-wider mb-1">
+            <p className="text-[#F5F0E8] text-xs uppercase tracking-wider mb-1">
               Status
             </p>
             <span

@@ -11,7 +11,7 @@ export function ContaSendoConfigurada() {
           Sua conta está sendo configurada
         </h1>
         <div className="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent" />
-        <p className="text-[#8A7A5A] text-sm sm:text-base leading-relaxed">
+        <p className="text-[#F5F0E8] text-sm sm:text-base leading-relaxed">
           Estamos finalizando o seu cadastro no portal. Aguarde o contato do
           João para iniciar o seu acompanhamento.
         </p>

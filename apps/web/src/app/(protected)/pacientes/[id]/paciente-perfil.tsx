@@ -53,7 +53,7 @@ export function PacientePerfil({
     <div className="space-y-6">
       <Link
         href="/pacientes"
-        className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors"
       >
         <ArrowLeft size={16} />
         Pacientes
@@ -66,7 +66,7 @@ export function PacientePerfil({
             <h1 className="text-2xl md:text-3xl font-semibold text-[#F5F0E8] tracking-wide">
               {paciente.nome}
             </h1>
-            <p className="text-sm text-[#8A7A5A]">
+            <p className="text-sm text-[#F5F0E8]">
               {TIPO_PLANO_LABELS[paciente.tipo_plano]}
               {' · '}
               {TEMPO_PLANO_LABELS[paciente.duracao_plano]}

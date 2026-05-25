@@ -9,7 +9,7 @@ export function VideoaulasList({ videoaulas }: VideoaulasListProps) {
   if (videoaulas.length === 0) {
     return (
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl p-8 text-center">
-        <p className="text-[#8A7A5A] text-sm">
+        <p className="text-[#F5F0E8] text-sm">
           Nenhuma videoaula disponível no momento.
         </p>
       </div>

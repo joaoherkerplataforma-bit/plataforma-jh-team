@@ -29,7 +29,7 @@ export function FormularioCard({ card }: FormularioCardProps) {
       }
     : {
         texto: 'Aguardando',
-        classe: 'bg-white/5 text-[#8A7A5A] border border-white/10',
+        classe: 'bg-white/5 text-[#F5F0E8] border border-white/10',
       }
 
   return (
@@ -45,7 +45,7 @@ export function FormularioCard({ card }: FormularioCardProps) {
         </span>
       </div>
 
-      <div className="text-xs text-[#8A7A5A]">
+      <div className="text-xs text-[#F5F0E8]">
         {dataLabel ? (
           <span>Recebido em {dataLabel}</span>
         ) : (
@@ -60,7 +60,7 @@ export function FormularioCard({ card }: FormularioCardProps) {
         className={`mt-auto inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-medium transition-colors ${
           respondido
             ? 'bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
-            : 'bg-white/5 text-[#8A7A5A]/60 border border-white/10 cursor-not-allowed'
+            : 'bg-white/5 text-[#F5F0E8]/60 border border-white/10 cursor-not-allowed'
         }`}
       >
         Ver respostas

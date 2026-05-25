@@ -36,7 +36,7 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="lg:hidden p-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
               aria-label="Abrir menu"
             >
               <Menu size={22} />
@@ -47,7 +47,7 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
             <h2 className="text-xl sm:text-2xl font-bold text-[#F5F0E8]">
               Ola, {user.nome.split(' ')[0]}
             </h2>
-            <p className="text-sm text-[#8A7A5A] hidden sm:block">
+            <p className="text-sm text-[#F5F0E8] hidden sm:block">
               Aqui esta o resumo da sua plataforma hoje.
             </p>
           </div>

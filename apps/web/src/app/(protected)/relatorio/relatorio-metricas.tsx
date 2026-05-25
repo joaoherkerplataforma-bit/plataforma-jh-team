@@ -81,7 +81,7 @@ export function RelatorioMetricas({
       valor: totalCancelados,
       icone: Ban,
       bgIcone: 'bg-zinc-800',
-      corValor: 'text-[#8A7A5A]',
+      corValor: 'text-[#F5F0E8]',
     },
     {
       label: 'Novos (7 dias)',
@@ -114,7 +114,7 @@ export function RelatorioMetricas({
                 <div className={`p-2 rounded-lg ${c.bgIcone}`}>
                   <Icone size={18} className="text-[#F5F0E8]" />
                 </div>
-                <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
+                <p className="text-[#F5F0E8] text-xs uppercase tracking-wider">
                   {c.label}
                 </p>
               </div>
@@ -129,7 +129,7 @@ export function RelatorioMetricas({
             <div className="p-2 rounded-lg bg-[#1A1500]">
               <Clock size={18} className="text-[#F5F0E8]" />
             </div>
-            <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
+            <p className="text-[#F5F0E8] text-xs uppercase tracking-wider">
               Tempo Medio de Permanencia
             </p>
           </div>
@@ -154,15 +154,15 @@ export function RelatorioMetricas({
               <CartesianGrid strokeDasharray="3 3" stroke="#2A2209" horizontal={false} />
               <XAxis
                 type="number"
-                stroke="#8A7A5A"
-                tick={{ fill: '#8A7A5A', fontSize: 12 }}
+                stroke="#F5F0E8"
+                tick={{ fill: '#F5F0E8', fontSize: 12 }}
                 allowDecimals={false}
               />
               <YAxis
                 type="category"
                 dataKey="label"
-                stroke="#8A7A5A"
-                tick={{ fill: '#8A7A5A', fontSize: 12 }}
+                stroke="#F5F0E8"
+                tick={{ fill: '#F5F0E8', fontSize: 12 }}
                 width={160}
               />
               <Tooltip

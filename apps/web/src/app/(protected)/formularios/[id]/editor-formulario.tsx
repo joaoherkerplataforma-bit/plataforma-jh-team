@@ -152,7 +152,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
         <button
           type="button"
           onClick={() => router.push('/formularios')}
-          className="flex items-center gap-1.5 text-sm text-[#8A7A5A] hover:text-[#F5F0E8]"
+          className="flex items-center gap-1.5 text-sm text-[#F5F0E8] hover:text-[#F5F0E8]"
         >
           <ArrowLeft size={16} /> Formulários
         </button>
@@ -178,9 +178,9 @@ export function EditorFormulario({ form }: { form: Formulario }) {
 
       {/* Link publico */}
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl p-4 mb-5">
-        <p className="text-xs uppercase tracking-wide text-[#8A7A5A] mb-2">Link para o paciente</p>
+        <p className="text-xs uppercase tracking-wide text-[#F5F0E8] mb-2">Link para o paciente</p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <code className="flex-1 text-xs text-[#C9C4BA] bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 truncate">
+          <code className="flex-1 text-xs text-[#F5F0E8] bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 truncate">
             {linkPublico}
           </code>
           <div className="flex gap-2">
@@ -196,7 +196,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
               href={linkPublico}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-[#C9C4BA] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50"
+              className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50"
             >
               <ExternalLink size={14} /> Abrir
             </a>
@@ -204,7 +204,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
               type="button"
               onClick={rotacionarToken}
               title="Gerar novo link (invalida o anterior)"
-              className="flex items-center gap-1.5 text-xs text-[#8A7A5A] border border-[#2A2209] rounded-lg px-3 py-2 hover:text-[#F5F0E8]"
+              className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:text-[#F5F0E8]"
             >
               <RefreshCw size={14} />
             </button>
@@ -215,11 +215,11 @@ export function EditorFormulario({ form }: { form: Formulario }) {
       {/* Meta do formulario */}
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl p-4 mb-5 space-y-4">
         <div>
-          <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">Título</label>
+          <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">Título</label>
           <input value={titulo} onChange={(e) => setTitulo(e.target.value)} className={inputBase} />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">Descrição</label>
+          <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">Descrição</label>
           <textarea
             value={descricao}
             onChange={(e) => setDescricao(e.target.value)}
@@ -229,7 +229,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">Ação no envio</label>
+            <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">Ação no envio</label>
             <select value={acao} onChange={(e) => setAcao(e.target.value as AcaoFormulario)} className={inputBase}>
               {ACOES.map((a) => (
                 <option key={a} value={a}>
@@ -239,7 +239,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
             </select>
           </div>
           <div className="flex items-end">
-            <label className="flex items-center gap-2 text-sm text-[#C9C4BA] cursor-pointer">
+            <label className="flex items-center gap-2 text-sm text-[#F5F0E8] cursor-pointer">
               <input
                 type="checkbox"
                 checked={ativo}
@@ -251,7 +251,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
           </div>
         </div>
         {acao !== 'nenhuma' && (
-          <p className="text-xs text-[#8A7A5A] bg-[#1A1500]/50 border border-[#2A2209] rounded-lg p-2.5">
+          <p className="text-xs text-[#F5F0E8] bg-[#1A1500]/50 border border-[#2A2209] rounded-lg p-2.5">
             Dica: para esta ação funcionar, mapeie os campos certos (ex.: anamnese precisa de{' '}
             <span className="text-[#F5F0E8]">Nome</span>, <span className="text-[#F5F0E8]">E-mail</span> e{' '}
             <span className="text-[#F5F0E8]">Plano</span>) usando o seletor &quot;Alimenta&quot; em cada campo.
@@ -280,7 +280,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
                   type="button"
                   onClick={() => mover(campo._id, -1)}
                   disabled={i === 0}
-                  className="text-[#8A7A5A] hover:text-[#F5F0E8] disabled:opacity-30"
+                  className="text-[#F5F0E8] hover:text-[#F5F0E8] disabled:opacity-30"
                 >
                   <ChevronUp size={16} />
                 </button>
@@ -288,7 +288,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
                   type="button"
                   onClick={() => mover(campo._id, 1)}
                   disabled={i === campos.length - 1}
-                  className="text-[#8A7A5A] hover:text-[#F5F0E8] disabled:opacity-30"
+                  className="text-[#F5F0E8] hover:text-[#F5F0E8] disabled:opacity-30"
                 >
                   <ChevronDown size={16} />
                 </button>
@@ -348,7 +348,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
                 )}
 
                 <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 text-xs text-[#C9C4BA] cursor-pointer">
+                  <label className="flex items-center gap-2 text-xs text-[#F5F0E8] cursor-pointer">
                     <input
                       type="checkbox"
                       checked={campo.obrigatorio}
@@ -371,7 +371,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
         ))}
 
         {campos.length === 0 && (
-          <div className="text-center py-10 text-[#8A7A5A] text-sm border border-dashed border-[#2A2209] rounded-xl">
+          <div className="text-center py-10 text-[#F5F0E8] text-sm border border-dashed border-[#2A2209] rounded-xl">
             Sem campos. Clique em <span className="text-[#F5F0E8]">Adicionar campo</span>.
           </div>
         )}

@@ -147,7 +147,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
                   ${
                     ativo
                       ? 'bg-[#1A1500] text-[#F5F0E8] border-l-[3px] border-l-[#C9A84C]'
-                      : 'text-[#8A7A5A] hover:bg-[#1A1500]/60 hover:text-[#F5F0E8]'
+                      : 'text-[#F5F0E8] hover:bg-[#1A1500]/60 hover:text-[#F5F0E8]'
                   }
                 `}
                 title={expandida ? undefined : item.label}
@@ -166,7 +166,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
           <button
             type="button"
             onClick={() => setExpandida(!expandida)}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
           >
             {expandida ? (
               <>

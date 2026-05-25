@@ -57,7 +57,7 @@ export function PortalContent({
 
           {videoaulasComProgresso.length > 0 && (
             <section className="mt-8">
-              <h2 className="text-sm uppercase tracking-wider text-[#8A7A5A] mb-3">
+              <h2 className="text-sm uppercase tracking-wider text-[#F5F0E8] mb-3">
                 Videoaulas concluídas
               </h2>
               <VideoaulasList videoaulas={videoaulasComProgresso} />
@@ -73,7 +73,7 @@ export function PortalContent({
               Antes de acessar sua área personalizada, assista as videoaulas
               obrigatórias na ordem.
             </p>
-            <p className="mt-2 text-xs text-[#8A7A5A]">
+            <p className="mt-2 text-xs text-[#F5F0E8]">
               Cada videoaula é desbloqueada após você concluir a anterior.
             </p>
           </section>

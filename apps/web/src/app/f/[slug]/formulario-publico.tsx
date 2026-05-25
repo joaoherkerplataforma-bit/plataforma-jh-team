@@ -95,7 +95,7 @@ export function FormularioPublico({ slug, titulo, descricao, campos, token }: Pr
           <CheckCircle2 size={56} className="text-[#F5F0E8] mx-auto mb-5" />
           <p className="font-serif text-[#F5F0E8] tracking-[0.25em] text-base mb-4">JH TEAM</p>
           <h1 className="text-[#F5F0E8] text-2xl font-semibold mb-2">Recebido! ✅</h1>
-          <p className="text-[#8A7A5A] text-sm leading-relaxed">
+          <p className="text-[#F5F0E8] text-sm leading-relaxed">
             Suas respostas foram enviadas com sucesso. Pode fechar esta página.
           </p>
         </div>
@@ -111,7 +111,7 @@ export function FormularioPublico({ slug, titulo, descricao, campos, token }: Pr
           <p className="font-serif text-[#F5F0E8] tracking-[0.25em] text-sm mb-5">JH TEAM</p>
           <h1 className="text-[#F5F0E8] text-2xl font-semibold leading-tight">{titulo}</h1>
           {descricao && (
-            <p className="text-[#8A7A5A] text-sm mt-3 leading-relaxed">{descricao}</p>
+            <p className="text-[#F5F0E8] text-sm mt-3 leading-relaxed">{descricao}</p>
           )}
         </header>
 
@@ -192,12 +192,12 @@ function CampoInput({
         {campo.label}
         {campo.obrigatorio && <span className="text-[#F5F0E8] ml-1">*</span>}
       </label>
-      {campo.descricao && <p className="text-[#8A7A5A] text-xs mt-1">{campo.descricao}</p>}
+      {campo.descricao && <p className="text-[#F5F0E8] text-xs mt-1">{campo.descricao}</p>}
     </div>
   )
 
   const inputBase =
-    'w-full bg-[#141414] border border-[#2A2209] rounded-xl px-4 py-3 text-base text-[#F5F0E8] placeholder-[#5A5040] outline-none focus:border-[#C9A84C]/60 transition-colors'
+    'w-full bg-[#141414] border border-[#2A2209] rounded-xl px-4 py-3 text-base text-[#F5F0E8] placeholder-[#F5F0E8] outline-none focus:border-[#C9A84C]/60 transition-colors'
 
   return (
     <div>
@@ -264,7 +264,7 @@ function CampoInput({
                 className={`w-full text-left px-4 py-3 rounded-xl border text-[15px] transition-colors flex items-center justify-between ${
                   selecionado
                     ? 'bg-[#1A1500] border-[#C9A84C] text-[#F5F0E8]'
-                    : 'bg-[#141414] border-[#2A2209] text-[#C9C4BA] active:border-[#C9A84C]/50'
+                    : 'bg-[#141414] border-[#2A2209] text-[#F5F0E8] active:border-[#C9A84C]/50'
                 }`}
               >
                 {op}
@@ -290,7 +290,7 @@ function CampoInput({
                 className={`w-full text-left px-4 py-3 rounded-xl border text-[15px] transition-colors flex items-center justify-between ${
                   selecionado
                     ? 'bg-[#1A1500] border-[#C9A84C] text-[#F5F0E8]'
-                    : 'bg-[#141414] border-[#2A2209] text-[#C9C4BA] active:border-[#C9A84C]/50'
+                    : 'bg-[#141414] border-[#2A2209] text-[#F5F0E8] active:border-[#C9A84C]/50'
                 }`}
               >
                 {op}
@@ -313,7 +313,7 @@ function CampoInput({
                 className={`aspect-square rounded-lg border text-sm font-semibold transition-colors ${
                   selecionado
                     ? 'bg-[#C9A84C] border-[#C9A84C] text-[#0A0A0A]'
-                    : 'bg-[#141414] border-[#2A2209] text-[#C9C4BA] active:border-[#C9A84C]/50'
+                    : 'bg-[#141414] border-[#2A2209] text-[#F5F0E8] active:border-[#C9A84C]/50'
                 }`}
               >
                 {n}
@@ -346,9 +346,9 @@ function CampoInput({
           ) : valor ? (
             <Check size={20} className="text-[#F5F0E8] flex-shrink-0" />
           ) : (
-            <Camera size={20} className="text-[#8A7A5A] flex-shrink-0" />
+            <Camera size={20} className="text-[#F5F0E8] flex-shrink-0" />
           )}
-          <span className="text-sm text-[#C9C4BA] truncate">
+          <span className="text-sm text-[#F5F0E8] truncate">
             {upload?.enviando
               ? 'Enviando foto...'
               : valor

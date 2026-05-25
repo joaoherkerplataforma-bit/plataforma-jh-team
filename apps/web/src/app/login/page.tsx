@@ -83,7 +83,7 @@ export default function LoginPage() {
             <div className="space-y-1">
               <label
                 htmlFor="email"
-                className="block text-sm text-[#8A7A5A] tracking-wide"
+                className="block text-sm text-[#F5F0E8] tracking-wide"
               >
                 Email
               </label>
@@ -92,7 +92,7 @@ export default function LoginPage() {
                 type="email"
                 autoComplete="email"
                 {...register('email')}
-                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#8A7A5A]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
+                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#F5F0E8]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
                 placeholder="seu@email.com"
               />
               {errors.email && (
@@ -105,7 +105,7 @@ export default function LoginPage() {
             <div className="space-y-1">
               <label
                 htmlFor="password"
-                className="block text-sm text-[#8A7A5A] tracking-wide"
+                className="block text-sm text-[#F5F0E8] tracking-wide"
               >
                 Senha
               </label>
@@ -114,7 +114,7 @@ export default function LoginPage() {
                 type="password"
                 autoComplete="current-password"
                 {...register('password')}
-                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#8A7A5A]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
+                className="w-full px-4 py-3 bg-[#0A0A0A] border border-[#2A2209] rounded-lg text-[#F5F0E8] placeholder-[#F5F0E8]/50 focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors"
                 placeholder="••••••"
               />
               {errors.password && (
@@ -140,7 +140,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="text-center text-[#8A7A5A]/40 text-xs mt-6">
+        <p className="text-center text-[#F5F0E8]/40 text-xs mt-6">
           Joao Herker Personal
         </p>
       </div>

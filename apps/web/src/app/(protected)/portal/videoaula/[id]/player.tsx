@@ -70,7 +70,7 @@ export function Player({
       <header className="mb-6">
         <Link
           href="/portal"
-          className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors"
         >
           <ArrowLeft size={16} />
           Voltar para o Portal
@@ -123,7 +123,7 @@ export function Player({
             type="button"
             disabled
             title="Modo preview — apenas alunos podem marcar como assistida"
-            className="px-4 py-2 rounded-md text-sm bg-[#1F1F1F] border border-[#2A2209] text-[#5A5040] cursor-not-allowed"
+            className="px-4 py-2 rounded-md text-sm bg-[#1F1F1F] border border-[#2A2209] text-[#F5F0E8] cursor-not-allowed"
           >
             Marcar como assistida
           </button>

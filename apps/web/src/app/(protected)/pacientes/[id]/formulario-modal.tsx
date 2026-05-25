@@ -76,13 +76,13 @@ export function FormularioModal({
             >
               {titulo}
             </h2>
-            <p className="text-xs text-[#8A7A5A]">Recebido em {dataLabel}</p>
+            <p className="text-xs text-[#F5F0E8]">Recebido em {dataLabel}</p>
           </div>
           <button
             type="button"
             onClick={onFechar}
             aria-label="Fechar"
-            className="p-1.5 rounded-md text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-white/5 transition-colors"
+            className="p-1.5 rounded-md text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-white/5 transition-colors"
           >
             <X size={18} />
           </button>
@@ -101,7 +101,7 @@ function renderCorpo(
 ) {
   if (respostas.length === 0) {
     return (
-      <p className="text-sm text-[#8A7A5A]">
+      <p className="text-sm text-[#F5F0E8]">
         Sem respostas detalhadas — confira diretamente no Google Forms.
       </p>
     )

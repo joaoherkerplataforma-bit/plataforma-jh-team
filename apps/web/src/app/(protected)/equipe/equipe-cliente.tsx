@@ -56,7 +56,7 @@ export function EquipeCliente({
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-[#F5F0E8]">Equipe</h1>
-          <p className="text-sm text-[#8A7A5A] mt-1">
+          <p className="text-sm text-[#F5F0E8] mt-1">
             Adicione Pablo e o Estagiário. Eles recebem e-mail + senha temporária para acessar.
           </p>
         </div>
@@ -163,7 +163,7 @@ function MembroRow({
             </span>
           )}
         </div>
-        <p className="text-xs text-[#8A7A5A] mt-1 truncate">{membro.email}</p>
+        <p className="text-xs text-[#F5F0E8] mt-1 truncate">{membro.email}</p>
       </div>
 
       <div className="flex items-center gap-2">
@@ -171,7 +171,7 @@ function MembroRow({
           type="button"
           onClick={onReset}
           disabled={ocupado}
-          className="flex items-center gap-1.5 text-xs text-[#C9C4BA] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 disabled:opacity-50"
+          className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 disabled:opacity-50"
         >
           {ocupado ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
           Nova senha
@@ -237,11 +237,11 @@ function ModalAdicionar({
       </h2>
       <div className="space-y-3">
         <div>
-          <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">Nome</label>
+          <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">Nome</label>
           <input value={nome} onChange={(e) => setNome(e.target.value)} className={inputBase} />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">E-mail</label>
+          <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">E-mail</label>
           <input
             type="email"
             value={email}
@@ -251,7 +251,7 @@ function ModalAdicionar({
           />
         </div>
         <div>
-          <label className="block text-xs uppercase tracking-wide text-[#8A7A5A] mb-1.5">Perfil</label>
+          <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">Perfil</label>
           <select
             value={perfil}
             onChange={(e) => setPerfil(e.target.value as MembroEquipe['perfil'])}
@@ -267,7 +267,7 @@ function ModalAdicionar({
         {erro && <p className="text-red-400 text-sm">{erro}</p>}
       </div>
       <div className="flex justify-end gap-2 mt-5">
-        <button type="button" onClick={onClose} className="text-sm text-[#8A7A5A] px-4 py-2 hover:text-[#F5F0E8]">
+        <button type="button" onClick={onClose} className="text-sm text-[#F5F0E8] px-4 py-2 hover:text-[#F5F0E8]">
           Cancelar
         </button>
         <button
@@ -301,7 +301,7 @@ function ModalCredencial({ credencial, onClose }: { credencial: Credencial; onCl
       <h2 className="text-lg font-semibold text-[#F5F0E8] mb-1 flex items-center gap-2">
         <ShieldCheck size={18} className="text-[#F5F0E8]" /> Acesso criado
       </h2>
-      <p className="text-xs text-[#8A7A5A] mb-4">
+      <p className="text-xs text-[#F5F0E8] mb-4">
         Copie e envie a mensagem abaixo (WhatsApp/e-mail). A senha não será mostrada de novo.
       </p>
 
@@ -319,7 +319,7 @@ function ModalCredencial({ credencial, onClose }: { credencial: Credencial; onCl
         {copiado ? <Check size={16} /> : <Copy size={16} />}
         {copiado ? 'Mensagem copiada' : 'Copiar mensagem pronta'}
       </button>
-      <button type="button" onClick={onClose} className="w-full mt-2 text-sm text-[#8A7A5A] py-2 hover:text-[#F5F0E8]">
+      <button type="button" onClick={onClose} className="w-full mt-2 text-sm text-[#F5F0E8] py-2 hover:text-[#F5F0E8]">
         Fechar
       </button>
     </Overlay>
@@ -329,8 +329,8 @@ function ModalCredencial({ credencial, onClose }: { credencial: Credencial; onCl
 function Linha({ label, valor, destaque }: { label: string; valor: string; destaque?: boolean }) {
   return (
     <div className="flex items-center justify-between gap-3">
-      <span className="text-[#8A7A5A] text-xs">{label}</span>
-      <span className={`truncate ${destaque ? 'text-[#F5F0E8] font-mono font-semibold' : 'text-[#C9C4BA]'}`}>
+      <span className="text-[#F5F0E8] text-xs">{label}</span>
+      <span className={`truncate ${destaque ? 'text-[#F5F0E8] font-mono font-semibold' : 'text-[#F5F0E8]'}`}>
         {valor}
       </span>
     </div>
@@ -347,7 +347,7 @@ function Overlay({ children, onClose }: { children: React.ReactNode; onClose: ()
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-3 right-3 text-[#8A7A5A] hover:text-[#F5F0E8]"
+          className="absolute top-3 right-3 text-[#F5F0E8] hover:text-[#F5F0E8]"
         >
           <X size={18} />
         </button>

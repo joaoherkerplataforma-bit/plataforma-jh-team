@@ -84,7 +84,7 @@ export default async function TarefasPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-[#F5F0E8] tracking-wide">Tarefas</h1>
-            <p className="text-sm text-[#8A7A5A] mt-0.5">
+            <p className="text-sm text-[#F5F0E8] mt-0.5">
               {totalAberto === 0
                 ? 'Tudo em dia!'
                 : `${totalAberto} tarefa${totalAberto !== 1 ? 's' : ''} em aberto`}
