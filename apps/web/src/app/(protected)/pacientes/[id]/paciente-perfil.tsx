@@ -53,7 +53,7 @@ export function PacientePerfil({
     <div className="space-y-6">
       <Link
         href="/pacientes"
-        className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#C9A84C] transition-colors"
+        className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
       >
         <ArrowLeft size={16} />
         Pacientes

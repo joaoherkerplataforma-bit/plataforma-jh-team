@@ -38,8 +38,8 @@ export function VideoaulaCard({ videoaula }: VideoaulaCardProps) {
           !desbloqueada
             ? 'bg-[#0D0D0D] border-[#1F1F1F] text-[#5A5040]'
             : assistida
-              ? 'bg-[#1A1500] border-[#C9A84C]/40 text-[#C9A84C]'
-              : 'bg-[#1A1500] border-[#C9A84C] text-[#C9A84C]'
+              ? 'bg-[#1A1500] border-[#C9A84C]/40 text-[#F5F0E8]'
+              : 'bg-[#1A1500] border-[#C9A84C] text-[#F5F0E8]'
         }`}
       >
         {ordem}
@@ -71,7 +71,7 @@ export function VideoaulaCard({ videoaula }: VideoaulaCardProps) {
         <div className="mt-3 flex items-center gap-3 text-xs text-[#8A7A5A]">
           {duracao && <span>{duracao}</span>}
           {desbloqueada && !assistida && (
-            <span className="inline-flex items-center gap-1.5 text-[#C9A84C]">
+            <span className="inline-flex items-center gap-1.5 text-[#F5F0E8]">
               <Play size={12} />
               Assistir
             </span>
@@ -121,7 +121,7 @@ function renderBadge({
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]/40 whitespace-nowrap">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]/40 whitespace-nowrap">
       Pendente
     </span>
   )

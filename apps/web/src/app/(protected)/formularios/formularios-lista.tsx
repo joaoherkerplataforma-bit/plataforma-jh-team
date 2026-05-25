@@ -63,7 +63,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
           >
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <FileText size={16} className="text-[#C9A84C] flex-shrink-0" />
+                <FileText size={16} className="text-[#F5F0E8] flex-shrink-0" />
                 <span className="text-[#F5F0E8] font-medium truncate">{f.titulo}</span>
                 {!f.ativo && (
                   <span className="text-[10px] uppercase tracking-wide bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded">
@@ -84,7 +84,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
               >
                 {copiado === f.id ? (
                   <>
-                    <Check size={14} className="text-[#C9A84C]" /> Copiado
+                    <Check size={14} className="text-[#F5F0E8]" /> Copiado
                   </>
                 ) : (
                   <>
@@ -104,7 +104,7 @@ export function FormulariosLista({ formularios }: { formularios: FormularioResum
 
         {formularios.length === 0 && (
           <div className="text-center py-16 text-[#8A7A5A] text-sm">
-            Nenhum formulário ainda. Clique em <span className="text-[#C9A84C]">Novo</span> para começar.
+            Nenhum formulário ainda. Clique em <span className="text-[#F5F0E8]">Novo</span> para começar.
           </div>
         )}
       </div>

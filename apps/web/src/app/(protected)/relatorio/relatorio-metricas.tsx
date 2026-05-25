@@ -39,7 +39,7 @@ function ChartTooltip({
   return (
     <div className="bg-[#111111] border border-[#2A2209] rounded-md px-3 py-2 shadow-lg">
       <p className="text-[#F5F0E8] text-xs">{item.payload.label}</p>
-      <p className="text-[#C9A84C] text-sm font-semibold">{item.value} pacientes</p>
+      <p className="text-[#F5F0E8] text-sm font-semibold">{item.value} pacientes</p>
     </div>
   )
 }
@@ -88,14 +88,14 @@ export function RelatorioMetricas({
       valor: novos7dias,
       icone: UserPlus,
       bgIcone: 'bg-[#1A1500]',
-      corValor: 'text-[#C9A84C]',
+      corValor: 'text-[#F5F0E8]',
     },
     {
       label: 'Novos (30 dias)',
       valor: novos30dias,
       icone: UserPlus,
       bgIcone: 'bg-[#1A1500]',
-      corValor: 'text-[#C9A84C]',
+      corValor: 'text-[#F5F0E8]',
     },
   ]
 
@@ -112,7 +112,7 @@ export function RelatorioMetricas({
             >
               <div className="flex items-center gap-3 mb-2">
                 <div className={`p-2 rounded-lg ${c.bgIcone}`}>
-                  <Icone size={18} className="text-[#C9A84C]" />
+                  <Icone size={18} className="text-[#F5F0E8]" />
                 </div>
                 <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
                   {c.label}
@@ -127,7 +127,7 @@ export function RelatorioMetricas({
         <div className="bg-[#111111] border border-[#2A2209] rounded-xl px-5 py-4 col-span-2">
           <div className="flex items-center gap-3 mb-2">
             <div className="p-2 rounded-lg bg-[#1A1500]">
-              <Clock size={18} className="text-[#C9A84C]" />
+              <Clock size={18} className="text-[#F5F0E8]" />
             </div>
             <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
               Tempo Medio de Permanencia

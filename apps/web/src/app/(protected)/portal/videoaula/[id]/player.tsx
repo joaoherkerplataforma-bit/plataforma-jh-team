@@ -57,7 +57,7 @@ export function Player({
     <div className="max-w-4xl mx-auto">
       {/* Modo preview banner */}
       {modoPreview && (
-        <div className="mb-6 px-4 py-3 bg-[#1A1500] border border-[#C9A84C]/40 rounded-lg flex items-center gap-2 text-sm text-[#C9A84C]">
+        <div className="mb-6 px-4 py-3 bg-[#1A1500] border border-[#C9A84C]/40 rounded-lg flex items-center gap-2 text-sm text-[#F5F0E8]">
           <Eye size={16} />
           <span>
             Modo preview — voce esta vendo a visao do aluno. O botao de marcar
@@ -70,13 +70,13 @@ export function Player({
       <header className="mb-6">
         <Link
           href="/portal"
-          className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#C9A84C] transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
         >
           <ArrowLeft size={16} />
           Voltar para o Portal
         </Link>
 
-        <h1 className="mt-4 text-2xl sm:text-3xl font-serif text-[#C9A84C] tracking-wide">
+        <h1 className="mt-4 text-2xl sm:text-3xl font-serif text-[#F5F0E8] tracking-wide">
           {videoaula.titulo}
         </h1>
         <div className="h-px w-32 mt-2 bg-gradient-to-r from-[#C9A84C] to-transparent" />
@@ -113,7 +113,7 @@ export function Player({
             </span>
             <Link
               href="/portal"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm bg-[#1A1500] border border-[#C9A84C]/40 text-[#C9A84C] hover:bg-[#1A1500]/70 hover:border-[#C9A84C] transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm bg-[#1A1500] border border-[#C9A84C]/40 text-[#F5F0E8] hover:bg-[#1A1500]/70 hover:border-[#C9A84C] transition-colors"
             >
               Voltar para a lista
             </Link>

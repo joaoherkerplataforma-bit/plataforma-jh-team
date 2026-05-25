@@ -98,8 +98,8 @@ export function badgeStatusPlano(diasAtivos: number): {
   classe: string
 } {
   if (diasAtivos < 0) return { texto: 'Vencido', classe: 'bg-red-600/20 text-red-400 border border-red-600/30' }
-  if (diasAtivos >= 0 && diasAtivos <= 3) return { texto: `Vence em ${diasAtivos}d`, classe: 'bg-yellow-600/20 text-yellow-400 border border-yellow-600/30' }
-  return { texto: 'Ativo', classe: 'bg-white/5 text-white/50 border border-white/10' }
+  if (diasAtivos >= 0 && diasAtivos <= 3) return { texto: `Vence em ${diasAtivos}d`, classe: 'bg-yellow-600/20 text-[#F5F0E8] border border-yellow-600/30' }
+  return { texto: 'Ativo', classe: 'bg-green-600/20 text-green-400 border border-green-600/30' }
 }
 
 export function corNomePaciente(diasAtivos: number): string {

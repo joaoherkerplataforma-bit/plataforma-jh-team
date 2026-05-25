@@ -115,7 +115,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
   const tabButtonClass = (key: TabKey) =>
     `px-4 py-2 text-sm rounded-md transition-colors ${
       tabAtiva === key
-        ? 'bg-[#111111] text-[#C9A84C] font-medium'
+        ? 'bg-[#111111] text-[#F5F0E8] font-medium'
         : 'text-[#8A7A5A] hover:text-[#F5F0E8]'
     }`
 
@@ -269,7 +269,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                     <td className={`px-4 py-3 whitespace-nowrap ${nomeClasse}`}>
                       <Link
                         href={`/pacientes/${p.id}`}
-                        className="hover:text-[#C9A84C] hover:underline transition-colors"
+                        className="hover:text-[#F5F0E8] hover:underline transition-colors"
                       >
                         {p.nome}
                       </Link>
@@ -329,7 +329,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                           <button
                             type="button"
                             onClick={() => abrirConfirm(p, 'reativar')}
-                            className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-[#1A1500] hover:bg-[#2A2209] text-[#C9A84C] border border-[#2A2209] hover:border-[#C9A84C] rounded transition-colors"
+                            className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-[#1A1500] hover:bg-[#2A2209] text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded transition-colors"
                           >
                             <RotateCcw size={12} />
                             Reativar
@@ -365,7 +365,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
           <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-md mx-4 shadow-2xl">
             <div className="px-6 py-4 border-b border-[#2A2209]">
-              <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
+              <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
                 {confirm.acao === 'cancelar'
                   ? 'Cancelar paciente'
                   : 'Reativar paciente'}
@@ -376,7 +376,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                 {confirm.acao === 'cancelar' ? (
                   <>
                     Tem certeza que deseja cancelar{' '}
-                    <span className="text-[#C9A84C] font-semibold">
+                    <span className="text-[#F5F0E8] font-semibold">
                       {confirm.pacienteNome}
                     </span>
                     ? O paciente sera movido para a aba Cancelados.
@@ -384,7 +384,7 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                 ) : (
                   <>
                     Tem certeza que deseja reativar{' '}
-                    <span className="text-[#C9A84C] font-semibold">
+                    <span className="text-[#F5F0E8] font-semibold">
                       {confirm.pacienteNome}
                     </span>
                     ? O paciente voltara para a aba Ativos.

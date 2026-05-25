@@ -154,7 +154,7 @@ function MembroRow({
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="text-[#F5F0E8] font-medium truncate">{membro.nome}</span>
-          <span className="text-[10px] uppercase tracking-wide bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]/30 px-1.5 py-0.5 rounded">
+          <span className="text-[10px] uppercase tracking-wide bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]/30 px-1.5 py-0.5 rounded">
             {PERFIL_LABEL[membro.perfil]}
           </span>
           {!membro.ativo && (
@@ -233,7 +233,7 @@ function ModalAdicionar({
   return (
     <Overlay onClose={onClose}>
       <h2 className="text-lg font-semibold text-[#F5F0E8] mb-4 flex items-center gap-2">
-        <UserPlus size={18} className="text-[#C9A84C]" /> Adicionar membro
+        <UserPlus size={18} className="text-[#F5F0E8]" /> Adicionar membro
       </h2>
       <div className="space-y-3">
         <div>
@@ -299,7 +299,7 @@ function ModalCredencial({ credencial, onClose }: { credencial: Credencial; onCl
   return (
     <Overlay onClose={onClose}>
       <h2 className="text-lg font-semibold text-[#F5F0E8] mb-1 flex items-center gap-2">
-        <ShieldCheck size={18} className="text-[#C9A84C]" /> Acesso criado
+        <ShieldCheck size={18} className="text-[#F5F0E8]" /> Acesso criado
       </h2>
       <p className="text-xs text-[#8A7A5A] mb-4">
         Copie e envie a mensagem abaixo (WhatsApp/e-mail). A senha não será mostrada de novo.
@@ -330,7 +330,7 @@ function Linha({ label, valor, destaque }: { label: string; valor: string; desta
   return (
     <div className="flex items-center justify-between gap-3">
       <span className="text-[#8A7A5A] text-xs">{label}</span>
-      <span className={`truncate ${destaque ? 'text-[#C9A84C] font-mono font-semibold' : 'text-[#C9C4BA]'}`}>
+      <span className={`truncate ${destaque ? 'text-[#F5F0E8] font-mono font-semibold' : 'text-[#C9C4BA]'}`}>
         {valor}
       </span>
     </div>

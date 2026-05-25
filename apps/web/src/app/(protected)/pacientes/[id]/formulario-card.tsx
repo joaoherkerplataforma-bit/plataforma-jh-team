@@ -59,7 +59,7 @@ export function FormularioCard({ card }: FormularioCardProps) {
         onClick={() => respondido && setModalAberto(true)}
         className={`mt-auto inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-medium transition-colors ${
           respondido
-            ? 'bg-[#C9A84C]/15 text-[#C9A84C] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
+            ? 'bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
             : 'bg-white/5 text-[#8A7A5A]/60 border border-white/10 cursor-not-allowed'
         }`}
       >

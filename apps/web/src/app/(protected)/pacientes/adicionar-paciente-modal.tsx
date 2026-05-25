@@ -87,7 +87,7 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2209]">
-          <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
+          <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
             Adicionar Paciente
           </h2>
           <button

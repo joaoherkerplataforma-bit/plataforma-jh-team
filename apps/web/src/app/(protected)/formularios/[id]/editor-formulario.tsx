@@ -253,8 +253,8 @@ export function EditorFormulario({ form }: { form: Formulario }) {
         {acao !== 'nenhuma' && (
           <p className="text-xs text-[#8A7A5A] bg-[#1A1500]/50 border border-[#2A2209] rounded-lg p-2.5">
             Dica: para esta ação funcionar, mapeie os campos certos (ex.: anamnese precisa de{' '}
-            <span className="text-[#C9A84C]">Nome</span>, <span className="text-[#C9A84C]">E-mail</span> e{' '}
-            <span className="text-[#C9A84C]">Plano</span>) usando o seletor &quot;Alimenta&quot; em cada campo.
+            <span className="text-[#F5F0E8]">Nome</span>, <span className="text-[#F5F0E8]">E-mail</span> e{' '}
+            <span className="text-[#F5F0E8]">Plano</span>) usando o seletor &quot;Alimenta&quot; em cada campo.
           </p>
         )}
       </div>
@@ -265,7 +265,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
         <button
           type="button"
           onClick={addCampo}
-          className="flex items-center gap-1.5 text-xs text-[#C9A84C] border border-[#C9A84C]/40 rounded-lg px-3 py-1.5 hover:bg-[#1A1500]"
+          className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#C9A84C]/40 rounded-lg px-3 py-1.5 hover:bg-[#1A1500]"
         >
           <Plus size={14} /> Adicionar campo
         </button>
@@ -372,7 +372,7 @@ export function EditorFormulario({ form }: { form: Formulario }) {
 
         {campos.length === 0 && (
           <div className="text-center py-10 text-[#8A7A5A] text-sm border border-dashed border-[#2A2209] rounded-xl">
-            Sem campos. Clique em <span className="text-[#C9A84C]">Adicionar campo</span>.
+            Sem campos. Clique em <span className="text-[#F5F0E8]">Adicionar campo</span>.
           </div>
         )}
       </div>

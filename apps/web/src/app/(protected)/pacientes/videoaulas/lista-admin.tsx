@@ -124,7 +124,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
         </td>
         <td className="px-4 py-3 text-center whitespace-nowrap">
           {v.ativo ? (
-            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]/40">
+            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]/40">
               Ativo
             </span>
           ) : (
@@ -143,7 +143,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
                   title="Mover para cima"
                   onClick={() => reordenar(v, 'up')}
                   disabled={pending || isFirstAtivo}
-                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ArrowUp size={14} />
                 </button>
@@ -152,7 +152,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
                   title="Mover para baixo"
                   onClick={() => reordenar(v, 'down')}
                   disabled={pending || isLastAtivo}
-                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ArrowDown size={14} />
                 </button>
@@ -165,7 +165,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
               title="Editar metadados"
               onClick={() => abrirEditar(v)}
               disabled={pending}
-              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
+              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
             >
               <Edit3 size={14} />
             </button>
@@ -176,7 +176,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
               title={v.ativo ? 'Arquivar' : 'Reativar'}
               onClick={() => toggleAtivo(v)}
               disabled={pending}
-              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
+              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
             >
               {v.ativo ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
@@ -191,7 +191,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-2xl font-serif text-[#C9A84C] tracking-wide">
+          <h1 className="text-2xl font-serif text-[#F5F0E8] tracking-wide">
             Videoaulas
           </h1>
           <p className="text-sm text-[#8A7A5A] mt-1">

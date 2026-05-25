@@ -92,8 +92,8 @@ export function FormularioPublico({ slug, titulo, descricao, campos, token }: Pr
     return (
       <main className="min-h-screen bg-[#0A0A0A] flex items-center justify-center px-5">
         <div className="max-w-md w-full text-center py-12">
-          <CheckCircle2 size={56} className="text-[#C9A84C] mx-auto mb-5" />
-          <p className="font-serif text-[#C9A84C] tracking-[0.25em] text-base mb-4">JH TEAM</p>
+          <CheckCircle2 size={56} className="text-[#F5F0E8] mx-auto mb-5" />
+          <p className="font-serif text-[#F5F0E8] tracking-[0.25em] text-base mb-4">JH TEAM</p>
           <h1 className="text-[#F5F0E8] text-2xl font-semibold mb-2">Recebido! ✅</h1>
           <p className="text-[#8A7A5A] text-sm leading-relaxed">
             Suas respostas foram enviadas com sucesso. Pode fechar esta página.
@@ -108,7 +108,7 @@ export function FormularioPublico({ slug, titulo, descricao, campos, token }: Pr
       <div className="max-w-lg mx-auto px-5">
         {/* Cabecalho */}
         <header className="pt-10 pb-6 text-center">
-          <p className="font-serif text-[#C9A84C] tracking-[0.25em] text-sm mb-5">JH TEAM</p>
+          <p className="font-serif text-[#F5F0E8] tracking-[0.25em] text-sm mb-5">JH TEAM</p>
           <h1 className="text-[#F5F0E8] text-2xl font-semibold leading-tight">{titulo}</h1>
           {descricao && (
             <p className="text-[#8A7A5A] text-sm mt-3 leading-relaxed">{descricao}</p>
@@ -190,7 +190,7 @@ function CampoInput({
     <div className="mb-2">
       <label className="block text-[#F5F0E8] text-[15px] font-medium leading-snug">
         {campo.label}
-        {campo.obrigatorio && <span className="text-[#C9A84C] ml-1">*</span>}
+        {campo.obrigatorio && <span className="text-[#F5F0E8] ml-1">*</span>}
       </label>
       {campo.descricao && <p className="text-[#8A7A5A] text-xs mt-1">{campo.descricao}</p>}
     </div>
@@ -268,7 +268,7 @@ function CampoInput({
                 }`}
               >
                 {op}
-                {selecionado && <Check size={18} className="text-[#C9A84C]" />}
+                {selecionado && <Check size={18} className="text-[#F5F0E8]" />}
               </button>
             )
           })}
@@ -294,7 +294,7 @@ function CampoInput({
                 }`}
               >
                 {op}
-                {selecionado && <Check size={18} className="text-[#C9A84C]" />}
+                {selecionado && <Check size={18} className="text-[#F5F0E8]" />}
               </button>
             )
           })}
@@ -342,9 +342,9 @@ function CampoInput({
             }}
           />
           {upload?.enviando ? (
-            <Loader2 size={20} className="text-[#C9A84C] animate-spin flex-shrink-0" />
+            <Loader2 size={20} className="text-[#F5F0E8] animate-spin flex-shrink-0" />
           ) : valor ? (
-            <Check size={20} className="text-[#C9A84C] flex-shrink-0" />
+            <Check size={20} className="text-[#F5F0E8] flex-shrink-0" />
           ) : (
             <Camera size={20} className="text-[#8A7A5A] flex-shrink-0" />
           )}

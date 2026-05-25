@@ -223,7 +223,7 @@ export function UploadModal({
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2209]">
-          <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
+          <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
             {mode === 'create' ? 'Nova videoaula' : 'Editar videoaula'}
           </h2>
           <button
@@ -300,7 +300,7 @@ export function UploadModal({
                 accept="video/mp4,video/webm,video/quicktime"
                 onChange={handleArquivoChange}
                 disabled={salvando}
-                className="block w-full text-sm text-[#F5F0E8] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#1A1500] file:text-[#C9A84C] hover:file:bg-[#2A2209] file:cursor-pointer disabled:opacity-50"
+                className="block w-full text-sm text-[#F5F0E8] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#1A1500] file:text-[#F5F0E8] hover:file:bg-[#2A2209] file:cursor-pointer disabled:opacity-50"
               />
               {arquivo && (
                 <p className="mt-1 text-xs text-[#8A7A5A]">
@@ -312,7 +312,7 @@ export function UploadModal({
 
           {/* Status / Erro */}
           {statusMsg && !erro && (
-            <p className="text-[#C9A84C] text-sm">{statusMsg}</p>
+            <p className="text-[#F5F0E8] text-sm">{statusMsg}</p>
           )}
           {erro && <p className="text-red-400 text-sm">{erro}</p>}
 

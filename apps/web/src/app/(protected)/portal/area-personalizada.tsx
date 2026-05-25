@@ -32,8 +32,8 @@ function diasRestantesPlano(dataVencimento: string): number {
 function corDiasRestantes(dias: number): string {
   if (dias < 0) return 'text-white/50'
   if (dias < 7) return 'text-red-400'
-  if (dias <= 30) return 'text-yellow-400'
-  return 'text-[#C9A84C]'
+  if (dias <= 30) return 'text-[#F5F0E8]'
+  return 'text-[#F5F0E8]'
 }
 
 function rotuloDiasRestantes(dias: number): string {
@@ -65,9 +65,9 @@ export function AreaPersonalizada({
       {/* Header */}
       <header className="flex items-center gap-3">
         <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#1A1500] border border-[#C9A84C]/40">
-          <Sparkles size={18} className="text-[#C9A84C]" />
+          <Sparkles size={18} className="text-[#F5F0E8]" />
         </div>
-        <h2 className="text-xl sm:text-2xl font-serif text-[#C9A84C] tracking-wide">
+        <h2 className="text-xl sm:text-2xl font-serif text-[#F5F0E8] tracking-wide">
           Sua Área Personalizada
         </h2>
       </header>
@@ -77,7 +77,7 @@ export function AreaPersonalizada({
         className={`grid grid-cols-1 ${mostraTreino ? 'sm:grid-cols-2' : ''} gap-4`}
       >
         <CardAcesso
-          icone={<Apple size={22} className="text-[#C9A84C]" />}
+          icone={<Apple size={22} className="text-[#F5F0E8]" />}
           titulo="Minha Dieta"
           descricao="Acesse seu plano alimentar atualizado no WebDiet."
           url={linkDieta}
@@ -85,7 +85,7 @@ export function AreaPersonalizada({
         />
         {mostraTreino && (
           <CardAcesso
-            icone={<Dumbbell size={22} className="text-[#C9A84C]" />}
+            icone={<Dumbbell size={22} className="text-[#F5F0E8]" />}
             titulo="Meu Treino"
             descricao="Acesse seu programa de treino no MFit Personal."
             url={linkTreino}
@@ -96,7 +96,7 @@ export function AreaPersonalizada({
 
       {/* Card do plano */}
       <section className="bg-[#111111] border border-[#2A2209] rounded-xl p-5 sm:p-6">
-        <h3 className="text-xs uppercase tracking-wider text-[#C9A84C] font-medium mb-4">
+        <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium mb-4">
           Seu plano
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -132,7 +132,7 @@ export function AreaPersonalizada({
         />
       ) : (
         <section className="bg-[#111111] border border-[#2A2209] rounded-xl p-5 sm:p-6">
-          <h3 className="text-xs uppercase tracking-wider text-[#C9A84C] font-medium mb-2">
+          <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium mb-2">
             Histórico de formulários
           </h3>
           <p className="text-sm text-[#8A7A5A]">
@@ -175,7 +175,7 @@ function CardAcesso({
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-auto inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#C9A84C]/15 text-[#C9A84C] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25 transition-colors"
+        className="mt-auto inline-flex items-center justify-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25 transition-colors"
       >
         {rotuloBotao}
         <ExternalLink size={14} />

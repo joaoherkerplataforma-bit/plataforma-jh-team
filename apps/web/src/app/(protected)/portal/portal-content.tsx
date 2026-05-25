@@ -31,7 +31,7 @@ export function PortalContent({
   return (
     <div className="max-w-3xl mx-auto">
       {modoPreview && (
-        <div className="mb-6 px-4 py-3 bg-[#1A1500] border border-[#C9A84C]/40 rounded-lg flex items-center gap-2 text-sm text-[#C9A84C]">
+        <div className="mb-6 px-4 py-3 bg-[#1A1500] border border-[#C9A84C]/40 rounded-lg flex items-center gap-2 text-sm text-[#F5F0E8]">
           <Eye size={16} />
           <span>Modo preview — você está vendo a visão do aluno.</span>
         </div>
@@ -39,7 +39,7 @@ export function PortalContent({
 
       {/* Header */}
       <header className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-serif text-[#C9A84C] tracking-wide">
+        <h1 className="text-2xl sm:text-3xl font-serif text-[#F5F0E8] tracking-wide">
           Portal do Aluno
         </h1>
         <div className="h-px w-32 mt-2 bg-gradient-to-r from-[#C9A84C] to-transparent" />

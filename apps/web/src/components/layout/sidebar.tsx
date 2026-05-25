@@ -106,7 +106,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
       >
         {/* Logo */}
         <div className="flex items-center justify-center h-16 border-b border-[#2A2209] px-4">
-          <span className="font-serif text-[#C9A84C] tracking-[0.25em] text-xl whitespace-nowrap overflow-hidden">
+          <span className="font-serif text-[#F5F0E8] tracking-[0.25em] text-xl whitespace-nowrap overflow-hidden">
             {expandida ? 'JH TEAM' : 'JH'}
           </span>
         </div>
@@ -122,7 +122,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
                 <p className="text-sm font-medium text-[#F5F0E8] truncate">
                   {user.nome}
                 </p>
-                <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border border-[#C9A84C] bg-[#1A1500] text-[#C9A84C]">
+                <span className="inline-block mt-0.5 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded border border-[#C9A84C] bg-[#1A1500] text-[#F5F0E8]">
                   {PERFIL_LABELS[user.perfil]}
                 </span>
               </div>
@@ -146,7 +146,7 @@ export function Sidebar({ user, mobileAberta, onFecharMobile }: SidebarProps) {
                   ${expandida ? '' : 'justify-center'}
                   ${
                     ativo
-                      ? 'bg-[#1A1500] text-[#C9A84C] border-l-[3px] border-l-[#C9A84C]'
+                      ? 'bg-[#1A1500] text-[#F5F0E8] border-l-[3px] border-l-[#C9A84C]'
                       : 'text-[#8A7A5A] hover:bg-[#1A1500]/60 hover:text-[#F5F0E8]'
                   }
                 `}

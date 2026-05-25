@@ -133,7 +133,7 @@ function renderCorpo(
           key={`${r.pergunta}-${idx}`}
           className="border border-[#2A2209] rounded-md p-3 bg-[#111111]"
         >
-          <p className="text-xs font-semibold text-[#C9A84C] mb-1">
+          <p className="text-xs font-semibold text-[#F5F0E8] mb-1">
             {r.pergunta}
           </p>
           <p className="text-sm text-[#F5F0E8] whitespace-pre-wrap break-words">

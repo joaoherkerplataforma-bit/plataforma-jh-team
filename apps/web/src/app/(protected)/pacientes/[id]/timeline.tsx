@@ -37,7 +37,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
       : `Vencido há ${Math.abs(paciente.dias_ativos)}d`
 
   const diasRestantesClasse =
-    paciente.dias_ativos >= 0 ? 'text-[#C9A84C]' : 'text-red-400'
+    paciente.dias_ativos >= 0 ? 'text-[#F5F0E8]' : 'text-red-400'
 
   const statusRetorno = badgeStatusRetorno(paciente.dias_para_retorno)
   const statusPlano = badgeStatusPlano(paciente.dias_ativos)
@@ -49,7 +49,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
     <div className="relative flex flex-col md:flex-row md:items-stretch gap-6 md:gap-0">
       {/* Bloco 1 — Entrada */}
       <div className="flex-1 bg-[#111111] border border-[#2A2209] rounded-xl p-5 space-y-4 md:rounded-r-none">
-        <h3 className="text-xs uppercase tracking-wider text-[#C9A84C] font-medium">
+        <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium">
           Entrada
         </h3>
         <div>
@@ -88,7 +88,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
 
       {/* Bloco 2 — Progresso */}
       <div className="flex-1 bg-[#111111] border border-[#2A2209] rounded-xl p-5 space-y-4 md:rounded-none">
-        <h3 className="text-xs uppercase tracking-wider text-[#C9A84C] font-medium">
+        <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium">
           Progresso
         </h3>
         <div>
@@ -106,7 +106,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
             <p className="text-[#8A7A5A] text-xs uppercase tracking-wider">
               % do plano
             </p>
-            <span className="text-[#C9A84C] text-xs font-medium">
+            <span className="text-[#F5F0E8] text-xs font-medium">
               {percentualPlano}%
             </span>
           </div>
@@ -147,7 +147,7 @@ export function Timeline({ paciente, responsavelNome }: TimelineProps) {
 
       {/* Bloco 3 — Saída */}
       <div className="flex-1 bg-[#111111] border border-[#2A2209] rounded-xl p-5 space-y-4 md:rounded-l-none">
-        <h3 className="text-xs uppercase tracking-wider text-[#C9A84C] font-medium">
+        <h3 className="text-xs uppercase tracking-wider text-[#F5F0E8] font-medium">
           Saída
         </h3>
         <div>

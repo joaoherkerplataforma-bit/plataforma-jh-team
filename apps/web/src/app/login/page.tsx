@@ -71,7 +71,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         {/* Logo acima do card */}
         <div className="text-center space-y-3 mb-8">
-          <h1 className="font-serif text-5xl tracking-[0.35em] text-[#C9A84C]">
+          <h1 className="font-serif text-5xl tracking-[0.35em] text-[#F5F0E8]">
             JH TEAM
           </h1>
           <div className="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-[#C9A84C] to-transparent" />

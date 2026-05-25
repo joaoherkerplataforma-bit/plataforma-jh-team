@@ -211,7 +211,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
         onClick={() => setEditando(true)}
         className={`text-left text-sm cursor-pointer min-w-[80px] max-w-[200px] transition-colors block truncate ${
           temObs
-            ? 'px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#C9A84C]'
+            ? 'px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#F5F0E8]'
             : 'text-[#8A7A5A]/60 hover:text-[#8A7A5A]'
         }`}
         title={temObs ? valor! : 'Clique para adicionar observacao'}
@@ -225,7 +225,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
   if (temObs) {
     return (
       <span
-        className="block truncate max-w-[200px] px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#C9A84C] text-sm"
+        className="block truncate max-w-[200px] px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#F5F0E8] text-sm"
         title={valor!}
       >
         <MessageSquare size={12} className="inline mr-1 -mt-0.5" />
@@ -716,7 +716,7 @@ function NovaAlteracaoModal({
               </div>
             )}
             {pacienteId && (
-              <p className="mt-1 text-xs text-[#C9A84C]">Selecionado: {buscaPaciente}</p>
+              <p className="mt-1 text-xs text-[#F5F0E8]">Selecionado: {buscaPaciente}</p>
             )}
           </div>
 
@@ -847,7 +847,7 @@ export function TarefasTabs({
             onClick={() => setTabAtiva(tab.id)}
             className={`px-4 py-2 text-sm rounded-md transition-colors whitespace-nowrap ${
               tabAtiva === tab.id
-                ? 'bg-[#111111] text-[#C9A84C] font-medium'
+                ? 'bg-[#111111] text-[#F5F0E8] font-medium'
                 : 'text-[#8A7A5A] hover:text-[#F5F0E8]'
             }`}
           >

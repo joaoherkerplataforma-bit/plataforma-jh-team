@@ -36,7 +36,7 @@ export function RelatorioPlaceholder() {
             >
               <div className="flex items-start gap-3">
                 <div className="p-2 rounded-lg bg-[#1A1500] shrink-0">
-                  <Icone size={20} className="text-[#C9A84C]/60" />
+                  <Icone size={20} className="text-[#F5F0E8]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[#F5F0E8]/80 text-sm font-semibold mb-1">

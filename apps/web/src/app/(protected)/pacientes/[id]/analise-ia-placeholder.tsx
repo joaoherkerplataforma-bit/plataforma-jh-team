@@ -26,7 +26,7 @@ export function AnaliseIaPlaceholder() {
         <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
           Análise IA
         </h2>
-        <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-[#C9A84C]/15 text-[#C9A84C] border border-[#C9A84C]/30">
+        <span className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30">
           Em breve
         </span>
       </div>
