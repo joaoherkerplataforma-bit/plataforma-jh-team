@@ -51,7 +51,8 @@ html.light {
   html.light [class*="bg-[#111111]"],
   html.light [class*="bg-[#141414]"],
   html.light [class*="bg-[#1A1A1A]"],
-  html.light [class*="bg-[#1F1F1F]"] {
+  html.light [class*="bg-[#1F1F1F]"],
+  html.light [class*="bg-zinc-800"] {
     background-color: #FFFFFF !important;
   }
 
