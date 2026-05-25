@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { LogOut, Menu } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
 import type { UserProfile, PerfilAcesso } from '@/types/auth'
 
 const PERFIL_LABELS: Record<PerfilAcesso, string> = {
@@ -58,6 +59,8 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
           <span className="hidden sm:inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]">
             {PERFIL_LABELS[user.perfil]}
           </span>
+
+          <ThemeToggle />
 
           <button
             type="button"

@@ -13,6 +13,14 @@
   --text-muted:  #F5F0E8;
 }
 
+html.light {
+  --background:  #F7F4EC;
+  --surface:     #FFFFFF;
+  --border:      #D9CFB9;
+  --text:        #151515;
+  --text-muted:  #151515;
+}
+
 @layer base {
   * {
     @apply box-border;
@@ -26,5 +34,51 @@
     background-color: #0A0A0A;
     color: #F5F0E8;
     @apply antialiased;
+  }
+
+  html.light body {
+    background-color: #F7F4EC;
+    color: #151515;
+  }
+}
+
+@layer utilities {
+  html.light [class*="bg-[#0A0A0A]"],
+  html.light [class*="bg-[#0D0D0D]"] {
+    background-color: #F7F4EC !important;
+  }
+
+  html.light [class*="bg-[#111111]"],
+  html.light [class*="bg-[#141414]"],
+  html.light [class*="bg-[#1A1A1A]"],
+  html.light [class*="bg-[#1F1F1F]"] {
+    background-color: #FFFFFF !important;
+  }
+
+  html.light [class*="bg-[#1A1500]"] {
+    background-color: #F2E7C8 !important;
+  }
+
+  html.light [class*="text-[#F5F0E8]"],
+  html.light [class*="text-white"],
+  html.light [class*="text-white/"] {
+    color: #151515 !important;
+  }
+
+  html.light [class*="placeholder-[#F5F0E8]"]::placeholder {
+    color: rgb(21 21 21 / 0.55) !important;
+  }
+
+  html.light [class*="border-[#2A2209]"],
+  html.light [class*="border-white/"] {
+    border-color: #D9CFB9 !important;
+  }
+
+  html.light [class*="divide-[#2A2209]"] > :not([hidden]) ~ :not([hidden]) {
+    border-color: #D9CFB9 !important;
+  }
+
+  html.light [class*="bg-black/"] {
+    background-color: rgb(21 21 21 / 0.35) !important;
   }
 }
