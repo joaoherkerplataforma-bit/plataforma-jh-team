@@ -56,6 +56,7 @@ INSERT INTO public.formularios (slug, titulo, descricao, acao, ativo, campos) VA
   true,
   '[
     {"key":"nome_completo","tipo":"texto_curto","label":"Nome completo","obrigatorio":true,"mapeia_para":"nome"},
+    {"key":"email","tipo":"email","label":"E-mail","obrigatorio":true,"mapeia_para":"email"},
     {"key":"foto_frente","tipo":"upload_foto","label":"Foto de frente","obrigatorio":true},
     {"key":"foto_lado","tipo":"upload_foto","label":"Foto de lado","obrigatorio":true},
     {"key":"foto_costas","tipo":"upload_foto","label":"Foto de costas","obrigatorio":true}

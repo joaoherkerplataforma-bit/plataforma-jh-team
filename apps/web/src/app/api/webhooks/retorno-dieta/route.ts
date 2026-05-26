@@ -7,6 +7,7 @@ import { processarRetornoDieta } from '@/lib/automacoes'
 
 interface RetornoDietaPayload {
   nome_completo: string
+  email: string
   respostas?: PerguntaResposta[]
 }
 
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceClient()
   const r = await processarRetornoDieta(supabase, {
     nome_completo: body.nome_completo,
+    email: body.email,
     dados_raw: body as unknown as Record<string, unknown>,
   })
 

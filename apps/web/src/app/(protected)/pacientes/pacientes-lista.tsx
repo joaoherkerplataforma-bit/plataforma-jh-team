@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Ban, RotateCcw } from 'lucide-react'
+import { Search, Ban, RotateCcw, ArrowUpDown, ArrowUp, ArrowDown, X } from 'lucide-react'
 import type { Paciente, PacienteComCalculos } from '@/types/pacientes'
 import {
   TIPO_PLANO_LABELS,
@@ -27,6 +27,19 @@ import {
 
 type TabKey = 'ativos' | 'vencidos' | 'cancelados'
 type Acao = 'cancelar' | 'reativar'
+type SortDirection = 'asc' | 'desc'
+type ColumnKey =
+  | 'nome'
+  | 'data_inicio'
+  | 'proximo_retorno'
+  | 'dias_para_retorno'
+  | 'status_retorno'
+  | 'tipo_plano'
+  | 'duracao_plano'
+  | 'data_vencimento_plano'
+  | 'dias_ativos'
+  | 'status_plano'
+  | 'observacoes'
 
 interface ConfirmState {
   aberto: boolean
@@ -47,10 +60,145 @@ const CONFIRM_INICIAL: ConfirmState = {
   acao: 'cancelar',
 }
 
+type ColumnFilters = Partial<Record<ColumnKey, string>>
+
+interface SortState {
+  key: ColumnKey
+  direction: SortDirection
+}
+
+function HeaderFiltravel({
+  label,
+  columnKey,
+  sort,
+  filtro,
+  align = 'left',
+  onSort,
+  onFilter,
+}: {
+  label: string
+  columnKey: ColumnKey
+  sort: SortState
+  filtro: string
+  align?: 'left' | 'center'
+  onSort: (key: ColumnKey) => void
+  onFilter: (key: ColumnKey, value: string) => void
+}) {
+  const ativo = sort.key === columnKey
+  const Icon = !ativo ? ArrowUpDown : sort.direction === 'asc' ? ArrowUp : ArrowDown
+
+  return (
+    <th
+      className={`px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider min-w-[150px] ${
+        align === 'center' ? 'text-center' : 'text-left'
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => onSort(columnKey)}
+        className={`inline-flex items-center gap-1.5 transition-colors ${
+          ativo ? 'text-[#C9A84C]' : 'text-[#F5F0E8] hover:text-[#C9A84C]'
+        } ${align === 'center' ? 'justify-center' : ''}`}
+      >
+        {label}
+        <Icon size={13} />
+      </button>
+      <input
+        type="text"
+        value={filtro}
+        onChange={(e) => onFilter(columnKey, e.target.value)}
+        placeholder="Filtrar"
+        className="mt-2 w-full min-w-[120px] rounded-md border border-[#2A2209] bg-[#111111] px-2 py-1.5 text-xs normal-case tracking-normal text-[#F5F0E8] placeholder-[#F5F0E8]/45 focus:border-[#C9A84C] focus:outline-none"
+      />
+    </th>
+  )
+}
+
+function valorColunaTexto(paciente: PacienteComCalculos, key: ColumnKey): string {
+  switch (key) {
+    case 'nome':
+      return `${paciente.nome} ${paciente.email ?? ''} ${paciente.telefone ?? ''}`
+    case 'data_inicio':
+      return formatarData(paciente.data_inicio)
+    case 'proximo_retorno':
+      return formatarData(paciente.proximo_retorno)
+    case 'dias_para_retorno':
+      return paciente.dias_para_retorno === null ? '-' : String(paciente.dias_para_retorno)
+    case 'status_retorno':
+      return badgeStatusRetorno(paciente.dias_para_retorno).texto
+    case 'tipo_plano':
+      return TIPO_PLANO_LABELS[paciente.tipo_plano]
+    case 'duracao_plano':
+      return TEMPO_PLANO_LABELS[paciente.duracao_plano]
+    case 'data_vencimento_plano':
+      return formatarData(paciente.data_vencimento_plano)
+    case 'dias_ativos':
+      return String(paciente.dias_ativos)
+    case 'status_plano':
+      return badgeStatusPlano(paciente.dias_ativos).texto
+    case 'observacoes':
+      return paciente.observacoes ?? ''
+  }
+}
+
+function valorColunaSort(paciente: PacienteComCalculos, key: ColumnKey): string | number {
+  switch (key) {
+    case 'data_inicio':
+      return paciente.data_inicio
+    case 'proximo_retorno':
+      return paciente.proximo_retorno ?? ''
+    case 'data_vencimento_plano':
+      return paciente.data_vencimento_plano
+    case 'dias_para_retorno':
+      return paciente.dias_para_retorno ?? Number.POSITIVE_INFINITY
+    case 'dias_ativos':
+      return paciente.dias_ativos
+    default:
+      return valorColunaTexto(paciente, key).toLowerCase()
+  }
+}
+
+function compararPacientes(
+  a: PacienteComCalculos,
+  b: PacienteComCalculos,
+  sort: SortState,
+): number {
+  const av = valorColunaSort(a, sort.key)
+  const bv = valorColunaSort(b, sort.key)
+  let resultado = 0
+
+  if (typeof av === 'number' && typeof bv === 'number') {
+    resultado = av - bv
+  } else {
+    resultado = String(av).localeCompare(String(bv), 'pt-BR', {
+      numeric: true,
+      sensitivity: 'base',
+    })
+  }
+
+  return sort.direction === 'asc' ? resultado : -resultado
+}
+
+function colunaVisivelNaTab(key: ColumnKey, tabAtiva: TabKey): boolean {
+  if (key === 'dias_para_retorno' || key === 'status_retorno') {
+    return tabAtiva === 'ativos'
+  }
+  if (
+    key === 'data_vencimento_plano' ||
+    key === 'dias_ativos' ||
+    key === 'status_plano'
+  ) {
+    return tabAtiva !== 'cancelados'
+  }
+  return true
+}
+
 export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) {
   const router = useRouter()
   const [tabAtiva, setTabAtiva] = useState<TabKey>('ativos')
   const [query, setQuery] = useState('')
+  const [columnFilters, setColumnFilters] = useState<ColumnFilters>({})
+  const [sort, setSort] = useState<SortState>({ key: 'nome', direction: 'asc' })
   const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false)
   const [confirm, setConfirm] = useState<ConfirmState>(CONFIRM_INICIAL)
   const [erroAcao, setErroAcao] = useState<string | null>(null)
@@ -71,14 +219,42 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
 
   const pacientesFiltrados = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return listaAtiva
-    return listaAtiva.filter((p) => {
+    const filters = Object.entries(columnFilters).filter(
+      ([key, value]) => value.trim() !== '' && colunaVisivelNaTab(key as ColumnKey, tabAtiva),
+    ) as [ColumnKey, string][]
+
+    const filtrados = listaAtiva.filter((p) => {
       const nome = p.nome.toLowerCase()
       const email = p.email?.toLowerCase() ?? ''
       const telefone = p.telefone?.toLowerCase() ?? ''
-      return nome.includes(q) || email.includes(q) || telefone.includes(q)
+      const passaBuscaGlobal = !q || nome.includes(q) || email.includes(q) || telefone.includes(q)
+      if (!passaBuscaGlobal) return false
+
+      return filters.every(([key, value]) =>
+        valorColunaTexto(p, key).toLowerCase().includes(value.trim().toLowerCase()),
+      )
     })
-  }, [listaAtiva, query])
+
+    const sortEfetivo = colunaVisivelNaTab(sort.key, tabAtiva)
+      ? sort
+      : { key: 'nome' as const, direction: 'asc' as const }
+
+    return [...filtrados].sort((a, b) => compararPacientes(a, b, sortEfetivo))
+  }, [listaAtiva, query, columnFilters, sort, tabAtiva])
+
+  const alterarFiltroColuna = (key: ColumnKey, value: string) => {
+    setColumnFilters((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const limparFiltrosColunas = () => setColumnFilters({})
+
+  const ordenarPor = (key: ColumnKey) => {
+    setSort((current) =>
+      current.key === key
+        ? { key, direction: current.direction === 'asc' ? 'desc' : 'asc' }
+        : { key, direction: 'asc' },
+    )
+  }
 
   const abrirConfirm = (paciente: PacienteComCalculos, acao: Acao) => {
     setErroAcao(null)
@@ -119,6 +295,8 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         : 'text-[#F5F0E8] hover:text-[#F5F0E8]'
     }`
 
+  const temFiltrosColuna = Object.values(columnFilters).some((value) => value?.trim())
+
   const colunasRetorno = tabAtiva === 'ativos'
   const colunasPlano = tabAtiva !== 'cancelados'
   const colunasAcao = isAdmin
@@ -158,6 +336,19 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         </button>
       </div>
 
+      {temFiltrosColuna && (
+        <div className="mb-3 flex justify-end">
+          <button
+            type="button"
+            onClick={limparFiltrosColunas}
+            className="inline-flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 transition-colors"
+          >
+            <X size={14} />
+            Limpar filtros das colunas
+          </button>
+        </div>
+      )}
+
       {/* Tabs */}
       <div className="flex gap-1 bg-[#0A0A0A] border border-[#2A2209] rounded-lg p-1 mb-4 w-fit">
         <button
@@ -188,47 +379,25 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Nome
-              </th>
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Data Inicio
-              </th>
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Prox. Retorno
-              </th>
+              <HeaderFiltravel label="Nome" columnKey="nome" sort={sort} filtro={columnFilters.nome ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+              <HeaderFiltravel label="Data Inicio" columnKey="data_inicio" sort={sort} filtro={columnFilters.data_inicio ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+              <HeaderFiltravel label="Prox. Retorno" columnKey="proximo_retorno" sort={sort} filtro={columnFilters.proximo_retorno ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
               {colunasRetorno && (
                 <>
-                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                    Dias p/ Retorno
-                  </th>
-                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                    Status Retorno
-                  </th>
+                  <HeaderFiltravel label="Dias p/ Retorno" columnKey="dias_para_retorno" align="center" sort={sort} filtro={columnFilters.dias_para_retorno ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+                  <HeaderFiltravel label="Status Retorno" columnKey="status_retorno" align="center" sort={sort} filtro={columnFilters.status_retorno ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
                 </>
               )}
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Tipo
-              </th>
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Tempo
-              </th>
+              <HeaderFiltravel label="Tipo" columnKey="tipo_plano" sort={sort} filtro={columnFilters.tipo_plano ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+              <HeaderFiltravel label="Tempo" columnKey="duracao_plano" sort={sort} filtro={columnFilters.duracao_plano ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
               {colunasPlano && (
                 <>
-                  <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                    Vencimento
-                  </th>
-                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                    Dias Ativos
-                  </th>
-                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                    Status Plano
-                  </th>
+                  <HeaderFiltravel label="Vencimento" columnKey="data_vencimento_plano" sort={sort} filtro={columnFilters.data_vencimento_plano ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+                  <HeaderFiltravel label="Dias Ativos" columnKey="dias_ativos" align="center" sort={sort} filtro={columnFilters.dias_ativos ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
+                  <HeaderFiltravel label="Status Plano" columnKey="status_plano" align="center" sort={sort} filtro={columnFilters.status_plano ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
                 </>
               )}
-              <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
-                Obs.
-              </th>
+              <HeaderFiltravel label="Obs." columnKey="observacoes" sort={sort} filtro={columnFilters.observacoes ?? ''} onSort={ordenarPor} onFilter={alterarFiltroColuna} />
               {colunasAcao && (
                 <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                   Acao

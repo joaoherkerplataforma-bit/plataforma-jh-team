@@ -129,9 +129,9 @@ async function despachar(
     case 'treino':
       return processarTreino(supabase, { nome_completo, email, dados_raw, formulario_id })
     case 'fotos_30dias':
-      return processarFotos30Dias(supabase, { nome_completo, dados_raw, formulario_id })
+      return processarFotos30Dias(supabase, { nome_completo, email, dados_raw, formulario_id })
     case 'feedback_retorno':
-      return processarRetornoDieta(supabase, { nome_completo, dados_raw, formulario_id })
+      return processarRetornoDieta(supabase, { nome_completo, email, dados_raw, formulario_id })
     case 'nenhuma':
     default:
       return registrarAvulso(supabase, { nome_completo, email, dados_raw, formulario_id })

@@ -839,24 +839,43 @@ export function TarefasTabs({
   return (
     <>
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-[#0A0A0A] border border-[#2A2209] rounded-lg p-1 mb-4 w-fit overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setTabAtiva(tab.id)}
-            className={`px-4 py-2 text-sm rounded-md transition-colors whitespace-nowrap ${
-              tabAtiva === tab.id
-                ? 'bg-[#111111] text-[#F5F0E8] font-medium'
-                : 'text-[#F5F0E8] hover:text-[#F5F0E8]'
-            }`}
-          >
-            {tab.label}
-            {tab.count !== undefined && (
-              <span className="ml-1.5 text-xs opacity-70">({tab.count})</span>
-            )}
-          </button>
-        ))}
+      <div className="mb-5 overflow-x-auto">
+        <div
+          role="tablist"
+          aria-label="Filtros de tarefas"
+          className="inline-flex min-w-max items-center gap-1 bg-[#0A0A0A] border border-[#2A2209] rounded-lg p-1"
+        >
+          {tabs.map((tab) => {
+            const ativo = tabAtiva === tab.id
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={ativo}
+                onClick={() => setTabAtiva(tab.id)}
+                className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-colors whitespace-nowrap border ${
+                  ativo
+                    ? 'bg-[#C9A84C] text-[#0A0A0A] border-[#C9A84C] font-semibold shadow-[0_0_0_1px_rgba(201,168,76,0.35)]'
+                    : 'text-[#F5F0E8] border-transparent hover:bg-white/5 hover:border-[#2A2209]'
+                }`}
+              >
+                <span>{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span
+                    className={`inline-flex min-w-6 justify-center rounded-full px-2 py-0.5 text-xs ${
+                      ativo
+                        ? 'bg-[#0A0A0A]/15 text-[#0A0A0A]'
+                        : 'bg-white/5 text-[#F5F0E8]'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Content */}

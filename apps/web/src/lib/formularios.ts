@@ -23,6 +23,7 @@ export const ORDEM_JORNADA: TipoFormulario[] = [
 
 const FOTO_REGEX = /^https?:\/\/.*\.(jpg|jpeg|png|webp|heic|gif)(\?.*)?$/i
 const DRIVE_FILE_REGEX = /^https?:\/\/(drive\.google\.com|lh\d+\.googleusercontent\.com)\//i
+const DIAS_MINIMOS_ENTRE_FOTOS_RETORNO = 25
 
 /**
  * Extrai array `respostas` do JSON `dados_raw`. Retorna `[]` se não houver
@@ -65,11 +66,11 @@ export function isFotoUrl(resposta: string): boolean {
  *   2. Fotos iniciais
  *   3. Treino (apenas plano completo)
  *   4. Pares (Fotos 30 dias / Feedback retorno) por ciclo, em ordem
- *      cronológica. Cada ciclo é numerado a partir de 1. Se um lado do par
- *      não existe naquele ciclo, mostra "Aguardando".
+ *      cronológica. O próximo ciclo de fotos só aparece quando o ciclo
+ *      anterior tem feedback e já passou a janela mínima entre retornos.
  *
- * Se ainda não houver nenhum formulário de retorno, mostra exatamente um
- * par vazio do ciclo 1 (foto30 + feedback) com status "aguardando".
+ * Se ainda não houver nenhum formulário de retorno, mostra o card de fotos do
+ * ciclo 1 como aguardando. O feedback do ciclo só aparece depois das fotos.
  */
 export function montarCardsDoCiclo(
   formularios: FormularioRecebido[],
@@ -125,12 +126,28 @@ export function montarCardsDoCiclo(
     formularios.filter((f) => f.tipo_formulario === 'feedback_retorno'),
   )
 
-  const totalCiclos = Math.max(fotos30.length, feedbacks.length, 1)
+  if (fotos30.length === 0) {
+    cards.push({
+      tipo: 'fotos_30dias',
+      titulo: LABELS_FORMULARIO.fotos_30dias,
+      status: 'aguardando',
+      cicloNumero: 1,
+    })
+    return cards
+  }
 
-  for (let i = 0; i < totalCiclos; i++) {
-    const cicloNumero = i + 1
+  let feedbackCursor = 0
+  let ultimoCicloCompleto:
+    | { cicloNumero: number; fotos: FormularioRecebido; feedback: FormularioRecebido }
+    | null = null
+
+  for (let i = 0; i < fotos30.length; i++) {
+    const cicloNumero = cards.filter((card) => card.tipo === 'fotos_30dias').length + 1
     const f30 = fotos30[i]
-    const fb = feedbacks[i]
+    const feedbackIndex = feedbacks.findIndex(
+      (feedback, idx) => idx >= feedbackCursor && feedback.criado_em > f30.criado_em,
+    )
+    const fb = feedbackIndex === -1 ? undefined : feedbacks[feedbackIndex]
 
     cards.push({
       tipo: 'fotos_30dias',
@@ -149,7 +166,35 @@ export function montarCardsDoCiclo(
       cicloNumero,
       formulario: fb,
     })
+
+    if (!fb) return cards
+
+    ultimoCicloCompleto = { cicloNumero, fotos: f30, feedback: fb }
+    feedbackCursor = feedbackIndex + 1
+  }
+
+  if (
+    ultimoCicloCompleto &&
+    diasEntreDatas(ultimoCicloCompleto.fotos.criado_em.slice(0, 10), hojeIso()) >=
+      DIAS_MINIMOS_ENTRE_FOTOS_RETORNO
+  ) {
+    cards.push({
+      tipo: 'fotos_30dias',
+      titulo: LABELS_FORMULARIO.fotos_30dias,
+      status: 'aguardando',
+      cicloNumero: ultimoCicloCompleto.cicloNumero + 1,
+    })
   }
 
   return cards
+}
+
+function hojeIso(): string {
+  return new Date().toISOString().split('T')[0]
+}
+
+function diasEntreDatas(inicio: string, fim: string): number {
+  const inicioMs = new Date(`${inicio}T00:00:00Z`).getTime()
+  const fimMs = new Date(`${fim}T00:00:00Z`).getTime()
+  return Math.floor((fimMs - inicioMs) / (1000 * 60 * 60 * 24))
 }

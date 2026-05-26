@@ -7,6 +7,7 @@ import { processarFotos30Dias } from '@/lib/automacoes'
 
 interface Fotos30DiasPayload {
   nome_completo: string
+  email: string
   respostas?: PerguntaResposta[]
 }
 
@@ -30,6 +31,7 @@ export async function POST(request: NextRequest) {
   const supabase = createServiceClient()
   const r = await processarFotos30Dias(supabase, {
     nome_completo: body.nome_completo,
+    email: body.email,
     dados_raw: body as unknown as Record<string, unknown>,
   })
 

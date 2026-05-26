@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { Images } from 'lucide-react'
 import type { CardFormulario } from '@/types/formularios'
 import { formatarData } from '@/lib/pacientes'
 import { FormularioModal } from '@/app/(protected)/pacientes/[id]/formulario-modal'
@@ -19,6 +20,9 @@ export function FormularioCard({ card }: FormularioCardProps) {
 
   const dataLabel = respondido && card.data
     ? formatarData(card.data.slice(0, 10))
+    : null
+  const hrefMontagem = respondido && card.tipo === 'fotos_30dias' && card.formulario
+    ? `/api/pacientes/${card.formulario.paciente_id}/montagem-fotos?retorno=${card.formulario.id}`
     : null
 
   const badge = respondido
@@ -53,18 +57,32 @@ export function FormularioCard({ card }: FormularioCardProps) {
         )}
       </div>
 
-      <button
-        type="button"
-        disabled={!respondido}
-        onClick={() => respondido && setModalAberto(true)}
-        className={`mt-auto inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-medium transition-colors ${
-          respondido
-            ? 'bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
-            : 'bg-white/5 text-[#F5F0E8]/60 border border-white/10 cursor-not-allowed'
-        }`}
-      >
-        Ver respostas
-      </button>
+      <div className="mt-auto grid grid-cols-1 gap-2">
+        <button
+          type="button"
+          disabled={!respondido}
+          onClick={() => respondido && setModalAberto(true)}
+          className={`inline-flex items-center justify-center rounded-md px-3 py-2 text-xs font-medium transition-colors ${
+            respondido
+              ? 'bg-[#C9A84C]/15 text-[#F5F0E8] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/25'
+              : 'bg-white/5 text-[#F5F0E8]/60 border border-white/10 cursor-not-allowed'
+          }`}
+        >
+          Ver respostas
+        </button>
+
+        {hrefMontagem && (
+          <a
+            href={hrefMontagem}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium bg-white/5 text-[#F5F0E8] border border-white/10 hover:bg-white/10 transition-colors"
+          >
+            <Images size={14} />
+            Ver montagem
+          </a>
+        )}
+      </div>
 
       {card.formulario && (
         <FormularioModal

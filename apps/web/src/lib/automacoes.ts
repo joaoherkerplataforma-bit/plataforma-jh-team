@@ -32,6 +32,9 @@ interface EntradaAnamnese extends EntradaComum {
 type EntradaComEmail = EntradaComum & { email: string }
 
 const ORIGENS_VALIDAS = ['Instagram', 'TikTok', 'YouTube', 'Indicação'] as const
+const ERRO_EMAIL_NAO_ENCONTRADO =
+  'E-mail não encontrado, verifique se há erros de digitação e tente novamente'
+const DIAS_MINIMOS_ENTRE_FOTOS_RETORNO = 25
 
 // -------------------------------------------------------------
 // Anamnese — cria/reusa paciente + tarefa Modulo B com alternancia
@@ -189,13 +192,12 @@ async function registrarComPaciente(
     const { data: paciente, error } = await supabase
       .from('pacientes')
       .select('id')
-      .ilike('nome', nome_completo)
       .eq('email', email)
       .limit(1)
       .single()
 
     if (error || !paciente) {
-      return { ok: false, status: 404, error: 'Paciente nao encontrado' }
+      return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
     }
 
     await registrarFormulario(supabase, {
@@ -218,34 +220,37 @@ async function registrarComPaciente(
 // -------------------------------------------------------------
 export async function processarFotos30Dias(
   supabase: SupabaseClient,
-  input: EntradaComum
+  input: EntradaComEmail
 ): Promise<ResultadoAutomacao> {
-  const { nome_completo, dados_raw, formulario_id } = input
-  if (!nome_completo) {
-    return { ok: false, status: 400, error: 'Campo obrigatorio: nome_completo' }
+  const { nome_completo, email, dados_raw, formulario_id } = input
+  if (!email) {
+    return { ok: false, status: 400, error: 'Campo obrigatorio: email' }
   }
 
   try {
     const { data: paciente, error } = await supabase
       .from('pacientes')
       .select('id')
-      .ilike('nome', nome_completo)
+      .eq('email', email)
       .limit(1)
       .single()
 
     if (error || !paciente) {
-      return { ok: false, status: 404, error: 'Paciente nao encontrado' }
+      return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
     }
 
-    const pablo = await buscarPablo(supabase)
-    if (!pablo) return { ok: false, status: 500, error: 'Usuario pablo nao encontrado' }
+    const disponibilidade = await verificarDisponibilidadeFotos30(supabase, paciente.id)
+    if (!disponibilidade.ok) return disponibilidade
+
+    const responsavelFotos = await buscarResponsavelFotos(supabase)
+    if (!responsavelFotos) return { ok: false, status: 500, error: 'Usuario responsavel pelas fotos nao encontrado' }
 
     const { data: tarefa, error: errTarefa } = await supabase
       .from('tarefas')
       .insert({
         paciente_id: paciente.id,
         modulo: 'C',
-        responsavel_id: pablo,
+        responsavel_id: responsavelFotos,
         data_criacao: hoje(),
         data_prazo: addDias(hoje(), 4),
         status: 'pendente',
@@ -262,6 +267,7 @@ export async function processarFotos30Dias(
       tipo_formulario: 'fotos_30dias',
       dados_raw,
       nome_formulario: nome_completo,
+      email_formulario: email,
       formulario_id,
     })
 
@@ -276,27 +282,27 @@ export async function processarFotos30Dias(
 // -------------------------------------------------------------
 export async function processarRetornoDieta(
   supabase: SupabaseClient,
-  input: EntradaComum
+  input: EntradaComEmail
 ): Promise<ResultadoAutomacao> {
-  const { nome_completo, dados_raw, formulario_id } = input
-  if (!nome_completo) {
-    return { ok: false, status: 400, error: 'Campo obrigatorio: nome_completo' }
+  const { nome_completo, email, dados_raw, formulario_id } = input
+  if (!email) {
+    return { ok: false, status: 400, error: 'Campo obrigatorio: email' }
   }
 
   try {
     const { data: paciente, error } = await supabase
       .from('pacientes')
       .select('id')
-      .ilike('nome', nome_completo)
+      .eq('email', email)
       .limit(1)
       .single()
 
     if (error || !paciente) {
-      return { ok: false, status: 404, error: 'Paciente nao encontrado' }
+      return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
     }
 
-    const pablo = await buscarPablo(supabase)
-    if (!pablo) return { ok: false, status: 500, error: 'Usuario pablo nao encontrado' }
+    const responsavelRetorno = await buscarResponsavelFotos(supabase)
+    if (!responsavelRetorno) return { ok: false, status: 500, error: 'Usuario responsavel pelas fotos nao encontrado' }
 
     const { data: tarefaC } = await supabase
       .from('tarefas')
@@ -312,7 +318,7 @@ export async function processarRetornoDieta(
       .insert({
         paciente_id: paciente.id,
         modulo: 'D',
-        responsavel_id: pablo,
+        responsavel_id: responsavelRetorno,
         data_criacao: hoje(),
         data_prazo: addDias(hoje(), 3),
         status: 'bloqueada',
@@ -330,6 +336,7 @@ export async function processarRetornoDieta(
       tipo_formulario: 'feedback_retorno',
       dados_raw,
       nome_formulario: nome_completo,
+      email_formulario: email,
       formulario_id,
     })
 
@@ -375,15 +382,96 @@ export async function registrarAvulso(
 // -------------------------------------------------------------
 // Helpers
 // -------------------------------------------------------------
-async function buscarPablo(supabase: SupabaseClient): Promise<string | null> {
-  const { data } = await supabase
+async function buscarResponsavelFotos(supabase: SupabaseClient): Promise<string | null> {
+  const { data: pablo } = await supabase
     .from('usuarios')
     .select('id')
     .eq('perfil', 'pablo')
     .eq('ativo', true)
     .limit(1)
-    .single()
-  return data?.id ?? null
+    .maybeSingle()
+
+  if (pablo?.id) return pablo.id
+
+  const { data: admin } = await supabase
+    .from('usuarios')
+    .select('id')
+    .eq('perfil', 'joao_admin')
+    .eq('ativo', true)
+    .limit(1)
+    .maybeSingle()
+
+  return admin?.id ?? null
+}
+
+interface FormularioRetornoMinimo {
+  tipo_formulario: 'fotos_30dias' | 'feedback_retorno'
+  criado_em: string
+}
+
+async function verificarDisponibilidadeFotos30(
+  supabase: SupabaseClient,
+  pacienteId: string
+): Promise<{ ok: true } | Extract<ResultadoAutomacao, { ok: false }>> {
+  const { data, error } = await supabase
+    .from('formularios_recebidos')
+    .select('tipo_formulario, criado_em')
+    .eq('paciente_id', pacienteId)
+    .in('tipo_formulario', ['fotos_30dias', 'feedback_retorno'])
+    .order('criado_em', { ascending: true })
+
+  if (error) {
+    return { ok: false, status: 500, error: 'Falha ao validar ciclo de retorno', details: error.message }
+  }
+
+  const formularios = (data ?? []) as FormularioRetornoMinimo[]
+  const fotos = formularios.filter((f) => f.tipo_formulario === 'fotos_30dias')
+  const feedbacks = formularios.filter((f) => f.tipo_formulario === 'feedback_retorno')
+
+  if (fotos.length === 0) return { ok: true }
+
+  let feedbackCursor = 0
+  let ultimaFotoComFeedback: FormularioRetornoMinimo | null = null
+
+  for (const foto of fotos) {
+    const feedbackIndex = feedbacks.findIndex(
+      (feedback, idx) => idx >= feedbackCursor && feedback.criado_em > foto.criado_em,
+    )
+
+    if (feedbackIndex === -1) {
+      return {
+        ok: false,
+        status: 409,
+        error: 'As fotos de retorno deste ciclo já foram enviadas. Preencha o Feedback & Retorno antes de enviar novas fotos.',
+      }
+    }
+
+    ultimaFotoComFeedback = foto
+    feedbackCursor = feedbackIndex + 1
+  }
+
+  if (!ultimaFotoComFeedback) return { ok: true }
+
+  const diasDesdeUltimasFotos = diasEntreDatas(
+    ultimaFotoComFeedback.criado_em.slice(0, 10),
+    hoje(),
+  )
+
+  if (diasDesdeUltimasFotos < DIAS_MINIMOS_ENTRE_FOTOS_RETORNO) {
+    return {
+      ok: false,
+      status: 409,
+      error: `O próximo ciclo de fotos ainda não está disponível. Tente novamente quando completar ${DIAS_MINIMOS_ENTRE_FOTOS_RETORNO} dias desde o último envio de fotos.`,
+    }
+  }
+
+  return { ok: true }
+}
+
+function diasEntreDatas(inicio: string, fim: string): number {
+  const inicioMs = new Date(`${inicio}T00:00:00Z`).getTime()
+  const fimMs = new Date(`${fim}T00:00:00Z`).getTime()
+  return Math.floor((fimMs - inicioMs) / (1000 * 60 * 60 * 24))
 }
 
 interface RegistroFormulario {
