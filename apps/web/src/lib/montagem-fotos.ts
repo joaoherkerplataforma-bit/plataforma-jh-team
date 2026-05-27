@@ -69,6 +69,48 @@ export async function gerarMontagemFotos(
     .toBuffer()
 }
 
+export interface AjusteImagem {
+  y: number
+  zoom: number
+}
+
+export type IdAjuste = `antes_${FotoTipo}` | `depois_${FotoTipo}`
+
+export type AjustesMontagem = Record<IdAjuste, AjusteImagem>
+
+export async function gerarMontagemFotosComAjustes(
+  fotosIniciais: FormularioRecebido,
+  fotosRetorno: FormularioRecebido,
+  ajustes: AjustesMontagem,
+): Promise<Buffer> {
+  const antes = extrairFotosObrigatorias(fotosIniciais, 'Fotos Iniciais')
+  const depois = extrairFotosObrigatorias(fotosRetorno, 'Fotos 30 dias')
+
+  const template = await readFile(TEMPLATE_PATH)
+  const composites: Slot[] = []
+
+  for (const tipo of ['frente', 'lado', 'costas'] as const) {
+    const antesKey = `antes_${tipo}` as IdAjuste
+    const depoisKey = `depois_${tipo}` as IdAjuste
+    const adjAntes = ajustes[antesKey] ?? { y: 0, zoom: 1 }
+    const adjDepois = ajustes[depoisKey] ?? { y: 0, zoom: 1 }
+
+    composites.push({
+      ...SLOTS[antesKey],
+      input: await prepararFotoComAjustes(antes[tipo], SLOTS[antesKey], adjAntes),
+    })
+    composites.push({
+      ...SLOTS[depoisKey],
+      input: await prepararFotoComAjustes(depois[tipo], SLOTS[depoisKey], adjDepois),
+    })
+  }
+
+  return sharp(template)
+    .composite(composites)
+    .png({ compressionLevel: 9 })
+    .toBuffer()
+}
+
 function extrairFotosObrigatorias(
   formulario: FormularioRecebido,
   nomeFormulario: string,
@@ -125,6 +167,48 @@ async function prepararFoto(
       fit: 'cover',
       position: 'top',
     })
+    .png()
+    .toBuffer()
+}
+
+async function prepararFotoComAjustes(
+  url: string,
+  slot: Omit<Slot, 'input'>,
+  ajustes: AjusteImagem,
+): Promise<Buffer> {
+  if (ajustes.zoom <= 1 && ajustes.y === 0) {
+    return prepararFoto(url, slot)
+  }
+
+  const imagem = await baixarImagem(url)
+  const meta = await sharp(imagem).metadata()
+  const imgW = meta.width!
+  const imgH = meta.height!
+
+  const { width: slotW, height: slotH } = slot
+  const zoom = ajustes.zoom
+  const y = ajustes.y
+
+  const escala = (zoom * slotW) / imgW
+  const visivelW = Math.round(slotW / escala)
+  const visivelH = Math.round(slotH / escala)
+  const yOrig = Math.round(y / escala)
+  const extractLeft = Math.round((imgW - visivelW) / 2)
+  const extractTop = Math.round((imgH - visivelH) / 2 - yOrig)
+
+  const clampedLeft = Math.max(0, Math.min(extractLeft, imgW - visivelW))
+  const clampedTop = Math.max(0, Math.min(extractTop, imgH - visivelH))
+  const clampedW = Math.min(visivelW, imgW - clampedLeft)
+  const clampedH = Math.min(visivelH, imgH - clampedTop)
+
+  if (clampedW <= 0 || clampedH <= 0) {
+    return prepararFoto(url, slot)
+  }
+
+  return sharp(imagem)
+    .rotate()
+    .extract({ left: clampedLeft, top: clampedTop, width: clampedW, height: clampedH })
+    .resize(slotW, slotH, { fit: 'fill' })
     .png()
     .toBuffer()
 }

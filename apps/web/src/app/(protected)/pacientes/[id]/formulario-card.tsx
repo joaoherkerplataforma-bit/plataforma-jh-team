@@ -5,6 +5,7 @@ import { Images } from 'lucide-react'
 import type { CardFormulario } from '@/types/formularios'
 import { formatarData } from '@/lib/pacientes'
 import { FormularioModal } from '@/app/(protected)/pacientes/[id]/formulario-modal'
+import { MontagemModal } from '@/app/(protected)/pacientes/[id]/montagem-modal'
 
 interface FormularioCardProps {
   card: CardFormulario
@@ -12,6 +13,7 @@ interface FormularioCardProps {
 
 export function FormularioCard({ card }: FormularioCardProps) {
   const [modalAberto, setModalAberto] = useState(false)
+  const [montagemAberta, setMontagemAberta] = useState(false)
   const respondido = card.status === 'respondido'
 
   const titulo = card.cicloNumero
@@ -72,15 +74,14 @@ export function FormularioCard({ card }: FormularioCardProps) {
         </button>
 
         {hrefMontagem && (
-          <a
-            href={hrefMontagem}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => setMontagemAberta(true)}
             className="inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-xs font-medium bg-white/5 text-[#F5F0E8] border border-white/10 hover:bg-white/10 transition-colors"
           >
             <Images size={14} />
             Ver montagem
-          </a>
+          </button>
         )}
       </div>
 
@@ -89,6 +90,15 @@ export function FormularioCard({ card }: FormularioCardProps) {
           formulario={card.formulario}
           aberto={modalAberto}
           onFechar={() => setModalAberto(false)}
+        />
+      )}
+
+      {card.formulario && card.tipo === 'fotos_30dias' && (
+        <MontagemModal
+          pacienteId={card.formulario.paciente_id}
+          retornoFormId={card.formulario.id}
+          aberto={montagemAberta}
+          onFechar={() => setMontagemAberta(false)}
         />
       )}
     </div>
