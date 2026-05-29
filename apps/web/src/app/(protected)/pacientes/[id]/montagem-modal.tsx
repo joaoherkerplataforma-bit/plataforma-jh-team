@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   X,
   ArrowUp,
@@ -73,6 +73,8 @@ export function MontagemModal({
   const [imagensComErro, setImagensComErro] = useState<Set<string>>(new Set())
   const [imagensProntas, setImagensProntas] = useState<Set<string>>(new Set())
   const [gerando, setGerando] = useState(false)
+  const ajustesRef = useRef(ajustes)
+  ajustesRef.current = ajustes
 
   useEffect(() => {
     if (!aberto) {
@@ -183,7 +185,7 @@ export function MontagemModal({
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ retornoFormId, ajustes }),
+          body: JSON.stringify({ retornoFormId, ajustes: ajustesRef.current }),
         },
       )
 
@@ -194,7 +196,7 @@ export function MontagemModal({
 
       const blob = await res.blob()
       const url = URL.createObjectURL(blob)
-      window.open(url, '_blank')
+      window.open(url, `montagem-${pacienteId}-${Date.now()}`)
     } catch (err) {
       setErro(err instanceof Error ? err.message : 'Erro inesperado')
     } finally {
