@@ -102,49 +102,8 @@ export async function processarAnamnese(
     }
 
     // Alternancia Pablo/Estagiario via delegacao_controle
-    const { data: delegacao } = await supabase
-      .from('delegacao_controle')
-      .select('id, ultimo_delegado, contador')
-      .limit(1)
-      .single()
-
-    const { data: usuarios } = await supabase
-      .from('usuarios')
-      .select('id, perfil')
-      .in('perfil', ['pablo', 'joao_estagiario'])
-      .eq('ativo', true)
-
-    if (!delegacao || !usuarios || usuarios.length < 2) {
-      return { ok: false, status: 500, error: 'Configuracao de delegacao incompleta' }
-    }
-
-    const proximo_perfil = delegacao.ultimo_delegado === 'pablo' ? 'joao_estagiario' : 'pablo'
-    const responsavel = usuarios.find((u) => u.perfil === proximo_perfil)
-    if (!responsavel) {
-      return { ok: false, status: 500, error: `Usuario com perfil ${proximo_perfil} nao encontrado` }
-    }
-
-    await supabase
-      .from('delegacao_controle')
-      .update({ ultimo_delegado: proximo_perfil, contador: delegacao.contador + 1 })
-      .eq('id', delegacao.id)
-
-    const { data: tarefa, error: errTarefa } = await supabase
-      .from('tarefas')
-      .insert({
-        paciente_id,
-        modulo: 'B',
-        responsavel_id: responsavel.id,
-        data_criacao: hoje(),
-        data_prazo: addDias(hoje(), 3),
-        status: 'pendente',
-      })
-      .select('id')
-      .single()
-
-    if (errTarefa || !tarefa) {
-      return { ok: false, status: 500, error: 'Falha ao criar tarefa', details: errTarefa?.message }
-    }
+    const resultadoDelegacao = await delegarModuloB(supabase, paciente_id, nome_completo)
+    if (!resultadoDelegacao.ok) return resultadoDelegacao
 
     await registrarFormulario(supabase, {
       paciente_id,
@@ -155,33 +114,18 @@ export async function processarAnamnese(
       formulario_id,
     })
 
-    return { ok: true, status: 200, paciente_id, tarefa_id: tarefa.id, responsavel: proximo_perfil }
+    return { ok: true, status: 200, paciente_id, tarefa_id: resultadoDelegacao.tarefa_id, responsavel: resultadoDelegacao.responsavel }
   } catch (error) {
     return { ok: false, status: 500, error: 'Erro interno', details: msg(error) }
   }
 }
 
 // -------------------------------------------------------------
-// Fotos iniciais / Treino — apenas registram (paciente deve existir)
+// Fotos iniciais — registra + cria tarefa Modulo C (Pablo)
 // -------------------------------------------------------------
 export async function processarFotosIniciais(
   supabase: SupabaseClient,
   input: EntradaComEmail
-): Promise<ResultadoAutomacao> {
-  return registrarComPaciente(supabase, input, 'fotos_iniciais')
-}
-
-export async function processarTreino(
-  supabase: SupabaseClient,
-  input: EntradaComEmail
-): Promise<ResultadoAutomacao> {
-  return registrarComPaciente(supabase, input, 'treino')
-}
-
-async function registrarComPaciente(
-  supabase: SupabaseClient,
-  input: EntradaComEmail,
-  tipo: 'fotos_iniciais' | 'treino'
 ): Promise<ResultadoAutomacao> {
   const { nome_completo, email, dados_raw, formulario_id } = input
   if (!nome_completo || !email) {
@@ -200,16 +144,95 @@ async function registrarComPaciente(
       return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
     }
 
+    // Idempotência: só cria tarefa se não houver fotos_iniciais já registrada
+    const jaProcessado = await formularioJaRegistrado(supabase, paciente.id, 'fotos_iniciais')
+
+    let tarefa_id: string | undefined
+    if (!jaProcessado) {
+      const responsavelFotos = await buscarResponsavelFotos(supabase)
+      if (!responsavelFotos) {
+        return { ok: false, status: 500, error: 'Usuario responsavel pelas fotos nao encontrado' }
+      }
+
+      const { data: tarefa, error: errTarefa } = await supabase
+        .from('tarefas')
+        .insert({
+          paciente_id: paciente.id,
+          modulo: 'C',
+          responsavel_id: responsavelFotos,
+          data_criacao: hoje(),
+          data_prazo: addDias(hoje(), 4),
+          status: 'pendente',
+          observacoes_joao: `Fotos iniciais — ${nome_completo}`,
+        })
+        .select('id')
+        .single()
+
+      if (errTarefa || !tarefa) {
+        return { ok: false, status: 500, error: 'Falha ao criar tarefa', details: errTarefa?.message }
+      }
+      tarefa_id = tarefa.id
+    }
+
     await registrarFormulario(supabase, {
       paciente_id: paciente.id,
-      tipo_formulario: tipo,
+      tipo_formulario: 'fotos_iniciais',
       dados_raw,
       nome_formulario: nome_completo,
       email_formulario: email,
       formulario_id,
     })
 
-    return { ok: true, status: 200, paciente_id: paciente.id }
+    return { ok: true, status: 200, paciente_id: paciente.id, tarefa_id }
+  } catch (error) {
+    return { ok: false, status: 500, error: 'Erro interno', details: msg(error) }
+  }
+}
+
+// -------------------------------------------------------------
+// Treino — registra + cria tarefa Modulo B (alternancia)
+// -------------------------------------------------------------
+export async function processarTreino(
+  supabase: SupabaseClient,
+  input: EntradaComEmail
+): Promise<ResultadoAutomacao> {
+  const { nome_completo, email, dados_raw, formulario_id } = input
+  if (!nome_completo || !email) {
+    return { ok: false, status: 400, error: 'Campos obrigatorios: nome_completo, email' }
+  }
+
+  try {
+    const { data: paciente, error } = await supabase
+      .from('pacientes')
+      .select('id')
+      .eq('email', email)
+      .limit(1)
+      .single()
+
+    if (error || !paciente) {
+      return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
+    }
+
+    // Idempotência: só cria tarefa se não houver treino já registrado
+    const jaProcessado = await formularioJaRegistrado(supabase, paciente.id, 'treino')
+
+    let tarefa_id: string | undefined
+    if (!jaProcessado) {
+      const resultadoDelegacao = await delegarModuloB(supabase, paciente.id, nome_completo)
+      if (!resultadoDelegacao.ok) return resultadoDelegacao
+      tarefa_id = resultadoDelegacao.tarefa_id
+    }
+
+    await registrarFormulario(supabase, {
+      paciente_id: paciente.id,
+      tipo_formulario: 'treino',
+      dados_raw,
+      nome_formulario: nome_completo,
+      email_formulario: email,
+      formulario_id,
+    })
+
+    return { ok: true, status: 200, paciente_id: paciente.id, tarefa_id }
   } catch (error) {
     return { ok: false, status: 500, error: 'Erro interno', details: msg(error) }
   }
@@ -382,6 +405,87 @@ export async function registrarAvulso(
 // -------------------------------------------------------------
 // Helpers
 // -------------------------------------------------------------
+
+/**
+ * Cria tarefa Modulo B com alternância Pablo/Estagiário via delegacao_controle.
+ * Reutilizada por processarAnamnese(), processarTreino() e criação manual de paciente.
+ */
+async function delegarModuloB(
+  supabase: SupabaseClient,
+  paciente_id: string,
+  nome_paciente: string,
+): Promise<
+  | { ok: true; tarefa_id: string; responsavel: string }
+  | Extract<ResultadoAutomacao, { ok: false }>
+> {
+  const { data: delegacao } = await supabase
+    .from('delegacao_controle')
+    .select('id, ultimo_delegado, contador')
+    .limit(1)
+    .single()
+
+  const { data: usuarios } = await supabase
+    .from('usuarios')
+    .select('id, perfil')
+    .in('perfil', ['pablo', 'joao_estagiario'])
+    .eq('ativo', true)
+
+  if (!delegacao || !usuarios || usuarios.length < 2) {
+    return { ok: false, status: 500, error: 'Configuracao de delegacao incompleta' }
+  }
+
+  const proximo_perfil = delegacao.ultimo_delegado === 'pablo' ? 'joao_estagiario' : 'pablo'
+  const responsavel = usuarios.find((u) => u.perfil === proximo_perfil)
+  if (!responsavel) {
+    return { ok: false, status: 500, error: `Usuario com perfil ${proximo_perfil} nao encontrado` }
+  }
+
+  await supabase
+    .from('delegacao_controle')
+    .update({ ultimo_delegado: proximo_perfil, contador: delegacao.contador + 1 })
+    .eq('id', delegacao.id)
+
+  const { data: tarefa, error: errTarefa } = await supabase
+    .from('tarefas')
+    .insert({
+      paciente_id,
+      modulo: 'B',
+      responsavel_id: responsavel.id,
+      data_criacao: hoje(),
+      data_prazo: addDias(hoje(), 3),
+      status: 'pendente',
+      observacoes_joao: nome_paciente ? `${nome_paciente}` : null,
+    })
+    .select('id')
+    .single()
+
+  if (errTarefa || !tarefa) {
+    return { ok: false, status: 500, error: 'Falha ao criar tarefa', details: errTarefa?.message }
+  }
+
+  return { ok: true, tarefa_id: tarefa.id, responsavel: proximo_perfil }
+}
+
+/**
+ * Verifica se já existe um formulário registrado para este paciente + tipo.
+ * Usado para idempotência na criação de tarefas.
+ */
+async function formularioJaRegistrado(
+  supabase: SupabaseClient,
+  paciente_id: string,
+  tipo: string,
+): Promise<boolean> {
+  const { data, error } = await supabase
+    .from('formularios_recebidos')
+    .select('id')
+    .eq('paciente_id', paciente_id)
+    .eq('tipo_formulario', tipo)
+    .limit(1)
+
+  if (error || !data) return false
+  return data.length > 0
+}
+
 async function buscarResponsavelFotos(supabase: SupabaseClient): Promise<string | null> {
   const { data: pablo } = await supabase
     .from('usuarios')

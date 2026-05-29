@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 
 interface AdicionarPacienteModalProps {
   aberto: boolean
@@ -35,30 +34,24 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
         return
       }
 
-      const inicio = new Date(dataInicio + 'T00:00:00')
-      let mesesAdicionais = 3
-      if (tempoplano === 'semestral') mesesAdicionais = 6
-      if (tempoplano === 'anual') mesesAdicionais = 12
-      const vencimento = new Date(inicio)
-      vencimento.setMonth(vencimento.getMonth() + mesesAdicionais)
-      const dataVencimento = vencimento.toISOString().split('T')[0]
-
       try {
-        const supabase = createClient()
-        const { error } = await supabase.from('pacientes').insert({
-          nome,
-          telefone,
-          email,
-          tipo_plano: tipoplano,
-          duracao_plano: tempoplano,
-          data_inicio: dataInicio,
-          data_vencimento_plano: dataVencimento,
-          proximo_retorno: proximoRetorno,
-          // status omitido — banco usa default 'ativo'
+        const res = await fetch('/api/pacientes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome,
+            telefone,
+            email,
+            tipo_plano: tipoplano,
+            duracao_plano: tempoplano,
+            data_inicio: dataInicio,
+            proximo_retorno: proximoRetorno,
+          }),
         })
 
-        if (error) {
-          setErro(`Erro ao salvar: ${error.message}`)
+        const data = await res.json()
+        if (!res.ok || !data.ok) {
+          setErro(data.error || data.details || 'Erro ao criar paciente')
           setSalvando(false)
           return
         }
