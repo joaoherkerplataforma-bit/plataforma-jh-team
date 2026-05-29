@@ -11,6 +11,7 @@ import {
   Power,
   X,
   ShieldCheck,
+  Lock,
 } from 'lucide-react'
 
 export interface MembroEquipe {
@@ -42,14 +43,19 @@ interface Credencial {
 export function EquipeCliente({
   membros,
   currentUserId,
+  ehAdmin,
 }: {
   membros: MembroEquipe[]
   currentUserId: string
+  ehAdmin: boolean
 }) {
   const router = useRouter()
   const [modalAberto, setModalAberto] = useState(false)
   const [credencial, setCredencial] = useState<Credencial | null>(null)
   const [acaoEmCurso, setAcaoEmCurso] = useState<string | null>(null)
+  const [resetSenhaId, setResetSenhaId] = useState<string | null>(null)
+
+  const exibidos = ehAdmin ? membros : membros.filter((m) => m.id === currentUserId)
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -57,20 +63,24 @@ export function EquipeCliente({
         <div>
           <h1 className="text-2xl font-semibold text-[#F5F0E8]">Equipe</h1>
           <p className="text-sm text-[#F5F0E8] mt-1">
-            Adicione Pablo e o Estagiário. Eles recebem e-mail + senha temporária para acessar.
+            {ehAdmin
+              ? 'Adicione Pablo e o Estagiário. Eles recebem e-mail + senha temporária para acessar.'
+              : 'Gerencie sua senha de acesso.'}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => setModalAberto(true)}
-          className="flex items-center gap-2 bg-[#C9A84C] text-[#0A0A0A] font-semibold text-sm rounded-lg px-4 py-2.5"
-        >
-          <UserPlus size={16} /> Adicionar
-        </button>
+        {ehAdmin && (
+          <button
+            type="button"
+            onClick={() => setModalAberto(true)}
+            className="flex items-center gap-2 bg-[#C9A84C] text-[#0A0A0A] font-semibold text-sm rounded-lg px-4 py-2.5"
+          >
+            <UserPlus size={16} /> Adicionar
+          </button>
+        )}
       </div>
 
       <div className="space-y-2">
-        {membros.map((m) => (
+        {exibidos.map((m) => (
           <MembroRow
             key={m.id}
             membro={m}
@@ -78,6 +88,7 @@ export function EquipeCliente({
             ocupado={acaoEmCurso === m.id}
             onReset={() => resetarSenha(m)}
             onToggle={() => toggleAtivo(m)}
+            onRedefinir={() => setResetSenhaId(m.id)}
           />
         ))}
       </div>
@@ -95,6 +106,18 @@ export function EquipeCliente({
 
       {credencial && (
         <ModalCredencial credencial={credencial} onClose={() => setCredencial(null)} />
+      )}
+
+      {resetSenhaId && (
+        <ModalRedefinirSenha
+          key={resetSenhaId}
+          membro={membros.find((m) => m.id === resetSenhaId)!}
+          onClose={() => setResetSenhaId(null)}
+          onSucesso={() => {
+            setResetSenhaId(null)
+            router.refresh()
+          }}
+        />
       )}
     </div>
   )
@@ -142,12 +165,14 @@ function MembroRow({
   ocupado,
   onReset,
   onToggle,
+  onRedefinir,
 }: {
   membro: MembroEquipe
   ehVoceMesmo: boolean
   ocupado: boolean
   onReset: () => void
   onToggle: () => void
+  onRedefinir: () => void
 }) {
   return (
     <div className="bg-[#111111] border border-[#2A2209] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center gap-3">
@@ -169,13 +194,24 @@ function MembroRow({
       <div className="flex items-center gap-2">
         <button
           type="button"
-          onClick={onReset}
+          onClick={onRedefinir}
           disabled={ocupado}
           className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 disabled:opacity-50"
         >
-          {ocupado ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
-          Nova senha
+          {ocupado ? <Loader2 size={14} className="animate-spin" /> : <Lock size={14} />}
+          Redefinir senha
         </button>
+        {ehVoceMesmo && (
+          <button
+            type="button"
+            onClick={onReset}
+            disabled={ocupado}
+            className="flex items-center gap-1.5 text-xs text-[#F5F0E8] border border-[#2A2209] rounded-lg px-3 py-2 hover:border-[#C9A84C]/50 disabled:opacity-50"
+          >
+            {ocupado ? <Loader2 size={14} className="animate-spin" /> : <KeyRound size={14} />}
+            Nova senha
+          </button>
+        )}
         {!ehVoceMesmo && (
           <button
             type="button"
@@ -192,6 +228,116 @@ function MembroRow({
         )}
       </div>
     </div>
+  )
+}
+
+function ModalRedefinirSenha({
+  membro,
+  onClose,
+  onSucesso,
+}: {
+  membro: MembroEquipe
+  onClose: () => void
+  onSucesso: () => void
+}) {
+  const [senha, setSenha] = useState('')
+  const [confirmacao, setConfirmacao] = useState('')
+  const [salvando, setSalvando] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
+  const [sucesso, setSucesso] = useState(false)
+
+  const inputBase =
+    'w-full bg-[#141414] border border-[#2A2209] rounded-lg px-3 py-2.5 text-sm text-[#F5F0E8] outline-none focus:border-[#C9A84C]/60'
+
+  async function salvar() {
+    setErro(null)
+    if (senha.length < 6) {
+      setErro('A senha deve ter no mínimo 6 caracteres')
+      return
+    }
+    if (senha !== confirmacao) {
+      setErro('As senhas não conferem')
+      return
+    }
+    setSalvando(true)
+    try {
+      const resp = await fetch('/api/auth/redefinir-senha', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ senha }),
+      })
+      const json = await resp.json()
+      if (!resp.ok) throw new Error(json.error ?? 'Falha ao redefinir senha')
+      setSucesso(true)
+      setTimeout(onSucesso, 1500)
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'Falha ao redefinir senha')
+    } finally {
+      setSalvando(false)
+    }
+  }
+
+  return (
+    <Overlay onClose={onClose}>
+      <h2 className="text-lg font-semibold text-[#F5F0E8] mb-1 flex items-center gap-2">
+        <Lock size={18} className="text-[#F5F0E8]" /> Redefinir senha
+      </h2>
+      <p className="text-xs text-[#F5F0E8] mb-4">
+        {membro.nome} — {membro.email}
+      </p>
+
+      {sucesso ? (
+        <div className="text-center py-6">
+          <Check size={40} className="mx-auto text-green-400 mb-3" />
+          <p className="text-[#F5F0E8] font-medium">Senha redefinida com sucesso!</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div>
+            <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">
+              Nova senha
+            </label>
+            <input
+              type="password"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              className={inputBase}
+              autoFocus
+            />
+          </div>
+          <div>
+            <label className="block text-xs uppercase tracking-wide text-[#F5F0E8] mb-1.5">
+              Confirmar nova senha
+            </label>
+            <input
+              type="password"
+              value={confirmacao}
+              onChange={(e) => setConfirmacao(e.target.value)}
+              className={inputBase}
+            />
+          </div>
+          {erro && <p className="text-red-400 text-sm">{erro}</p>}
+          <div className="flex justify-end gap-2 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm text-[#F5F0E8] px-4 py-2 hover:text-[#F5F0E8]"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              onClick={salvar}
+              disabled={salvando}
+              className="flex items-center gap-2 bg-[#C9A84C] text-[#0A0A0A] font-semibold text-sm rounded-lg px-4 py-2 disabled:opacity-60"
+            >
+              {salvando ? <Loader2 size={16} className="animate-spin" /> : <Lock size={16} />}
+              Salvar nova senha
+            </button>
+          </div>
+        </div>
+      )}
+    </Overlay>
   )
 }
 

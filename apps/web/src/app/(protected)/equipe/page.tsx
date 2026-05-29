@@ -6,6 +6,8 @@ import { EquipeCliente, type MembroEquipe } from '@/app/(protected)/equipe/equip
 
 export const dynamic = 'force-dynamic'
 
+const PERFIS_EQUIPE = ['joao_admin', 'pablo', 'joao_estagiario'] as const
+
 export default async function EquipePage() {
   const supabase = await createClient()
   const {
@@ -18,7 +20,9 @@ export default async function EquipePage() {
     .select('perfil')
     .eq('id', user.id)
     .single()
-  if (usuario?.perfil !== 'joao_admin') redirect('/relatorio')
+  if (!usuario || !PERFIS_EQUIPE.includes(usuario.perfil as typeof PERFIS_EQUIPE[number])) {
+    redirect('/relatorio')
+  }
 
   const service = createServiceClient()
   const { data } = await service
@@ -29,6 +33,13 @@ export default async function EquipePage() {
     .order('nome', { ascending: true })
 
   const membros = (data ?? []) as MembroEquipe[]
+  const ehAdmin = usuario.perfil === 'joao_admin'
 
-  return <EquipeCliente membros={membros} currentUserId={user.id} />
+  return (
+    <EquipeCliente
+      membros={membros}
+      currentUserId={user.id}
+      ehAdmin={ehAdmin}
+    />
+  )
 }
