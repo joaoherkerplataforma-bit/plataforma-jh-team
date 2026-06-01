@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Lock, MessageSquare, Plus, X } from 'lucide-react'
+import { Lock, Plus, X } from 'lucide-react'
 import type { Tarefa, ModuloTarefa, StatusTarefa } from '@/types/tarefas'
 import {
   STATUS_LABELS,
@@ -39,7 +39,7 @@ function proximoStatus(
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'C') {
-    if (status === 'pendente' && perfil === 'pablo') return 'feito'
+    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'gravado'
     if (status === 'gravado' && perfil === 'joao_admin') return 'entregue'
   }
@@ -209,9 +209,9 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
       <button
         type="button"
         onClick={() => setEditando(true)}
-        className={`text-left text-sm cursor-pointer min-w-[80px] max-w-[200px] transition-colors block truncate ${
+        className={`text-left text-sm cursor-pointer transition-colors ${
           temObs
-            ? 'px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#F5F0E8]'
+            ? 'text-[#F5F0E8]'
             : 'text-[#F5F0E8]/60 hover:text-[#F5F0E8]'
         }`}
         title={temObs ? valor! : 'Clique para adicionar observacao'}
@@ -224,11 +224,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
   // Non-admin: read-only display
   if (temObs) {
     return (
-      <span
-        className="block truncate max-w-[200px] px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#F5F0E8] text-sm"
-        title={valor!}
-      >
-        <MessageSquare size={12} className="inline mr-1 -mt-0.5" />
+      <span className="text-sm text-[#F5F0E8]" title={valor!}>
         {valor}
       </span>
     )
@@ -800,10 +796,12 @@ export function TarefasTabs({
 
   const isAdmin = perfil === 'joao_admin'
   const isPablo = perfil === 'pablo'
+  const isEstagiario = perfil === 'joao_estagiario'
+  const podeVerFotos = isPablo || isAdmin || isEstagiario
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: 'pendencias', label: 'Pendencias', count: tarefasB.length },
-    ...(isPablo || isAdmin
+    ...(podeVerFotos
       ? [{ id: 'fotos' as TabId, label: 'Fotos 30 Dias', count: tarefasC.length }]
       : []),
     ...(isPablo || isAdmin
@@ -888,7 +886,7 @@ export function TarefasTabs({
         />
       )}
 
-      {tabAtiva === 'fotos' && (isPablo || isAdmin) && (
+      {tabAtiva === 'fotos' && podeVerFotos && (
         <TabelaFotos
           tarefas={tarefasC}
           perfil={perfil}
