@@ -35,20 +35,20 @@ function proximoStatus(
   if (status === 'bloqueada' || status === 'entregue') return null
 
   if (modulo === 'B') {
-    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'C') {
-    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'gravado'
     if (status === 'gravado' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'D') {
-    if (status === 'pendente' && perfil === 'pablo') return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'E') {
-    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   return null
