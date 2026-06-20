@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { Lock, MessageSquare, Plus, X } from 'lucide-react'
+import { Lock, Plus, X } from 'lucide-react'
 import type { Tarefa, ModuloTarefa, StatusTarefa } from '@/types/tarefas'
 import {
   STATUS_LABELS,
@@ -35,20 +35,20 @@ function proximoStatus(
   if (status === 'bloqueada' || status === 'entregue') return null
 
   if (modulo === 'B') {
-    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'C') {
-    if (status === 'pendente' && perfil === 'pablo') return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'gravado'
     if (status === 'gravado' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'D') {
-    if (status === 'pendente' && perfil === 'pablo') return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   if (modulo === 'E') {
-    if (status === 'pendente' && (perfil === 'pablo' || perfil === 'joao_estagiario')) return 'feito'
+    if (status === 'pendente') return 'feito'
     if (status === 'feito' && perfil === 'joao_admin') return 'entregue'
   }
   return null
@@ -81,11 +81,11 @@ function diasAteOuDesde(dataPrazo: string): number {
 
 /** Color class for data_prazo column based on urgency. */
 function corPrazo(tarefa: Tarefa): string {
-  if (tarefa.status === 'entregue') return 'text-[#8A7A5A]'
+  if (tarefa.status === 'entregue') return 'text-[#F5F0E8]'
   const diff = diasAteOuDesde(tarefa.data_prazo)
   if (diff > 0) return 'text-red-400'       // vencido
   if (diff >= -1) return 'text-orange-400'   // faltando 1 dia ou no dia
-  return 'text-[#8A7A5A]'                   // normal
+  return 'text-[#F5F0E8]'                   // normal
 }
 
 function linhaAtrasada(tarefa: Tarefa): boolean {
@@ -101,7 +101,7 @@ interface ResponsavelBadgeProps {
 }
 
 function ResponsavelBadge({ nome, perfil }: ResponsavelBadgeProps) {
-  if (!nome) return <span className="text-sm text-[#8A7A5A]">-</span>
+  if (!nome) return <span className="text-sm text-[#F5F0E8]">-</span>
 
   const primeiroNome = nome.split(' ')[0]
 
@@ -128,10 +128,10 @@ function ResponsavelBadge({ nome, perfil }: ResponsavelBadgeProps) {
 /* ─────────────────── Style constants ─────────────────── */
 
 const thClass =
-  'text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider'
+  'text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider'
 const thCenter =
-  'text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider'
-const tdClass = 'px-4 py-3 text-sm text-[#8A7A5A] whitespace-nowrap'
+  'text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider'
+const tdClass = 'px-4 py-3 text-sm text-[#F5F0E8] whitespace-nowrap'
 
 /* ─────────────────── ObservacoesCell ─────────────────── */
 
@@ -209,10 +209,10 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
       <button
         type="button"
         onClick={() => setEditando(true)}
-        className={`text-left text-sm cursor-pointer min-w-[80px] max-w-[200px] transition-colors block truncate ${
+        className={`text-left text-sm cursor-pointer transition-colors ${
           temObs
-            ? 'px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#C9A84C]'
-            : 'text-[#8A7A5A]/60 hover:text-[#8A7A5A]'
+            ? 'text-[#F5F0E8]'
+            : 'text-[#F5F0E8]/60 hover:text-[#F5F0E8]'
         }`}
         title={temObs ? valor! : 'Clique para adicionar observacao'}
       >
@@ -224,17 +224,13 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
   // Non-admin: read-only display
   if (temObs) {
     return (
-      <span
-        className="block truncate max-w-[200px] px-2 py-1 rounded border border-[#C9A84C]/40 bg-[#1A1500] text-[#C9A84C] text-sm"
-        title={valor!}
-      >
-        <MessageSquare size={12} className="inline mr-1 -mt-0.5" />
+      <span className="text-sm text-[#F5F0E8]" title={valor!}>
         {valor}
       </span>
     )
   }
 
-  return <span className="text-sm text-[#8A7A5A]/40">-</span>
+  return <span className="text-sm text-[#F5F0E8]/40">-</span>
 }
 
 /* ─────────────────── StatusButton ─────────────────── */
@@ -310,7 +306,7 @@ function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBPro
         <tbody>
           {tarefas.length === 0 ? (
             <tr>
-              <td colSpan={9} className="text-center py-12 text-[#8A7A5A]/60">
+              <td colSpan={9} className="text-center py-12 text-[#F5F0E8]/60">
                 Nenhuma pendencia de protocolo novo.
               </td>
             </tr>
@@ -387,7 +383,7 @@ function TabelaFotos({ tarefas, perfil, onUpdate, atualizando }: TabelaCProps) {
         <tbody>
           {tarefas.length === 0 ? (
             <tr>
-              <td colSpan={7} className="text-center py-12 text-[#8A7A5A]/60">
+              <td colSpan={7} className="text-center py-12 text-[#F5F0E8]/60">
                 Nenhuma tarefa de fotos antes/depois.
               </td>
             </tr>
@@ -471,7 +467,7 @@ function TabelaRetornos({ tarefas, perfil, onUpdate, atualizando }: TabelaDProps
         <tbody>
           {tarefasVisiveis.length === 0 ? (
             <tr>
-              <td colSpan={6} className="text-center py-12 text-[#8A7A5A]/60">
+              <td colSpan={6} className="text-center py-12 text-[#F5F0E8]/60">
                 Nenhuma tarefa de retorno dietetico.
               </td>
             </tr>
@@ -542,7 +538,7 @@ function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEPro
         <tbody>
           {tarefas.length === 0 ? (
             <tr>
-              <td colSpan={6} className="text-center py-12 text-[#8A7A5A]/60">
+              <td colSpan={6} className="text-center py-12 text-[#F5F0E8]/60">
                 Nenhuma alteracao de protocolo.
               </td>
             </tr>
@@ -671,7 +667,7 @@ function NovaAlteracaoModal({
           <button
             type="button"
             onClick={onFechar}
-            className="p-1 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+            className="p-1 rounded-lg text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
           >
             <X size={20} />
           </button>
@@ -681,7 +677,7 @@ function NovaAlteracaoModal({
         <div className="space-y-4">
           {/* Nome do aluno */}
           <div>
-            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+            <label className="block text-sm font-medium text-[#F5F0E8] mb-1">
               Nome do Aluno
             </label>
             <input
@@ -692,12 +688,12 @@ function NovaAlteracaoModal({
                 setPacienteId('')
               }}
               placeholder="Buscar aluno..."
-              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#8A7A5A]/40 focus:outline-none focus:border-[#C9A84C]/60"
+              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#F5F0E8]/40 focus:outline-none focus:border-[#C9A84C]/60"
             />
             {buscaPaciente.trim() && !pacienteId && (
               <div className="mt-1 max-h-32 overflow-y-auto bg-[#0A0A0A] border border-[#2A2209] rounded-lg">
                 {pacientesFiltrados.length === 0 ? (
-                  <p className="px-3 py-2 text-xs text-[#8A7A5A]/60">Nenhum aluno encontrado.</p>
+                  <p className="px-3 py-2 text-xs text-[#F5F0E8]/60">Nenhum aluno encontrado.</p>
                 ) : (
                   pacientesFiltrados.map((p) => (
                     <button
@@ -716,13 +712,13 @@ function NovaAlteracaoModal({
               </div>
             )}
             {pacienteId && (
-              <p className="mt-1 text-xs text-[#C9A84C]">Selecionado: {buscaPaciente}</p>
+              <p className="mt-1 text-xs text-[#F5F0E8]">Selecionado: {buscaPaciente}</p>
             )}
           </div>
 
           {/* Responsavel */}
           <div>
-            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+            <label className="block text-sm font-medium text-[#F5F0E8] mb-1">
               Responsavel
             </label>
             <select
@@ -741,7 +737,7 @@ function NovaAlteracaoModal({
 
           {/* Observacoes */}
           <div>
-            <label className="block text-sm font-medium text-[#8A7A5A] mb-1">
+            <label className="block text-sm font-medium text-[#F5F0E8] mb-1">
               Observacoes
             </label>
             <textarea
@@ -749,7 +745,7 @@ function NovaAlteracaoModal({
               onChange={(e) => setObservacoes(e.target.value)}
               placeholder="Detalhes da alteracao..."
               rows={3}
-              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#8A7A5A]/40 focus:outline-none focus:border-[#C9A84C]/60 resize-none"
+              className="w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-sm text-[#F5F0E8] placeholder-[#F5F0E8]/40 focus:outline-none focus:border-[#C9A84C]/60 resize-none"
             />
           </div>
 
@@ -763,7 +759,7 @@ function NovaAlteracaoModal({
             <button
               type="button"
               onClick={onFechar}
-              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors"
+              className="px-4 py-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors"
             >
               Cancelar
             </button>
@@ -800,10 +796,12 @@ export function TarefasTabs({
 
   const isAdmin = perfil === 'joao_admin'
   const isPablo = perfil === 'pablo'
+  const isEstagiario = perfil === 'joao_estagiario'
+  const podeVerFotos = isPablo || isAdmin || isEstagiario
 
   const tabs: { id: TabId; label: string; count?: number }[] = [
     { id: 'pendencias', label: 'Pendencias', count: tarefasB.length },
-    ...(isPablo || isAdmin
+    ...(podeVerFotos
       ? [{ id: 'fotos' as TabId, label: 'Fotos 30 Dias', count: tarefasC.length }]
       : []),
     ...(isPablo || isAdmin
@@ -839,24 +837,43 @@ export function TarefasTabs({
   return (
     <>
       {/* Tabs */}
-      <div className="flex items-center gap-1 bg-[#0A0A0A] border border-[#2A2209] rounded-lg p-1 mb-4 w-fit overflow-x-auto">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setTabAtiva(tab.id)}
-            className={`px-4 py-2 text-sm rounded-md transition-colors whitespace-nowrap ${
-              tabAtiva === tab.id
-                ? 'bg-[#111111] text-[#C9A84C] font-medium'
-                : 'text-[#8A7A5A] hover:text-[#F5F0E8]'
-            }`}
-          >
-            {tab.label}
-            {tab.count !== undefined && (
-              <span className="ml-1.5 text-xs opacity-70">({tab.count})</span>
-            )}
-          </button>
-        ))}
+      <div className="mb-5 overflow-x-auto">
+        <div
+          role="tablist"
+          aria-label="Filtros de tarefas"
+          className="inline-flex min-w-max items-center gap-1 bg-[#0A0A0A] border border-[#2A2209] rounded-lg p-1"
+        >
+          {tabs.map((tab) => {
+            const ativo = tabAtiva === tab.id
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={ativo}
+                onClick={() => setTabAtiva(tab.id)}
+                className={`inline-flex items-center gap-2 px-4 py-2 text-sm rounded-md transition-colors whitespace-nowrap border ${
+                  ativo
+                    ? 'bg-[#C9A84C] text-[#0A0A0A] border-[#C9A84C] font-semibold shadow-[0_0_0_1px_rgba(201,168,76,0.35)]'
+                    : 'text-[#F5F0E8] border-transparent hover:bg-white/5 hover:border-[#2A2209]'
+                }`}
+              >
+                <span>{tab.label}</span>
+                {tab.count !== undefined && (
+                  <span
+                    className={`inline-flex min-w-6 justify-center rounded-full px-2 py-0.5 text-xs ${
+                      ativo
+                        ? 'bg-[#0A0A0A]/15 text-[#0A0A0A]'
+                        : 'bg-white/5 text-[#F5F0E8]'
+                    }`}
+                  >
+                    {tab.count}
+                  </span>
+                )}
+              </button>
+            )
+          })}
+        </div>
       </div>
 
       {/* Content */}
@@ -869,7 +886,7 @@ export function TarefasTabs({
         />
       )}
 
-      {tabAtiva === 'fotos' && (isPablo || isAdmin) && (
+      {tabAtiva === 'fotos' && podeVerFotos && (
         <TabelaFotos
           tarefas={tarefasC}
           perfil={perfil}

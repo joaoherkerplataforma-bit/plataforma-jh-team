@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { Sun, Moon, LogOut, Menu } from 'lucide-react'
+import { LogOut, Menu } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { useTheme } from '@/components/theme-provider'
+import { ThemeToggle } from '@/components/layout/theme-toggle'
 import type { UserProfile, PerfilAcesso } from '@/types/auth'
 
 const PERFIL_LABELS: Record<PerfilAcesso, string> = {
@@ -19,7 +19,6 @@ interface HeaderProps {
 }
 
 export function Header({ user, onToggleSidebar }: HeaderProps) {
-  const { theme, toggleTheme } = useTheme()
   const router = useRouter()
 
   async function handleLogout() {
@@ -38,7 +37,7 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
             <button
               type="button"
               onClick={onToggleSidebar}
-              className="lg:hidden p-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
+              className="lg:hidden p-2 rounded-lg text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
               aria-label="Abrir menu"
             >
               <Menu size={22} />
@@ -49,7 +48,7 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
             <h2 className="text-xl sm:text-2xl font-bold text-[#F5F0E8]">
               Ola, {user.nome.split(' ')[0]}
             </h2>
-            <p className="text-sm text-[#8A7A5A] hidden sm:block">
+            <p className="text-sm text-[#F5F0E8] hidden sm:block">
               Aqui esta o resumo da sua plataforma hoje.
             </p>
           </div>
@@ -57,23 +56,16 @@ export function Header({ user, onToggleSidebar }: HeaderProps) {
 
         {/* Direita: badge + toggle tema + sair */}
         <div className="flex items-center gap-3">
-          <span className="hidden sm:inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]">
+          <span className="hidden sm:inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-full bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]">
             {PERFIL_LABELS[user.perfil]}
           </span>
 
-          <button
-            type="button"
-            onClick={toggleTheme}
-            className="p-2 rounded-lg text-[#8A7A5A] hover:text-[#F5F0E8] hover:bg-[#1A1500]/60 transition-colors"
-            aria-label={theme === 'dark' ? 'Mudar para tema claro' : 'Mudar para tema escuro'}
-          >
-            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
+          <ThemeToggle />
 
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 text-sm text-[#C9A84C] border border-[#C9A84C] hover:bg-[#1A1500] rounded-lg transition-colors"
+            className="flex items-center gap-2 px-4 py-2 text-sm text-[#F5F0E8] border border-[#C9A84C] hover:bg-[#1A1500] rounded-lg transition-colors"
           >
             <LogOut size={16} />
             <span className="hidden sm:inline">Sair</span>

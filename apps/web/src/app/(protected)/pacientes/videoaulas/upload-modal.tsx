@@ -215,22 +215,22 @@ export function UploadModal({
   if (!aberto) return null
 
   const inputClass =
-    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#8A7A5A]/50 disabled:opacity-50'
-  const labelClass = 'block text-sm text-[#8A7A5A] mb-1'
+    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#F5F0E8]/50 disabled:opacity-50'
+  const labelClass = 'block text-sm text-[#F5F0E8] mb-1'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2209]">
-          <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
+          <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
             {mode === 'create' ? 'Nova videoaula' : 'Editar videoaula'}
           </h2>
           <button
             type="button"
             onClick={onFechar}
             disabled={salvando}
-            className="text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors text-xl leading-none disabled:opacity-50"
+            className="text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors text-xl leading-none disabled:opacity-50"
           >
             ✕
           </button>
@@ -300,10 +300,10 @@ export function UploadModal({
                 accept="video/mp4,video/webm,video/quicktime"
                 onChange={handleArquivoChange}
                 disabled={salvando}
-                className="block w-full text-sm text-[#F5F0E8] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#1A1500] file:text-[#C9A84C] hover:file:bg-[#2A2209] file:cursor-pointer disabled:opacity-50"
+                className="block w-full text-sm text-[#F5F0E8] file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#1A1500] file:text-[#F5F0E8] hover:file:bg-[#2A2209] file:cursor-pointer disabled:opacity-50"
               />
               {arquivo && (
-                <p className="mt-1 text-xs text-[#8A7A5A]">
+                <p className="mt-1 text-xs text-[#F5F0E8]">
                   {arquivo.name} ({formatarBytes(arquivo.size)})
                 </p>
               )}
@@ -312,7 +312,7 @@ export function UploadModal({
 
           {/* Status / Erro */}
           {statusMsg && !erro && (
-            <p className="text-[#C9A84C] text-sm">{statusMsg}</p>
+            <p className="text-[#F5F0E8] text-sm">{statusMsg}</p>
           )}
           {erro && <p className="text-red-400 text-sm">{erro}</p>}
 
@@ -322,7 +322,7 @@ export function UploadModal({
               type="button"
               onClick={onFechar}
               disabled={salvando}
-              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

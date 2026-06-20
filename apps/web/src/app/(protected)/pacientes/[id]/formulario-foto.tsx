@@ -17,7 +17,7 @@ export function FormularioFoto({ url, alt }: FormularioFotoProps) {
         href={url}
         target="_blank"
         rel="noopener noreferrer"
-        className="aspect-square bg-[#1A1A1A] border border-[#2A2209] rounded-md flex flex-col items-center justify-center gap-2 p-3 text-[#8A7A5A] hover:text-[#C9A84C] hover:border-[#C9A84C]/40 transition-colors"
+        className="aspect-square bg-[#1A1A1A] border border-[#2A2209] rounded-md flex flex-col items-center justify-center gap-2 p-3 text-[#F5F0E8] hover:text-[#F5F0E8] hover:border-[#C9A84C]/40 transition-colors"
       >
         <ImageOff size={20} />
         <span className="text-[11px] text-center leading-tight">

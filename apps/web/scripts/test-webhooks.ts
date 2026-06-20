@@ -64,11 +64,13 @@ async function main() {
   // Test 4: Fotos 30 dias (cria tarefa C)
   await testEndpoint('4. Fotos 30 Dias', '/api/webhooks/fotos-30-dias', {
     nome_completo: 'Maria Silva Teste',
+    email: 'maria.teste@email.com',
   })
 
   // Test 5: Retorno dieta (cria tarefa D bloqueada)
   await testEndpoint('5. Retorno Dieta', '/api/webhooks/retorno-dieta', {
     nome_completo: 'Maria Silva Teste',
+    email: 'maria.teste@email.com',
   })
 
   // Test 6: Anamnese duplicado (deve reusar paciente existente)

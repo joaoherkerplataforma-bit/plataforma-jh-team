@@ -36,10 +36,10 @@ export function VideoaulaCard({ videoaula }: VideoaulaCardProps) {
       <div
         className={`shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-lg flex items-center justify-center text-lg sm:text-xl font-serif border ${
           !desbloqueada
-            ? 'bg-[#0D0D0D] border-[#1F1F1F] text-[#5A5040]'
+            ? 'bg-[#0D0D0D] border-[#1F1F1F] text-[#F5F0E8]'
             : assistida
-              ? 'bg-[#1A1500] border-[#C9A84C]/40 text-[#C9A84C]'
-              : 'bg-[#1A1500] border-[#C9A84C] text-[#C9A84C]'
+              ? 'bg-[#1A1500] border-[#C9A84C]/40 text-[#F5F0E8]'
+              : 'bg-[#1A1500] border-[#C9A84C] text-[#F5F0E8]'
         }`}
       >
         {ordem}
@@ -50,7 +50,7 @@ export function VideoaulaCard({ videoaula }: VideoaulaCardProps) {
         <div className="flex items-start gap-2 flex-wrap">
           <h3
             className={`text-base sm:text-lg font-medium ${
-              !desbloqueada ? 'text-[#5A5040]' : 'text-[#F5F0E8]'
+              !desbloqueada ? 'text-[#F5F0E8]' : 'text-[#F5F0E8]'
             }`}
           >
             {titulo}
@@ -61,17 +61,17 @@ export function VideoaulaCard({ videoaula }: VideoaulaCardProps) {
         {descricao && (
           <p
             className={`mt-1.5 text-sm leading-relaxed line-clamp-2 ${
-              !desbloqueada ? 'text-[#5A5040]/70' : 'text-[#8A7A5A]'
+              !desbloqueada ? 'text-[#F5F0E8]/70' : 'text-[#F5F0E8]'
             }`}
           >
             {descricao}
           </p>
         )}
 
-        <div className="mt-3 flex items-center gap-3 text-xs text-[#8A7A5A]">
+        <div className="mt-3 flex items-center gap-3 text-xs text-[#F5F0E8]">
           {duracao && <span>{duracao}</span>}
           {desbloqueada && !assistida && (
-            <span className="inline-flex items-center gap-1.5 text-[#C9A84C]">
+            <span className="inline-flex items-center gap-1.5 text-[#F5F0E8]">
               <Play size={12} />
               Assistir
             </span>
@@ -114,14 +114,14 @@ function renderBadge({
   }
   if (!desbloqueada) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1A1A] text-[#5A5040] border border-[#2A2209] whitespace-nowrap">
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1A1A] text-[#F5F0E8] border border-[#2A2209] whitespace-nowrap">
         <Lock size={12} />
         Bloqueado
       </span>
     )
   }
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]/40 whitespace-nowrap">
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]/40 whitespace-nowrap">
       Pendente
     </span>
   )

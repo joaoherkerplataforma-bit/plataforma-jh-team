@@ -113,22 +113,22 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
         key={v.id}
         className="border-b border-[#1A1A1A] hover:bg-[#1A1500]/30 transition-colors"
       >
-        <td className="px-4 py-3 text-center text-[#8A7A5A] whitespace-nowrap">
+        <td className="px-4 py-3 text-center text-[#F5F0E8] whitespace-nowrap">
           {v.ordem}
         </td>
         <td className="px-4 py-3 text-[#F5F0E8]">
           {v.titulo}
         </td>
-        <td className="px-4 py-3 text-[#8A7A5A] max-w-md">
+        <td className="px-4 py-3 text-[#F5F0E8] max-w-md">
           <span className="line-clamp-2">{v.descricao ?? '-'}</span>
         </td>
         <td className="px-4 py-3 text-center whitespace-nowrap">
           {v.ativo ? (
-            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#C9A84C] border border-[#C9A84C]/40">
+            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1500] text-[#F5F0E8] border border-[#C9A84C]/40">
               Ativo
             </span>
           ) : (
-            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1A1A] text-[#8A7A5A] border border-[#2A2209]">
+            <span className="inline-block px-2 py-0.5 rounded text-xs bg-[#1A1A1A] text-[#F5F0E8] border border-[#2A2209]">
               Arquivado
             </span>
           )}
@@ -143,7 +143,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
                   title="Mover para cima"
                   onClick={() => reordenar(v, 'up')}
                   disabled={pending || isFirstAtivo}
-                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ArrowUp size={14} />
                 </button>
@@ -152,7 +152,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
                   title="Mover para baixo"
                   onClick={() => reordenar(v, 'down')}
                   disabled={pending || isLastAtivo}
-                  className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-1.5 rounded text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ArrowDown size={14} />
                 </button>
@@ -165,7 +165,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
               title="Editar metadados"
               onClick={() => abrirEditar(v)}
               disabled={pending}
-              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
+              className="p-1.5 rounded text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
             >
               <Edit3 size={14} />
             </button>
@@ -176,7 +176,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
               title={v.ativo ? 'Arquivar' : 'Reativar'}
               onClick={() => toggleAtivo(v)}
               disabled={pending}
-              className="p-1.5 rounded text-[#8A7A5A] hover:text-[#C9A84C] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
+              className="p-1.5 rounded text-[#F5F0E8] hover:text-[#F5F0E8] hover:bg-[#1A1500] transition-colors disabled:opacity-30"
             >
               {v.ativo ? <EyeOff size={14} /> : <Eye size={14} />}
             </button>
@@ -191,10 +191,10 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
         <div>
-          <h1 className="text-2xl font-serif text-[#C9A84C] tracking-wide">
+          <h1 className="text-2xl font-serif text-[#F5F0E8] tracking-wide">
             Videoaulas
           </h1>
-          <p className="text-sm text-[#8A7A5A] mt-1">
+          <p className="text-sm text-[#F5F0E8] mt-1">
             Catalogo da trilha de videoaulas do Portal do Aluno.
           </p>
         </div>
@@ -217,26 +217,26 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
 
       {/* Tabela ATIVOS */}
       <section className="mb-8">
-        <h2 className="text-sm uppercase tracking-wider text-[#8A7A5A] mb-2">
+        <h2 className="text-sm uppercase tracking-wider text-[#F5F0E8] mb-2">
           Ativos ({ativos.length})
         </h2>
         <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
-                <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-20">
+                <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-20">
                   Ordem
                 </th>
-                <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                   Titulo
                 </th>
-                <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                   Descricao
                 </th>
-                <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-32">
+                <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-32">
                   Status
                 </th>
-                <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-44">
+                <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-44">
                   Acoes
                 </th>
               </tr>
@@ -246,7 +246,7 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
                 <tr>
                   <td
                     colSpan={5}
-                    className="text-center py-12 text-[#8A7A5A]/60"
+                    className="text-center py-12 text-[#F5F0E8]/60"
                   >
                     Nenhuma videoaula ativa. Clique em &quot;Nova videoaula&quot; para comecar.
                   </td>
@@ -264,26 +264,26 @@ export function ListaAdmin({ videoaulas }: ListaAdminProps) {
       {/* Tabela ARQUIVADOS */}
       {arquivados.length > 0 && (
         <section>
-          <h2 className="text-sm uppercase tracking-wider text-[#8A7A5A] mb-2">
+          <h2 className="text-sm uppercase tracking-wider text-[#F5F0E8] mb-2">
             Arquivados ({arquivados.length})
           </h2>
           <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-[#0D0D0D] border-b border-[#2A2209]">
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-20">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-20">
                     Ordem
                   </th>
-                  <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Titulo
                   </th>
-                  <th className="text-left px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider">
+                  <th className="text-left px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider">
                     Descricao
                   </th>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-32">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-32">
                     Status
                   </th>
-                  <th className="text-center px-4 py-3 text-[#8A7A5A] font-medium text-xs uppercase tracking-wider w-44">
+                  <th className="text-center px-4 py-3 text-[#F5F0E8] font-medium text-xs uppercase tracking-wider w-44">
                     Acoes
                   </th>
                 </tr>

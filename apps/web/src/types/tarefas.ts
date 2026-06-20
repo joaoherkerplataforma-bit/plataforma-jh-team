@@ -40,7 +40,7 @@ export const STATUS_LABELS: Record<StatusTarefa, string> = {
 } as const
 
 export const STATUS_BADGE_CLASS: Record<StatusTarefa, string> = {
-  pendente:  'bg-yellow-900/40 text-yellow-300 border border-yellow-700/40',
+  pendente:  'bg-yellow-900/40 text-[#F5F0E8] border border-yellow-700/40',
   bloqueada: 'bg-[#1A1A1A] text-[#555] border border-[#333]',
   feito:     'bg-blue-900/40 text-blue-300 border border-blue-700/40',
   gravado:   'bg-purple-900/40 text-purple-300 border border-purple-700/40',

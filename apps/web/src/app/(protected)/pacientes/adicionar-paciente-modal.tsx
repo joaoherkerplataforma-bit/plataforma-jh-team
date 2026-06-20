@@ -2,7 +2,6 @@
 
 import { useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase/client'
 
 interface AdicionarPacienteModalProps {
   aberto: boolean
@@ -35,30 +34,24 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
         return
       }
 
-      const inicio = new Date(dataInicio + 'T00:00:00')
-      let mesesAdicionais = 3
-      if (tempoplano === 'semestral') mesesAdicionais = 6
-      if (tempoplano === 'anual') mesesAdicionais = 12
-      const vencimento = new Date(inicio)
-      vencimento.setMonth(vencimento.getMonth() + mesesAdicionais)
-      const dataVencimento = vencimento.toISOString().split('T')[0]
-
       try {
-        const supabase = createClient()
-        const { error } = await supabase.from('pacientes').insert({
-          nome,
-          telefone,
-          email,
-          tipo_plano: tipoplano,
-          duracao_plano: tempoplano,
-          data_inicio: dataInicio,
-          data_vencimento_plano: dataVencimento,
-          proximo_retorno: proximoRetorno,
-          // status omitido — banco usa default 'ativo'
+        const res = await fetch('/api/pacientes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome,
+            telefone,
+            email,
+            tipo_plano: tipoplano,
+            duracao_plano: tempoplano,
+            data_inicio: dataInicio,
+            proximo_retorno: proximoRetorno,
+          }),
         })
 
-        if (error) {
-          setErro(`Erro ao salvar: ${error.message}`)
+        const data = await res.json()
+        if (!res.ok || !data.ok) {
+          setErro(data.error || data.details || 'Erro ao criar paciente')
           setSalvando(false)
           return
         }
@@ -79,21 +72,21 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
   if (!aberto) return null
 
   const inputClass =
-    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#8A7A5A]/50'
-  const labelClass = 'block text-sm text-[#8A7A5A] mb-1'
+    'w-full bg-[#0A0A0A] border border-[#2A2209] rounded-lg px-3 py-2 text-[#F5F0E8] text-sm focus:outline-none focus:border-[#C9A84C] focus:ring-1 focus:ring-[#C9A84C] transition-colors placeholder-[#F5F0E8]/50'
+  const labelClass = 'block text-sm text-[#F5F0E8] mb-1'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="bg-[#111111] border border-[#2A2209] rounded-xl w-full max-w-lg mx-4 shadow-2xl">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#2A2209]">
-          <h2 className="text-lg font-semibold text-[#C9A84C] tracking-wide">
+          <h2 className="text-lg font-semibold text-[#F5F0E8] tracking-wide">
             Adicionar Paciente
           </h2>
           <button
             type="button"
             onClick={onFechar}
-            className="text-[#8A7A5A] hover:text-[#F5F0E8] transition-colors text-xl leading-none"
+            className="text-[#F5F0E8] hover:text-[#F5F0E8] transition-colors text-xl leading-none"
           >
             ✕
           </button>
@@ -163,7 +156,7 @@ export function AdicionarPacienteModal({ aberto, onFechar }: AdicionarPacienteMo
               type="button"
               onClick={onFechar}
               disabled={salvando}
-              className="px-4 py-2 text-sm text-[#8A7A5A] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm text-[#F5F0E8] hover:text-[#F5F0E8] border border-[#2A2209] hover:border-[#C9A84C] rounded-lg transition-colors disabled:opacity-50"
             >
               Cancelar
             </button>

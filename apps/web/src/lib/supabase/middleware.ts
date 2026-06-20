@@ -39,6 +39,8 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith('/relatorio') ||
     pathname.startsWith('/pacientes') ||
     pathname.startsWith('/tarefas') ||
+    pathname.startsWith('/formularios') ||
+    pathname.startsWith('/equipe') ||
     pathname.startsWith('/portal')
 
   const isLoginPage = pathname === '/login'
