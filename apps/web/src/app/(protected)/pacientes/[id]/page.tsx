@@ -14,7 +14,7 @@ export default async function PacienteDetalhe({
 
   const { data: paciente, error } = await supabase
     .from('pacientes')
-    .select('*')
+    .select('id, nome, email, telefone, tipo_plano, duracao_plano, data_inicio, data_vencimento_plano, proximo_retorno, status, observacoes, origem, created_at, updated_at')
     .eq('id', id)
     .single()
 

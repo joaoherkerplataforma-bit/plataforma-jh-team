@@ -15,7 +15,7 @@ export default async function PacientesPage() {
 
   const { data: pacientesRaw } = await supabase
     .from('pacientes')
-    .select('*')
+    .select('id, nome, email, telefone, tipo_plano, duracao_plano, data_inicio, data_vencimento_plano, proximo_retorno, status, observacoes, origem, created_at, updated_at')
     .order('nome', { ascending: true })
 
   const pacientes = (pacientesRaw as Paciente[] | null) ?? []
