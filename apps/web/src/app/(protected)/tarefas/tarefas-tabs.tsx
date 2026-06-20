@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Lock, Plus, X } from 'lucide-react'
 import type { Tarefa, ModuloTarefa, StatusTarefa } from '@/types/tarefas'
@@ -144,24 +144,16 @@ interface ObservacoesCellProps {
 
 function ObservacoesCell({ pacienteId, valor, perfil, onSaved }: ObservacoesCellProps) {
   const [texto, setTexto] = useState(valor ?? '')
-  const [editando, setEditando] = useState(false)
   const [salvando, setSalvando] = useState(false)
-  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Sync texto with external valor changes (e.g., edit from another tab or obsMap update)
   useEffect(() => {
-    if (!editando) {
-      setTexto(valor ?? '')
-    }
-  }, [valor, editando])
+    setTexto(valor ?? '')
+  }, [valor])
 
   const canEdit = perfil === 'joao_admin' || perfil === 'pablo' || perfil === 'joao_estagiario'
 
   const salvar = useCallback(async () => {
-    if (texto === (valor ?? '')) {
-      setEditando(false)
-      return
-    }
+    if (texto === (valor ?? '')) return
     setSalvando(true)
     try {
       const novoValor = texto || null
@@ -179,7 +171,6 @@ function ObservacoesCell({ pacienteId, valor, perfil, onSaved }: ObservacoesCell
       console.error('Falha ao salvar observacao:', error)
     } finally {
       setSalvando(false)
-      setEditando(false)
     }
   }, [pacienteId, texto, valor, onSaved])
 
@@ -191,52 +182,29 @@ function ObservacoesCell({ pacienteId, valor, perfil, onSaved }: ObservacoesCell
       }
       if (e.key === 'Escape') {
         setTexto(valor ?? '')
-        setEditando(false)
       }
     },
     [salvar, valor]
   )
 
-  const temObs = !!(valor && valor.trim())
-
-  if (canEdit && editando) {
+  if (canEdit) {
     return (
       <textarea
-        ref={textareaRef}
         value={texto}
         onChange={(e) => setTexto(e.target.value)}
         onBlur={salvar}
         onKeyDown={handleKeyDown}
         disabled={salvando}
-        autoFocus
         rows={2}
-        className="w-full min-w-[140px] bg-[#1A1500] border border-[#C9A84C]/30 rounded px-2 py-1 text-sm text-[#F5F0E8] focus:outline-none focus:border-[#C9A84C] resize-none disabled:opacity-50"
+        placeholder="Observação..."
+        className="w-full min-w-[140px] bg-[#1A1500] border border-[#2A2209] rounded px-2 py-1 text-sm text-[#F5F0E8] placeholder-[#F5F0E8]/30 focus:outline-none focus:border-[#C9A84C]/60 resize-none disabled:opacity-50"
       />
     )
   }
 
-  if (canEdit) {
+  if (valor?.trim()) {
     return (
-      <button
-        type="button"
-        onClick={() => setEditando(true)}
-        className={`text-left text-sm cursor-pointer transition-colors ${
-          temObs
-            ? 'text-[#F5F0E8]'
-            : 'text-[#F5F0E8]/60 hover:text-[#F5F0E8]'
-        }`}
-        title={temObs ? valor! : 'Clique para adicionar observacao'}
-      >
-        {temObs ? valor! : '-'}
-      </button>
-    )
-  }
-
-  if (temObs) {
-    return (
-      <span className="text-sm text-[#F5F0E8]" title={valor!}>
-        {valor}
-      </span>
+      <span className="text-sm text-[#F5F0E8]">{valor}</span>
     )
   }
 
