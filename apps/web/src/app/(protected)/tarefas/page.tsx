@@ -31,7 +31,7 @@ export default async function TarefasPage() {
     .select(
       `
       *,
-      paciente:pacientes!paciente_id(id, nome, email, tipo_plano),
+      paciente:pacientes!paciente_id(id, nome, email, tipo_plano, observacoes_operacionais),
       responsavel:usuarios!responsavel_id(id, nome, perfil)
     `
     )

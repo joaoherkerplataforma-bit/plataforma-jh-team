@@ -136,17 +136,19 @@ const tdClass = 'px-4 py-3 text-sm text-[#F5F0E8] whitespace-nowrap'
 /* ─────────────────── ObservacoesCell ─────────────────── */
 
 interface ObservacoesCellProps {
-  tarefaId: string
+  pacienteId: string
   valor: string | null
   perfil: PerfilAcesso
+  onSaved: (pacienteId: string, valor: string | null) => void
 }
 
-function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
+function ObservacoesCell({ pacienteId, valor, perfil, onSaved }: ObservacoesCellProps) {
   const [texto, setTexto] = useState(valor ?? '')
   const [editando, setEditando] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const isAdmin = perfil === 'joao_admin'
+
+  const canEdit = perfil === 'joao_admin' || perfil === 'pablo' || perfil === 'joao_estagiario'
 
   const salvar = useCallback(async () => {
     if (texto === (valor ?? '')) {
@@ -155,12 +157,15 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
     }
     setSalvando(true)
     try {
-      const res = await fetch(`/api/tarefas/${tarefaId}/observacoes`, {
+      const novoValor = texto || null
+      const res = await fetch(`/api/pacientes/${pacienteId}/obs-operacionais`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ observacoes_joao: texto || null }),
+        body: JSON.stringify({ observacoes_operacionais: novoValor }),
       })
-      if (!res.ok) {
+      if (res.ok) {
+        onSaved(pacienteId, novoValor)
+      } else {
         console.error('Erro ao salvar observacao')
       }
     } catch (error) {
@@ -169,7 +174,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
       setSalvando(false)
       setEditando(false)
     }
-  }, [tarefaId, texto, valor])
+  }, [pacienteId, texto, valor, onSaved])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -187,8 +192,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
 
   const temObs = !!(valor && valor.trim())
 
-  // Editable inline for admin
-  if (isAdmin && editando) {
+  if (canEdit && editando) {
     return (
       <textarea
         ref={textareaRef}
@@ -204,7 +208,7 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
     )
   }
 
-  if (isAdmin) {
+  if (canEdit) {
     return (
       <button
         type="button"
@@ -221,7 +225,6 @@ function ObservacoesCell({ tarefaId, valor, perfil }: ObservacoesCellProps) {
     )
   }
 
-  // Non-admin: read-only display
   if (temObs) {
     return (
       <span className="text-sm text-[#F5F0E8]" title={valor!}>
@@ -284,9 +287,11 @@ interface TabelaBProps {
   perfil: PerfilAcesso
   onUpdate: (id: string, status: StatusTarefa) => void
   atualizando: string | null
+  obsMap: Map<string, string | null>
+  onObsSaved: (pacienteId: string, valor: string | null) => void
 }
 
-function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBProps) {
+function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando, obsMap, onObsSaved }: TabelaBProps) {
   return (
     <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
       <table className="w-full text-sm">
@@ -336,7 +341,12 @@ function TabelaPendencias({ tarefas, perfil, onUpdate, atualizando }: TabelaBPro
                     {formatarData(t.data_prazo)}
                   </td>
                   <td className="px-4 py-3">
-                    <ObservacoesCell tarefaId={t.id} valor={t.observacoes_joao} perfil={perfil} />
+                    <ObservacoesCell
+                      pacienteId={t.paciente_id}
+                      valor={obsMap.get(t.paciente_id) ?? null}
+                      perfil={perfil}
+                      onSaved={onObsSaved}
+                    />
                   </td>
                   <td className="px-4 py-3 text-center whitespace-nowrap">
                     <span className={`inline-block px-2 py-0.5 rounded text-xs ${STATUS_BADGE_CLASS[t.status]}`}>
@@ -363,9 +373,11 @@ interface TabelaCProps {
   perfil: PerfilAcesso
   onUpdate: (id: string, status: StatusTarefa) => void
   atualizando: string | null
+  obsMap: Map<string, string | null>
+  onObsSaved: (pacienteId: string, valor: string | null) => void
 }
 
-function TabelaFotos({ tarefas, perfil, onUpdate, atualizando }: TabelaCProps) {
+function TabelaFotos({ tarefas, perfil, onUpdate, atualizando, obsMap, onObsSaved }: TabelaCProps) {
   return (
     <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
       <table className="w-full text-sm">
@@ -414,7 +426,12 @@ function TabelaFotos({ tarefas, perfil, onUpdate, atualizando }: TabelaCProps) {
                     {formatarData(t.data_prazo)}
                   </td>
                   <td className="px-4 py-3">
-                    <ObservacoesCell tarefaId={t.id} valor={t.observacoes_joao} perfil={perfil} />
+                    <ObservacoesCell
+                      pacienteId={t.paciente_id}
+                      valor={obsMap.get(t.paciente_id) ?? null}
+                      perfil={perfil}
+                      onSaved={onObsSaved}
+                    />
                   </td>
                   <td className="px-4 py-3 text-center whitespace-nowrap">
                     <span className={`inline-block px-2 py-0.5 rounded text-xs ${STATUS_BADGE_CLASS[t.status]}`}>
@@ -441,9 +458,11 @@ interface TabelaDProps {
   perfil: PerfilAcesso
   onUpdate: (id: string, status: StatusTarefa) => void
   atualizando: string | null
+  obsMap: Map<string, string | null>
+  onObsSaved: (pacienteId: string, valor: string | null) => void
 }
 
-function TabelaRetornos({ tarefas, perfil, onUpdate, atualizando }: TabelaDProps) {
+function TabelaRetornos({ tarefas, perfil, onUpdate, atualizando, obsMap, onObsSaved }: TabelaDProps) {
   const isAdmin = perfil === 'joao_admin'
 
   // For Pablo: filter out bloqueadas. For admin: show all.
@@ -492,7 +511,12 @@ function TabelaRetornos({ tarefas, perfil, onUpdate, atualizando }: TabelaDProps
                     {formatarData(t.data_prazo)}
                   </td>
                   <td className="px-4 py-3">
-                    <ObservacoesCell tarefaId={t.id} valor={t.observacoes_joao} perfil={perfil} />
+                    <ObservacoesCell
+                      pacienteId={t.paciente_id}
+                      valor={obsMap.get(t.paciente_id) ?? null}
+                      perfil={perfil}
+                      onSaved={onObsSaved}
+                    />
                   </td>
                   <td className="px-4 py-3 text-center whitespace-nowrap">
                     <span className={`inline-block px-2 py-0.5 rounded text-xs ${STATUS_BADGE_CLASS[t.status]}`}>
@@ -519,9 +543,11 @@ interface TabelaEProps {
   perfil: PerfilAcesso
   onUpdate: (id: string, status: StatusTarefa) => void
   atualizando: string | null
+  obsMap: Map<string, string | null>
+  onObsSaved: (pacienteId: string, valor: string | null) => void
 }
 
-function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEProps) {
+function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando, obsMap, onObsSaved }: TabelaEProps) {
   return (
     <div className="bg-[#111111] border border-[#2A2209] rounded-xl overflow-x-auto">
       <table className="w-full text-sm">
@@ -561,7 +587,12 @@ function TabelaAlteracoes({ tarefas, perfil, onUpdate, atualizando }: TabelaEPro
                   </td>
                   <td className={tdClass}>{formatarData(t.data_criacao)}</td>
                   <td className="px-4 py-3">
-                    <ObservacoesCell tarefaId={t.id} valor={t.observacoes_joao} perfil={perfil} />
+                    <ObservacoesCell
+                      pacienteId={t.paciente_id}
+                      valor={obsMap.get(t.paciente_id) ?? null}
+                      perfil={perfil}
+                      onSaved={onObsSaved}
+                    />
                   </td>
                   <td className="px-4 py-3 text-center whitespace-nowrap">
                     <span className={`inline-block px-2 py-0.5 rounded text-xs ${STATUS_BADGE_CLASS[t.status]}`}>
@@ -794,6 +825,20 @@ export function TarefasTabs({
   const [atualizando, setAtualizando] = useState<string | null>(null)
   const [modalAberto, setModalAberto] = useState(false)
 
+  const [obsMap, setObsMap] = useState<Map<string, string | null>>(() => {
+    const map = new Map<string, string | null>()
+    for (const t of [...tarefasB, ...tarefasC, ...tarefasD, ...tarefasE]) {
+      if (t.paciente_id && !map.has(t.paciente_id)) {
+        map.set(t.paciente_id, t.paciente?.observacoes_operacionais ?? null)
+      }
+    }
+    return map
+  })
+
+  const handleObsSaved = useCallback((pacienteId: string, valor: string | null) => {
+    setObsMap((prev) => new Map(prev).set(pacienteId, valor))
+  }, [])
+
   const isAdmin = perfil === 'joao_admin'
   const isPablo = perfil === 'pablo'
   const isEstagiario = perfil === 'joao_estagiario'
@@ -883,6 +928,8 @@ export function TarefasTabs({
           perfil={perfil}
           onUpdate={handleUpdate}
           atualizando={atualizando}
+          obsMap={obsMap}
+          onObsSaved={handleObsSaved}
         />
       )}
 
@@ -892,6 +939,8 @@ export function TarefasTabs({
           perfil={perfil}
           onUpdate={handleUpdate}
           atualizando={atualizando}
+          obsMap={obsMap}
+          onObsSaved={handleObsSaved}
         />
       )}
 
@@ -901,6 +950,8 @@ export function TarefasTabs({
           perfil={perfil}
           onUpdate={handleUpdate}
           atualizando={atualizando}
+          obsMap={obsMap}
+          onObsSaved={handleObsSaved}
         />
       )}
 
@@ -923,6 +974,8 @@ export function TarefasTabs({
             perfil={perfil}
             onUpdate={handleUpdate}
             atualizando={atualizando}
+            obsMap={obsMap}
+            onObsSaved={handleObsSaved}
           />
 
           <NovaAlteracaoModal
