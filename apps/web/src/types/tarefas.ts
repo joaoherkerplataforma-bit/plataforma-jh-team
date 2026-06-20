@@ -6,6 +6,7 @@ export interface PacienteResumo {
   nome: string
   email: string | null
   tipo_plano: 'dieta' | 'completo'
+  observacoes_operacionais: string | null
 }
 
 export interface ResponsavelResumo {
