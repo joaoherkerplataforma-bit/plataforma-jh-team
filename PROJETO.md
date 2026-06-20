@@ -1,13 +1,15 @@
 # PROJETO.md — Plataforma João Herker Personal
 
+> **ATENÇÃO:** em 20/06/2026 foi identificado que o banco de produção real é `ajnuekldkzenrryrcxho` (não `jsnagsklweeheojqpnut`, que ficou como ambiente de testes/legado). Domínio oficial atualizado para **jhplataforma.com**.
+
 ## Visão geral
 Plataforma de gestão operacional para consultoria de personal trainer online.
 Cliente: João Herker Personal (marca: JH TEAM)
 Nome da plataforma: JH TEAM
-Domínio desejado: jhteam.com (1ª opção), consultoriajhteam.com (2ª), joaoherkerteam.com (3ª)
+Domínio oficial: **jhplataforma.com** (em produção desde 20/06/2026)
 
 ## URL pública (Vercel)
-- Produção: https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app
+- Produção: https://jhplataforma.com
 - Projeto Vercel: joaoherkerplataforma-bits-projects/plataforma-jh-team-web
 - Auto-deploy: push em `main` dispara build (vercel.json)
 
@@ -537,7 +539,7 @@ apps/web/src/
 8. Fotos iniciais com paciente inexistente → **404** OK
 9. Anamnese com campos faltando → **400** OK
 
-**Proximo passo:** Configurar os 5 cenarios no Make para apontar para os webhooks de producao em https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/*.
+**Proximo passo:** Configurar os 5 cenarios no Make para apontar para os webhooks de producao em https://jhplataforma.com/api/webhooks/*.
 
 ### Configuração Make — Cenários
 
@@ -549,7 +551,7 @@ Todos os webhooks exigem o header:
 Authorization: Bearer ${WEBHOOK_SECRET}
 ```
 
-URL base de produção: `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app`
+URL base de produção: `https://jhplataforma.com`
 
 #### Cenário 1: Anamnese (anamnese)
 
@@ -590,7 +592,7 @@ O campo `respostas` é **opcional** — se não vier, o webhook continua funcion
 
 Em "Make an HTTP request":
 
-- **URL:** `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/anamnese`
+- **URL:** `https://jhplataforma.com/api/webhooks/anamnese`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer ${WEBHOOK_SECRET}`
 - **Body type:** JSON
@@ -635,7 +637,7 @@ O campo `respostas` é **opcional** — se não vier, o webhook continua funcion
 
 Em "Make an HTTP request":
 
-- **URL:** `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/fotos-iniciais`
+- **URL:** `https://jhplataforma.com/api/webhooks/fotos-iniciais`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer ${WEBHOOK_SECRET}`
 - **Body type:** JSON
@@ -675,7 +677,7 @@ O campo `respostas` é **opcional** — se não vier, o webhook continua funcion
 
 Em "Make an HTTP request":
 
-- **URL:** `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/treino`
+- **URL:** `https://jhplataforma.com/api/webhooks/treino`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer ${WEBHOOK_SECRET}`
 - **Body type:** JSON
@@ -715,7 +717,7 @@ O campo `respostas` é **opcional** — se não vier, o webhook continua funcion
 
 Em "Make an HTTP request":
 
-- **URL:** `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/fotos-30-dias`
+- **URL:** `https://jhplataforma.com/api/webhooks/fotos-30-dias`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer ${WEBHOOK_SECRET}`
 - **Body type:** JSON
@@ -770,7 +772,7 @@ O campo `respostas` é **opcional** — se não vier, o webhook continua funcion
 
 Em "Make an HTTP request":
 
-- **URL:** `https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app/api/webhooks/retorno-dieta`
+- **URL:** `https://jhplataforma.com/api/webhooks/retorno-dieta`
 - **Method:** POST
 - **Headers:** `Authorization: Bearer ${WEBHOOK_SECRET}`
 - **Body type:** JSON
@@ -809,12 +811,12 @@ Plataforma publicada com URL pública funcional.
 - Sem isso o Turborepo nao expoe as env vars ao processo do Next.js e o build quebra na geracao de paginas que usam `createClient()` em build time.
 
 **Deploy de producao:**
-- URL canonica: https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app
+- URL canonica: https://jhplataforma.com
 - Build time: 56s
 - Status: Ready (HTTP 200)
 - Deployment ID: `dpl_GaoGQ1sxC2MWMZHAk14K5u68tPJ1`
 
-**Proximo passo:** Apontar o dominio definitivo (jhteam.com / consultoriajhteam.com / joaoherkerteam.com) para o projeto Vercel quando o registro estiver disponivel.
+**Domínio oficial:** jhplataforma.com (em produção desde 20/06/2026). Supabase de produção: `ajnuekldkzenrryrcxho` (o projeto `jsnagsklweeheojqpnut` é legado/testes).
 
 ---
 
@@ -833,14 +835,14 @@ Plataforma publicada com URL pública funcional.
   - `POST /api/webhooks/treino`
   - `POST /api/webhooks/fotos-30-dias`
   - `POST /api/webhooks/retorno-dieta`
-- **Deploy producao:** https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app — auto-deploy ativo no push em `main`, env vars configuradas em Production
+- **Deploy producao:** https://jhplataforma.com — auto-deploy ativo no push em `main`, env vars configuradas em Production
 
 ### Em aberto / proximos passos
 1. **Configurar Make** — criar os 5 cenarios apontando os Google Forms para os webhooks de producao
 2. **Servico Railway** — implementar `services/relatorio` (cron 8h, WhatsApp Business API, composicao de imagem com Sharp)
 3. **Portal do aluno** — pagina /portal real (placeholder atualmente): redirecionamento WebDiet/MFit, historico de protocolos, calendario de frequencia
 4. **Migracao de dados** — importar pacientes existentes do Google Planilhas
-5. **Dominio definitivo** — apontar jhteam.com (1a opcao) para o projeto Vercel
+5. **Dominio definitivo** — jhplataforma.com (domínio oficial em produção desde 20/06/2026)
 6. **Usuarios de producao** — criar contas reais (Joao, Pablo, Joao Estagiario) no Supabase Auth e vincular a tabela `usuarios`
 
 ### Sessoes concluidas
@@ -854,7 +856,7 @@ Plataforma publicada com URL pública funcional.
 | 6 | 2026-04-10 | Layout base (sidebar + tema) |
 | 7 | 2026-04-13 | Modulos B, C, D + pagina /tarefas |
 | 8 | 2026-04-16 | Webhooks Make (5 endpoints + testes) |
-| 9 | 2026-04-21 | Deploy Vercel (https://plataforma-jh-team-web-joaoherkerplataforma-bits-projects.vercel.app) |
+| 9 | 2026-04-21 | Deploy Vercel (https://jhplataforma.com — domínio oficial desde 20/06/2026) |
 
 ## Problemas resolvidos
 [atualizar quando bugs importantes forem resolvidos]
