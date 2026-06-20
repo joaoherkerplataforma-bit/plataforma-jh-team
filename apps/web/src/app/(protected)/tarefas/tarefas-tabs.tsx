@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Lock, Plus, X } from 'lucide-react'
 import type { Tarefa, ModuloTarefa, StatusTarefa } from '@/types/tarefas'
@@ -147,6 +147,13 @@ function ObservacoesCell({ pacienteId, valor, perfil, onSaved }: ObservacoesCell
   const [editando, setEditando] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // Sync texto with external valor changes (e.g., edit from another tab or obsMap update)
+  useEffect(() => {
+    if (!editando) {
+      setTexto(valor ?? '')
+    }
+  }, [valor, editando])
 
   const canEdit = perfil === 'joao_admin' || perfil === 'pablo' || perfil === 'joao_estagiario'
 
