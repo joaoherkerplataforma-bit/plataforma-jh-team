@@ -26,6 +26,9 @@ export default async function TarefasPage() {
 
   // Build query — filter by responsavel_id for pablo/estagiario
   // joao_admin sees all tasks
+  // Hide completed tasks across all tabs: status "feito" and "entregue"
+  // are never shown. "pendente", "gravado" (Modulo C) and "bloqueada"
+  // (admin only, handled in the client) remain visible.
   let query = service
     .from('tarefas')
     .select(
@@ -35,6 +38,7 @@ export default async function TarefasPage() {
       responsavel:usuarios!responsavel_id(id, nome, perfil)
     `
     )
+    .not('status', 'in', '("feito","entregue")')
     .order('data_criacao', { ascending: false })
 
   if (perfil !== 'joao_admin') {
