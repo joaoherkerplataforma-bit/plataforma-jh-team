@@ -24,6 +24,7 @@ import {
   cancelarPaciente,
   reativarPaciente,
 } from '@/app/(protected)/pacientes/actions'
+import { RenovarModal } from '@/app/(protected)/pacientes/renovar-modal'
 
 type TabKey = 'ativos' | 'vencidos' | 'cancelados'
 type Acao = 'cancelar' | 'reativar'
@@ -203,6 +204,11 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
   const [confirm, setConfirm] = useState<ConfirmState>(CONFIRM_INICIAL)
   const [erroAcao, setErroAcao] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
+  const [renovarState, setRenovarState] = useState<{
+    aberto: boolean
+    pacienteId: string
+    pacienteNome: string
+  }>({ aberto: false, pacienteId: '', pacienteNome: '' })
 
   const isAdmin = perfilAtual === 'joao_admin'
 
@@ -503,6 +509,25 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                             <RotateCcw size={12} />
                             Reativar
                           </button>
+                        ) : tabAtiva === 'vencidos' ? (
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => setRenovarState({ aberto: true, pacienteId: p.id, pacienteNome: p.nome })}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs font-medium text-[#C9A84C] border border-[#C9A84C]/30 hover:bg-[#C9A84C]/10 rounded transition-colors"
+                            >
+                              <RotateCcw size={12} />
+                              Renovar
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => abrirConfirm(p, 'cancelar')}
+                              className="inline-flex items-center gap-1 px-3 py-1 text-xs bg-transparent hover:bg-red-900/20 text-red-400 border border-red-900/40 hover:border-red-600/60 rounded transition-colors"
+                            >
+                              <Ban size={12} />
+                              Cancelar
+                            </button>
+                          </div>
                         ) : (
                           <button
                             type="button"
@@ -528,6 +553,15 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
         aberto={modalAdicionarAberto}
         onFechar={() => setModalAdicionarAberto(false)}
       />
+
+      {/* Modal renovar plano */}
+      {renovarState.aberto && (
+        <RenovarModal
+          pacienteId={renovarState.pacienteId}
+          pacienteNome={renovarState.pacienteNome}
+          onClose={() => setRenovarState({ aberto: false, pacienteId: '', pacienteNome: '' })}
+        />
+      )}
 
       {/* Modal confirmacao */}
       {confirm.aberto && (
