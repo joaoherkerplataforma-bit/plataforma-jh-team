@@ -228,11 +228,19 @@ export async function processarTreino(
       return { ok: false, status: 404, error: ERRO_EMAIL_NAO_ENCONTRADO }
     }
 
-    // Idempotência: só cria tarefa se não houver treino já registrado
+    // Idempotência: só cria tarefa B se não houver treino já registrado
+    // E também não houver tarefa B pendente (evita duplicata no cenário renovacao dieta→completo)
     const jaProcessado = await formularioJaRegistrado(supabase, paciente.id, 'treino')
 
+    const { count: pendingBCount } = await supabase
+      .from('tarefas')
+      .select('id', { count: 'exact', head: true })
+      .eq('paciente_id', paciente.id)
+      .eq('modulo', 'B')
+      .eq('status', 'pendente')
+
     let tarefa_id: string | undefined
-    if (!jaProcessado) {
+    if (!jaProcessado && (pendingBCount ?? 0) === 0) {
       const resultadoDelegacao = await delegarModuloB(supabase, paciente.id, nome_completo)
       if (!resultadoDelegacao.ok) return resultadoDelegacao
       tarefa_id = resultadoDelegacao.tarefa_id
