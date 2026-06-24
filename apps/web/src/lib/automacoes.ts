@@ -453,19 +453,18 @@ export async function delegarModuloB(
     .in('perfil', ['pablo', 'joao_estagiario'])
     .eq('ativo', true)
 
-  if (!delegacao || !usuarios || usuarios.length < 2) {
+  if (!delegacao || !usuarios || usuarios.length < 1) {
     return { ok: false, status: 500, error: 'Configuracao de delegacao incompleta' }
   }
 
   const proximo_perfil = delegacao.ultimo_delegado === 'pablo' ? 'joao_estagiario' : 'pablo'
-  const responsavel = usuarios.find((u) => u.perfil === proximo_perfil)
-  if (!responsavel) {
-    return { ok: false, status: 500, error: `Usuario com perfil ${proximo_perfil} nao encontrado` }
-  }
+  // Tenta o próximo na alternância; se não existir (ex: joao_estagiario não cadastrado ainda),
+  // usa o primeiro disponível para não bloquear a operação.
+  const responsavel = usuarios.find((u) => u.perfil === proximo_perfil) ?? usuarios[0]
 
   await supabase
     .from('delegacao_controle')
-    .update({ ultimo_delegado: proximo_perfil, contador: delegacao.contador + 1 })
+    .update({ ultimo_delegado: responsavel.perfil, contador: delegacao.contador + 1 })
     .eq('id', delegacao.id)
 
   const { data: tarefa, error: errTarefa } = await supabase
