@@ -101,9 +101,24 @@ export async function processarAnamnese(
       paciente_id = novoPaciente.id
     }
 
-    // Alternancia Pablo/Estagiario via delegacao_controle
-    const resultadoDelegacao = await delegarModuloB(supabase, paciente_id, nome_completo)
-    if (!resultadoDelegacao.ok) return resultadoDelegacao
+    // Verifica se ja existe tarefa B pendente (ex: criada por renovacao antes da anamnese chegar)
+    const { count: pendingBCount } = await supabase
+      .from('tarefas')
+      .select('id', { count: 'exact', head: true })
+      .eq('paciente_id', paciente_id)
+      .eq('modulo', 'B')
+      .eq('status', 'pendente')
+
+    let tarefa_id: string | undefined
+    let responsavel: string | undefined
+
+    if ((pendingBCount ?? 0) === 0) {
+      // Fluxo normal: cria nova tarefa B com alternancia Pablo/Estagiario
+      const resultadoDelegacao = await delegarModuloB(supabase, paciente_id, nome_completo)
+      if (!resultadoDelegacao.ok) return resultadoDelegacao
+      tarefa_id = resultadoDelegacao.tarefa_id
+      responsavel = resultadoDelegacao.responsavel
+    }
 
     await registrarFormulario(supabase, {
       paciente_id,
@@ -114,7 +129,7 @@ export async function processarAnamnese(
       formulario_id,
     })
 
-    return { ok: true, status: 200, paciente_id, tarefa_id: resultadoDelegacao.tarefa_id, responsavel: resultadoDelegacao.responsavel }
+    return { ok: true, status: 200, paciente_id, tarefa_id, responsavel }
   } catch (error) {
     return { ok: false, status: 500, error: 'Erro interno', details: msg(error) }
   }
@@ -410,7 +425,7 @@ export async function registrarAvulso(
  * Cria tarefa Modulo B com alternância Pablo/Estagiário via delegacao_controle.
  * Reutilizada por processarAnamnese(), processarTreino() e criação manual de paciente.
  */
-async function delegarModuloB(
+export async function delegarModuloB(
   supabase: SupabaseClient,
   paciente_id: string,
   nome_paciente: string,
