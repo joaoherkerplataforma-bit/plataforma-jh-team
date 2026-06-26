@@ -24,6 +24,12 @@ export const DURACAO_MESES: Record<string, number> = {
 }
 
 /**
+ * Margem adicional (em dias) somada ao vencimento do plano, alem da duracao
+ * em meses. O vencimento e calculado como: data_inicio + N meses + 15 dias.
+ */
+export const MARGEM_VENCIMENTO_DIAS = 15
+
+/**
  * Parseia os campos qual_plano e tempo_plano do payload da anamnese.
  *
  * Aceita dois formatos:

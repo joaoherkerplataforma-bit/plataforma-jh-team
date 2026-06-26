@@ -7,7 +7,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 
 import { hoje, addDias, addMeses } from '@/lib/dates'
-import { parsePlano, DURACAO_MESES } from '@/lib/parse-plano'
+import { parsePlano, DURACAO_MESES, MARGEM_VENCIMENTO_DIAS } from '@/lib/parse-plano'
 
 export type ResultadoAutomacao =
   | { ok: true; status: number; paciente_id: string; tarefa_id?: string; responsavel?: string }
@@ -61,7 +61,7 @@ export async function processarAnamnese(
   const { tipo_plano, duracao_plano } = plano
   const meses = DURACAO_MESES[duracao_plano]
   const data_inicio = addDias(hoje(), 5)
-  const data_vencimento_plano = addMeses(data_inicio, meses)
+  const data_vencimento_plano = addDias(addMeses(data_inicio, meses), MARGEM_VENCIMENTO_DIAS)
   const proximo_retorno = addDias(data_inicio, 30)
 
   try {
