@@ -3,7 +3,7 @@
 import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Search, Ban, RotateCcw, ArrowUpDown, ArrowUp, ArrowDown, X } from 'lucide-react'
+import { Search, Ban, RotateCcw, ArrowUpDown, ArrowUp, ArrowDown, X, CalendarDays } from 'lucide-react'
 import type { Paciente, PacienteComCalculos } from '@/types/pacientes'
 import {
   TIPO_PLANO_LABELS,
@@ -25,6 +25,7 @@ import {
   reativarPaciente,
 } from '@/app/(protected)/pacientes/actions'
 import { RenovarModal } from '@/app/(protected)/pacientes/renovar-modal'
+import { EditarDatasModal } from '@/app/(protected)/pacientes/editar-datas-modal'
 
 type TabKey = 'ativos' | 'vencidos' | 'cancelados'
 type Acao = 'cancelar' | 'reativar'
@@ -209,6 +210,13 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
     pacienteId: string
     pacienteNome: string
   }>({ aberto: false, pacienteId: '', pacienteNome: '' })
+  const [pacienteEditandoDatas, setPacienteEditandoDatas] = useState<{
+    id: string
+    nome_completo: string
+    data_inicio: string
+    data_vencimento_plano: string
+    proximo_retorno: string
+  } | null>(null)
 
   const isAdmin = perfilAtual === 'joao_admin'
 
@@ -450,7 +458,25 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
                       </Link>
                     </td>
                     <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
-                      {formatarData(p.data_inicio)}
+                      <div className="flex items-center gap-2">
+                        <span>{formatarData(p.data_inicio)}</span>
+                        <button
+                          type="button"
+                          title="Editar datas"
+                          onClick={() =>
+                            setPacienteEditandoDatas({
+                              id: p.id,
+                              nome_completo: p.nome,
+                              data_inicio: p.data_inicio,
+                              data_vencimento_plano: p.data_vencimento_plano,
+                              proximo_retorno: p.proximo_retorno ?? '',
+                            })
+                          }
+                          className="text-[#F5F0E8]/40 transition-colors hover:text-[#C9A84C]"
+                        >
+                          <CalendarDays size={14} />
+                        </button>
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-[#F5F0E8] whitespace-nowrap">
                       {formatarData(p.proximo_retorno)}
@@ -560,6 +586,14 @@ export function PacientesLista({ pacientes, perfilAtual }: PacientesListaProps) 
           pacienteId={renovarState.pacienteId}
           pacienteNome={renovarState.pacienteNome}
           onClose={() => setRenovarState({ aberto: false, pacienteId: '', pacienteNome: '' })}
+        />
+      )}
+
+      {/* Modal editar datas */}
+      {pacienteEditandoDatas !== null && (
+        <EditarDatasModal
+          paciente={pacienteEditandoDatas}
+          onClose={() => setPacienteEditandoDatas(null)}
         />
       )}
 
